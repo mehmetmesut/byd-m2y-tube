@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- M2Y Tube: About screen. Copyright (C) 2026 Yeşil Dönüşüm Mühendisi - M2Y -->
+<resources>
+    <string-array name="m2y_about">
+        <item>Developed by Yeşil Dönüşüm Mühendisi - M2Y</item>
+        <item>Built for the BYD Seal U DM-i head unit (Android 10, 1920×1080 touch screen), free for everyone</item>
+        <item>Source code: github.com/mehmetmesut/byd-m2y-tube</item>
+        <item>News and downloads: byd.mehmetmesut.com</item>
+        <item>Based on SmartTube by yuliskov (MIT licence): github.com/yuliskov/SmartTube</item>
+        <item>Not affiliated with YouTube, Google or BYD</item>
+    </string-array>
+    <string name="m2y_more_settings">More settings…</string>
+    <string name="m2y_music">Music</string>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- M2Y Tube: Hakkında ekranı. Copyright (C) 2026 Yeşil Dönüşüm Mühendisi - M2Y -->
+<resources>
+    <string-array name="m2y_about">
+        <item>Geliştiren: Yeşil Dönüşüm Mühendisi - M2Y</item>
+        <item>BYD Seal U DM-i multimedya ekranı için geliştirildi (Android 10, 1920×1080 dokunmatik), herkesin kullanımına açıktır</item>
+        <item>Kaynak kodu: github.com/mehmetmesut/byd-m2y-tube</item>
+        <item>Duyuru ve indirme: byd.mehmetmesut.com</item>
+        <item>yuliskov\'un SmartTube projesi tabanlıdır (MIT lisansı): github.com/yuliskov/SmartTube</item>
+        <item>YouTube, Google ya da BYD ile bağlantılı değildir</item>
+    </string-array>
+    <string name="m2y_more_settings">Diğer ayarlar…</string>
+    <string name="m2y_music">Müzik</string>
+</resources>
