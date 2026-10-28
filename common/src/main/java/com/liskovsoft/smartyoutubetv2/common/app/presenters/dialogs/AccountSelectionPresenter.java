@@ -133,7 +133,6 @@ public class AccountSelectionPresenter extends BasePresenter<Void> {
 
     public void selectAccount(Account account) {
         mSignInService.selectAccount(account);
-        Utils.updateChannels(getContext());
 
         // Account history might be turned off (common issue).
         GeneralData generalData = GeneralData.instance(getContext());

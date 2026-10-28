@@ -35,7 +35,6 @@ public class GeneralData implements ProfileChangeListener {
     public static final int ACTION_SEARCH = 7;
     private static GeneralData sInstance;
     private final AppPrefs mPrefs;
-    private String mBackupZipName;
     private int mAppExitShortcut;
     private int mPlayerExitShortcut;
     private int mSearchExitShortcut;
@@ -45,7 +44,6 @@ public class GeneralData implements ProfileChangeListener {
     private boolean mIsHideUpcomingEnabled;
     private int mScreensaverTimeoutMs;
     private int mScreensaverDimmingPercents;
-    private boolean mIsProxyEnabled;
     private boolean mIsBridgeCheckEnabled;
     private boolean mIsOkButtonLongPressDisabled;
     private String mLastPlaylistId;
@@ -60,7 +58,6 @@ public class GeneralData implements ProfileChangeListener {
     private boolean mIsHideShortsFromHomeEnabled;
     private boolean mIsHideShortsFromHistoryEnabled;
     private boolean mIsScreensaverDisabled;
-    private boolean mIsVPNEnabled;
     private boolean mIsGlobalClockEnabled;
     private String mSettingsPassword;
     private String mMasterPassword;
@@ -81,9 +78,6 @@ public class GeneralData implements ProfileChangeListener {
     private boolean mIsFullscreenModeEnabled;
     private Map<Integer, Video> mSelectedItems;
     private boolean mIsFirstUseTooltipEnabled;
-    private boolean mIsDeviceSpecificBackupEnabled;
-    private int mGDriveBackupFreqDays;
-    private int mLocalDriveBackupFreqDays;
     private List<Video> mOldPinnedItems;
     private boolean mIsRemapSToSpeedToggleEnabled;
     private final Runnable mPersistStateInt = this::persistStateInt;
@@ -100,15 +94,6 @@ public class GeneralData implements ProfileChangeListener {
         }
 
         return sInstance;
-    }
-
-    public String getBackupZipName() {
-        return mBackupZipName;
-    }
-
-    public void setBackupZipName(String backupZipName) {
-        mBackupZipName = backupZipName;
-        persistState();
     }
 
     public int getAppExitShortcut() {
@@ -253,24 +238,6 @@ public class GeneralData implements ProfileChangeListener {
 
     public void set24HourLocaleEnabled(boolean enable) {
         GlobalPreferences.sInstance.set24HourLocaleEnabled(enable);
-    }
-
-    public boolean isProxyEnabled() {
-        return mIsProxyEnabled;
-    }
-
-    public void setProxyEnabled(boolean enable) {
-        mIsProxyEnabled = enable;
-        persistState();
-    }
-
-    public boolean isVPNEnabled() {
-        return mIsVPNEnabled;
-    }
-
-    public void setVPNEnabled(boolean enable) {
-        mIsVPNEnabled = enable;
-        persistState();
     }
 
     public boolean isBridgeCheckEnabled() {
@@ -490,33 +457,6 @@ public class GeneralData implements ProfileChangeListener {
         persistState();
     }
 
-    public boolean isDeviceSpecificBackupEnabled() {
-        return mIsDeviceSpecificBackupEnabled;
-    }
-
-    public void setDeviceSpecificBackupEnabled(boolean enable) {
-        mIsDeviceSpecificBackupEnabled = enable;
-        persistState();
-    }
-
-    public int getGDriveBackupFreqDays() {
-        return mGDriveBackupFreqDays;
-    }
-
-    public void setGDriveBackupFreqDays(int freqDays) {
-        mGDriveBackupFreqDays = freqDays;
-        persistState();
-    }
-
-    public int getLocalDriveBackupFreqDays() {
-        return mLocalDriveBackupFreqDays;
-    }
-
-    public void setLocalDriveBackupFreqDays(int freqDays) {
-        mLocalDriveBackupFreqDays = freqDays;
-        persistState();
-    }
-
     public boolean isRemapSToSpeedToggleEnabled() {
         return mIsRemapSToSpeedToggleEnabled;
     }
@@ -580,7 +520,6 @@ public class GeneralData implements ProfileChangeListener {
 
         String[] split = Helpers.splitData(data);
 
-        mBackupZipName = Helpers.parseStr(split, 0);
         //mBootSectionId = Helpers.parseInt(split, 1, MediaGroup.TYPE_HOME);
         //mIsSettingsSectionEnabled = Helpers.parseBoolean(split, 2, true);
         mAppExitShortcut = Helpers.parseInt(split, 3, EXIT_DOUBLE_BACK);
@@ -590,7 +529,6 @@ public class GeneralData implements ProfileChangeListener {
         mIsHideShortsFromSubscriptionsEnabled = Helpers.parseBoolean(split, 7, false);
         mFastForwardRewindAction = Helpers.parseInt(split, 8, ACTION_UNDEFINED);
         //mScreenDimmingTimeoutMs = Helpers.parseInt(split, 9, 1);
-        mIsProxyEnabled = Helpers.parseBoolean(split, 10, false);
         mIsBridgeCheckEnabled = Helpers.parseBoolean(split, 11, true);
         mIsOkButtonLongPressDisabled = Helpers.parseBoolean(split, 12, false);
         mLastPlaylistId = Helpers.parseStr(split, 13);
@@ -607,7 +545,6 @@ public class GeneralData implements ProfileChangeListener {
         mIsHideShortsFromHomeEnabled = Helpers.parseBoolean(split, 24, false);
         mIsHideShortsFromHistoryEnabled = Helpers.parseBoolean(split, 25, false);
         mIsScreensaverDisabled = Helpers.parseBoolean(split, 26, true);
-        mIsVPNEnabled = Helpers.parseBoolean(split, 27, false);
         mLastPlaylistTitle = Helpers.parseStr(split, 28);
         mPlaylistOrder = Helpers.parseMap(split, 29, Helpers::parseStr, Helpers::parseInt);
         //String pendingStreams = Helpers.parseStr(split, 30);
@@ -648,12 +585,9 @@ public class GeneralData implements ProfileChangeListener {
         mIsRememberPinnedPositionEnabled = Helpers.parseBoolean(split, 62, false);
         mSelectedItems = Helpers.parseMap(split, 63, Helpers::parseInt, Video::fromString);
         mIsFirstUseTooltipEnabled = Helpers.parseBoolean(split, 64, true);
-        mIsDeviceSpecificBackupEnabled = Helpers.parseBoolean(split, 65, false);
         //mIsAutoBackupEnabled = Helpers.parseBoolean(split, 66, false);
         //mIsRemapPageDownToSpeedEnabled = Helpers.parseBoolean(split, 67, false);
         mSearchExitShortcut = Helpers.parseInt(split, 68, EXIT_SINGLE_BACK);
-        mGDriveBackupFreqDays = Helpers.parseInt(split, 69, -1);
-        mLocalDriveBackupFreqDays = Helpers.parseInt(split, 70, 1);
         //mIsRemapFastForwardToSpeedToggleEnabled = Helpers.parseBoolean(split, 71, false);
         mIsRemapSToSpeedToggleEnabled = Helpers.parseBoolean(split, 72, true);
     }
@@ -668,19 +602,19 @@ public class GeneralData implements ProfileChangeListener {
 
     private void persistStateInt() {
         // Zero index is skipped. Selected sections were there.
-        mPrefs.setProfileData(GENERAL_DATA, Helpers.mergeData(mBackupZipName, null, null, mAppExitShortcut, mIsReturnToLauncherEnabled,
+        mPrefs.setProfileData(GENERAL_DATA, Helpers.mergeData(null, null, null, mAppExitShortcut, mIsReturnToLauncherEnabled,
                 mBackgroundShortcut, mOldPinnedItems, mIsHideShortsFromSubscriptionsEnabled,
-                mFastForwardRewindAction, null, mIsProxyEnabled, mIsBridgeCheckEnabled, mIsOkButtonLongPressDisabled, mLastPlaylistId,
+                mFastForwardRewindAction, null, null, mIsBridgeCheckEnabled, mIsOkButtonLongPressDisabled, mLastPlaylistId,
                 null, mIsHideUpcomingEnabled, mPageUpDownAction, null, mChannelUpDownAction, null, null, null, null, null,
-                mIsHideShortsFromHomeEnabled, mIsHideShortsFromHistoryEnabled, mIsScreensaverDisabled, mIsVPNEnabled, mLastPlaylistTitle,
+                mIsHideShortsFromHomeEnabled, mIsHideShortsFromHistoryEnabled, mIsScreensaverDisabled, null, mLastPlaylistTitle,
                 mPlaylistOrder, mPendingStreams, mIsGlobalClockEnabled, null, mSettingsPassword, mIsChildModeEnabled, mIsHistoryEnabled,
                 mScreensaverTimeoutMs, null, mIsAltAppIconEnabled, mVersionCode, mIsSelectChannelSectionEnabled, mMasterPassword,
                 null, mIsOldUpdateNotificationsEnabled, mScreensaverDimmingPercents, mNextPreviousAction, mIsRemapPlayToOKEnabled,
                 mHistoryState, mIsRememberSubscriptionsPositionEnabled, null, mIsRemapNumbersToSpeedEnabled, mDpadUpDownAction,
                 null, null, mIsRemapDpadLeftToVolumeEnabled, null,
                 mIsHideWatchedFromNotificationsEnabled, mChangelog, mPlayerExitShortcut, null, mIsFullscreenModeEnabled, null,
-                mIsRememberPinnedPositionEnabled, mSelectedItems, mIsFirstUseTooltipEnabled, mIsDeviceSpecificBackupEnabled, null,
-                null, mSearchExitShortcut, mGDriveBackupFreqDays, mLocalDriveBackupFreqDays, null,
+                mIsRememberPinnedPositionEnabled, mSelectedItems, mIsFirstUseTooltipEnabled, null, null,
+                null, mSearchExitShortcut, null, null, null,
                 mIsRemapSToSpeedToggleEnabled));
     }
 

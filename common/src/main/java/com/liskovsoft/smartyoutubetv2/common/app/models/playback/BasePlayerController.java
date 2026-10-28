@@ -31,7 +31,6 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
-import com.liskovsoft.smartyoutubetv2.common.prefs.RemoteControlData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.SearchData;
 import com.liskovsoft.youtubeapi.service.YouTubeServiceManager;
 import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
@@ -296,10 +295,6 @@ public abstract class BasePlayerController implements PlayerEventListener {
 
     protected PlayerTweaksData getPlayerTweaksData() {
         return PlayerTweaksData.instance(getContext());
-    }
-
-    protected RemoteControlData getRemoteControlData() {
-        return RemoteControlData.instance(getContext());
     }
 
     protected VideoStateService getStateService() {

@@ -27,7 +27,6 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.MaxControlsVideoPlayerGlue;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.PlaybackTransportRowPresenter;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.widget.OnActionLongClickedListener;
-import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.AFRAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.ActionHelpers;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.ChannelAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HomeAction;
@@ -46,6 +45,7 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.PipAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.PlaybackQueueAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.PlaylistAddAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.PlaybackModeAction;
+import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.SaveAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.SearchAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.SubscribeAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.TwoStateAction;
@@ -123,8 +123,8 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         putAction(new VideoSpeedAction(context));
         putAction(new VideoStatsAction(context));
         putAction(new SearchAction(context));
+        putAction(new SaveAction(context)); // M2Y
         putAction(new PipAction(context));
-        putAction(new AFRAction(context));
         putAction(new ScreenDimmingAction(context));
         putAction(new ChatAction(context));
         putAction(new PlaybackQueueAction(context));
@@ -174,6 +174,7 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SEARCH)) {
             adapter.add(mActions.get(R.id.action_search));
         }
+        adapter.add(mActions.get(R.id.action_m2y_save)); // M2Y: always shown, next to search
         if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SHARE)) {
             adapter.add(mActions.get(R.id.action_share));
         }
@@ -191,9 +192,6 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         }
         if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SOUND_OFF)) {
             adapter.add(mActions.get(R.id.action_sound_off));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_AFR)) {
-            adapter.add(mActions.get(R.id.action_afr));
         }
     }
 

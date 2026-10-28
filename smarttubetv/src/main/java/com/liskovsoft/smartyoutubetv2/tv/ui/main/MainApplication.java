@@ -1,16 +1,15 @@
 package com.liskovsoft.smartyoutubetv2.tv.ui.main;
 
+import android.app.Application;
 import android.os.Build.VERSION;
 
 import androidx.annotation.NonNull;
-import androidx.multidex.MultiDexApplication;
 import androidx.work.Configuration;
 
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.BrowsePresenter;
-import com.liskovsoft.smartyoutubetv2.common.app.views.AddDeviceView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.AppDialogView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.BrowseView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ChannelUploadsView;
@@ -21,10 +20,8 @@ import com.liskovsoft.smartyoutubetv2.common.app.views.SignInView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.SplashView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager;
 import com.liskovsoft.smartyoutubetv2.common.app.views.WebBrowserView;
-import com.liskovsoft.smartyoutubetv2.common.prefs.NetworkData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
-import com.liskovsoft.smartyoutubetv2.tv.ui.adddevice.AddDeviceActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.BrowseActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.channel.ChannelActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.channeluploads.ChannelUploadsActivity;
@@ -35,13 +32,10 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.search.tags.SearchTagsActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.signin.SignInActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.webbrowser.WebBrowserActivity;
 
-import org.conscrypt.Conscrypt;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.security.Provider;
-import java.security.Security;
 
-public class MainApplication extends MultiDexApplication implements Configuration.Provider { // fix: Didn't find class "com.google.firebase.provider.FirebaseInitProvider"
+public class MainApplication extends Application implements Configuration.Provider {
     static {
         // fix YouTube bandwidth throttling (best - false)???
         // false is better for streams (less buffering)
@@ -58,33 +52,7 @@ public class MainApplication extends MultiDexApplication implements Configuratio
     public void onCreate() {
         super.onCreate();
 
-        // ByeByeDPI fix
-        // https://android-review.googlesource.com/c/platform/external/conscrypt/+/89408/
-        // NOTE: Android 10+ (API 29+) uses system Conscrypt TLS; custom Security providers are unnecessary
-        // NOTE: May cause 'Unexpected playback error null'
-        //if (Build.VERSION.SDK_INT < 29 && Conscrypt.isAvailable()) {
-        //    Security.insertProviderAt(Conscrypt.newProvider(), 1);
-        //}
-
-        // Important: Initialize the native Conscrypt provider BEFORE reading any configs/SharedPreferences.
-        // Otherwise, early disk I/O shifts the ClassLoader on some Android TV devices, causing silent JNI linking errors.
-        Provider conscryptProvider = null;
-        if (NetworkData.instance(this).isConscryptEnabled()) { // M2Y: no native library load on a normal start
-            try {
-                conscryptProvider = Conscrypt.newProvider();
-            } catch (Throwable e) {
-                // UnsatisfiedLinkError
-            }
-        }
-
-        if (conscryptProvider != null) {
-            try {
-                Security.insertProviderAt(conscryptProvider, 1);
-            } catch (Throwable e) {
-                // UnsatisfiedLinkError
-            }
-        }
-
+        // M2Y: no Conscrypt — Android 10 already has the system Conscrypt TLS provider
         setupGlobalExceptionHandler();
         setupViewManager();
     }
@@ -112,7 +80,6 @@ public class MainApplication extends MultiDexApplication implements Configuratio
         viewManager.register(AppDialogView.class, dialogClass, BrowseActivity.class);
         viewManager.register(SearchView.class, SearchTagsActivity.class, BrowseActivity.class);
         viewManager.register(SignInView.class, SignInActivity.class, BrowseActivity.class);
-        viewManager.register(AddDeviceView.class, AddDeviceActivity.class, BrowseActivity.class);
         viewManager.register(ChannelView.class, ChannelActivity.class, BrowseActivity.class);
         viewManager.register(ChannelUploadsView.class, ChannelUploadsActivity.class, BrowseActivity.class);
         viewManager.register(WebBrowserView.class, WebBrowserActivity.class, BrowseActivity.class);

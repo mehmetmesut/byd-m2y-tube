@@ -22,8 +22,6 @@ public class AppPrefs extends SharedPreferencesBase implements AccountChangeList
     private static final String CHANNEL_GROUP_DATA = "channel_group_data";
     private static final String SIDEBAR_DATA = "sidebar_data";
     private static final String VIEW_MANAGER_DATA = "view_manager_data";
-    private static final String WEB_PROXY_URI = "web_proxy_uri";
-    private static final String WEB_PROXY_ENABLED = "web_proxy_enabled";
     private static final String LAST_PROFILE_NAME = "last_profile_name";
     private String mBootResolution;
     private final WeakHashSet<ProfileChangeListener> mListeners = new WeakHashSet<>();
@@ -132,22 +130,6 @@ public class AppPrefs extends SharedPreferencesBase implements AccountChangeList
     //        putString(key, data);
     //    }
     //}
-
-    public String getWebProxyUri() {
-        return getString(WEB_PROXY_URI, "");
-    }
-
-    public void setWebProxyUri(String uri) {
-        putString(WEB_PROXY_URI, uri);
-    }
-
-    public boolean isWebProxyEnabled() {
-        return getBoolean(WEB_PROXY_ENABLED, false);
-    }
-
-    public void setWebProxyEnabled(boolean enabled) {
-        putBoolean(WEB_PROXY_ENABLED, enabled);
-    }
 
     private String getProfileName() {
         return getString(LAST_PROFILE_NAME, null);

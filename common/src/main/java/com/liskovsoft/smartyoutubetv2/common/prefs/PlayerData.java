@@ -29,6 +29,8 @@ import java.util.Map;
 
 public class PlayerData extends DataChangeBase implements PlayerConstants, ProfileChangeListener {
     private static final String VIDEO_PLAYER_DATA = "video_player_data";
+    private static final int RECOMMENDED_HEIGHT = 480;
+    private static final float RECOMMENDED_MAX_FPS = 30.5f; // 25 and 30 fps sources (29.97)
     public static final int OK_ONLY_UI = 0;
     public static final int OK_UI_AND_PAUSE = 1;
     public static final int OK_ONLY_PAUSE = 2;
@@ -709,14 +711,19 @@ public class PlayerData extends DataChangeBase implements PlayerConstants, Profi
     }
 
     public FormatItem getDefaultAudioFormat() {
-        // Android 4 (probably some others) doesn't support opus (ac3 will be reverted to opus)
-        // Note, 5.1 mp4a doesn't work in 5.1 mode
-        // Use opus (ac3 fallback) on modern devices. vp9 and opus should be supported at the same time?
-        return DeviceHelpers.isVP9ResolutionSupported(2160) ? FormatItem.AUDIO_51_AC3 : FormatItem.AUDIO_HQ_MP4A;
+        // M2Y: the car (Android 10, VP9 decoder) always gets YouTube's best stereo audio: opus ~160 kbps instead of
+        // mp4a 128 kbps. On an audio error ErrorFixerController still falls back to AUDIO_HQ_MP4A.
+        return FormatItem.AUDIO_HQ_OPUS;
     }
 
+    /** M2Y recommendation shown in the quality lists: quick start, smooth playback, low data use on mobile data. */
     public FormatItem getDefaultVideoFormat() {
-        return FormatItem.VIDEO_HD_VP9_30; // M2Y: 720p30 on the car; the quality menu goes up to 1080p60
+        return FormatItem.VIDEO_SD_VP9_30; // M2Y: 480p (25/30 fps) on the car; the quality menu goes up to 1080p60
+    }
+
+    /** M2Y: the recommended (default) quality, for the "Recommended" mark in the quality lists. */
+    public static boolean isRecommendedQuality(int width, int height, float frameRate) {
+        return Math.min(width, height) == RECOMMENDED_HEIGHT && frameRate <= RECOMMENDED_MAX_FPS;
     }
 
     public FormatItem getDefaultSubtitleFormat() {

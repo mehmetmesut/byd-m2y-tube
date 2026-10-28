@@ -11,6 +11,7 @@ public interface FormatItem {
     FormatItem VIDEO_AUTO = ExoFormatItem.fromVideoParams(-1, -1, -1);
     FormatItem VIDEO_SUB_SD_AVC_30 = ExoFormatItem.fromVideoSpec("426,240,30,avc", false);
     FormatItem VIDEO_SD_AVC_30 = ExoFormatItem.fromVideoSpec("640,360,30,avc", false);
+    FormatItem VIDEO_SD_VP9_30 = ExoFormatItem.fromVideoSpec("854,480,30,vp9", false); // M2Y: car default (25/30 fps)
     FormatItem VIDEO_HD_AVC_30 = ExoFormatItem.fromVideoSpec("1280,720,30,avc", false);
     FormatItem VIDEO_HD_VP9_30 = ExoFormatItem.fromVideoSpec("1280,720,30,vp9", false);
     FormatItem VIDEO_FHD_AVC_30 = ExoFormatItem.fromVideoSpec("1920,1080,30,avc", false);
@@ -19,6 +20,7 @@ public interface FormatItem {
     FormatItem VIDEO_4K_VP9_60 = ExoFormatItem.fromVideoSpec("3840,2160,60,vp9", false);
     FormatItem SUBTITLE_NONE = ExoFormatItem.fromSubtitleParams(null);
     FormatItem AUDIO_HQ_MP4A = ExoFormatItem.fromAudioSpecs(String.format("%s,null", "mp4a")); // Note, 5.1 mp4a doesn't work in 5.1 mode
+    FormatItem AUDIO_HQ_OPUS = ExoFormatItem.fromAudioSpecs(String.format("%s,null", "opus")); // M2Y: YouTube's best audio (~160 kbps)
     FormatItem AUDIO_51_EC3 = ExoFormatItem.fromAudioSpecs(String.format("%s,null", "ec-3")); // Note, 5.1 mp4a doesn't work in 5.1 mode
     FormatItem AUDIO_51_AC3 = ExoFormatItem.fromAudioSpecs(String.format("%s,null", "ac-3")); // Note, 5.1 mp4a doesn't work in 5.1 mode
     int TYPE_VIDEO = 0;

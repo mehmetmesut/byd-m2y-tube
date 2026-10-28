@@ -10,7 +10,7 @@
   <img alt="licence" src="https://img.shields.io/github/license/mehmetmesut/byd-m2y-tube?color=6250d6">
 </p>
 <p align="center">
-  <a href="https://github.com/mehmetmesut/byd-m2y-tube/releases/download/1.25.07.68.0/M2YTube_1.25.07.68.0_arm64-v8a.apk"><b>⬇ Download APK (27.3 MB)</b></a> ·
+  <a href="https://github.com/mehmetmesut/byd-m2y-tube/releases/download/1.25.07.68.2/M2YTube_1.25.07.68.2_arm64-v8a.apk"><b>⬇ Download APK (18.0 MB)</b></a> ·
   <a href="https://byd.mehmetmesut.com">byd.mehmetmesut.com</a> ·
   <a href="https://github.com/mehmetmesut/byd-m2y">⭐ All M2Y apps for BYD</a>
 </p>
@@ -26,9 +26,10 @@ I built these apps first for **my own BYD SEAL U DM-i**, because the store apps 
 ### Highlights
 
 - **Touch first.** Tap the picture to pause or resume, swipe left/right for the previous/next video, swipe up for suggestions, swipe down to hide the controls. A back arrow top-left, a Home button in the player and an **X** on every panel replace the remote.
-- **Quality that fits the screen.** Never above **1080p60**, never below 360p; AV1, HDR, 2K and 4K are not offered. Default is **720p30 VP9** on the hardware decoder.
+- **Quality that fits the screen.** Never above **1080p60**, never below 360p; AV1, HDR, 2K and 4K are not offered. Default is **480p30 VP9** on the hardware decoder.
 - **Music mode.** One entry in the quality list turns the video track off, shows the cover and plays audio only: less data and less decoding.
 - **Plays on while you navigate.** Background audio is on by default; the Home button leaves the player while the video keeps playing.
+- **Works offline too.** Save a video from the player (360p–1080p) or simply watch it to the end: the last 5 videos watched to the end are kept from the stream itself (no extra data) and play without internet. Left menu: **Saved** and **In memory**.
 - **Ad-free, no tracking.** No ads without signing in and none when you sign in with your own YouTube account; no analytics, no crash reporting, no update checker.
 - **Light on the head unit.** No Google Play services, no card shadows or zoom animations, thumbnails kept in memory, no boot or screen-on receiver of its own.
 
@@ -36,11 +37,17 @@ I built these apps first for **my own BYD SEAL U DM-i**, because the store apps 
 
 **Playback**
 - Video quality from **360p to 1080p60**. A video that only exists below 360p keeps all its formats and plays at the best one available.
-- Default quality 720p30 (VP9, hardware decoded); you can change it per video from the quality list.
+- Default quality 480p30 (VP9, hardware decoded); you can change it per video from the quality list.
 - AV1, HDR and anything above 1080p or 60 fps are hidden for good. The "unlock all formats" tweak does not bring them back.
 - **Music** quality: the video track is off, the video's cover is shown (audio only, less data and decoding).
 - **Speed list:** 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 and 4×.
 - **Background audio** on by default; controls auto-hide after 6 seconds, enough to reach a button by touch.
+
+**Offline**
+- **Save** button next to search in the player: pick a quality (360p–1080p, VP9 before H.264); the download runs in the background with a progress ring. Up to 8 GB; the least recently watched go first.
+- **In memory:** the last 5 videos watched to the end are kept automatically from the stream, byte-identical to YouTube's files, at no extra data cost. When a sixth one starts, the oldest is removed at once.
+- Without internet the app opens Saved (or In memory) instead of an error page.
+- **Search:** one tap on a suggestion searches it at once and closes the keyboard.
 
 **Touch controls and gestures**
 - With the controls hidden the first tap only shows them; with the controls visible a tap on the picture pauses or resumes.
@@ -67,7 +74,7 @@ I built these apps first for **my own BYD SEAL U DM-i**, because the store apps 
 |---|---|
 | Android 10 (API 29), arm64-v8a, no Google services | Built without Google Play services, Firebase or Crashlytics; arm64 only |
 | Qualcomm SM6125 (8 cores, 4×1.8 + 4×2.0 GHz), Adreno 610, 8 GB RAM | No card shadows, zoom or rounded-corner clipping; thumbnails kept in memory; the boot / screen-on receiver of the original app is removed |
-| Hardware decoders: AVC, HEVC, VP9 (no AV1); 1080p up to about 120 fps | Quality capped at **1080p60**; AV1, HDR, 2K and 4K never offered or chosen; **720p30 VP9** by default |
+| Hardware decoders: AVC, HEVC, VP9 (no AV1); 1080p up to about 120 fps | Quality capped at **1080p60**; AV1, HDR, 2K and 4K never offered or chosen; **480p30 VP9** by default |
 | 1920×1080 landscape touch screen, 240 dpi, 60 Hz, no remote | Tap and swipe gestures, back arrow, Home button, an **X** on every panel, lists above their buttons |
 | Music while driving | Background audio on by default; **Music** mode with the video track off |
 
@@ -77,7 +84,7 @@ Head unit with wireless ADB enabled (step-by-step guide on [byd.mehmetmesut.com]
 
 ```
 adb connect <car-ip>:5555
-adb install -r M2YTube_1.25.07.68.0_arm64-v8a.apk
+adb install -r M2YTube_1.25.07.68.2_arm64-v8a.apk
 ```
 
 - **Windows one-click installer:** [m2y-kurulum.cmd](https://byd.mehmetmesut.com/m2y-kurulum.cmd) asks for the car's IP, downloads Google's platform-tools if they are missing, downloads the apps you choose, verifies their SHA-256 and installs them.
@@ -115,11 +122,13 @@ Designed and tested on the BYD SEAL U DM-i (DiLink 3.0). Other BYD models with a
 ```
 git clone --recursive https://github.com/mehmetmesut/byd-m2y-tube.git
 cd byd-m2y-tube
+git -C MediaServiceCore apply ../m2y-patches/MediaServiceCore.patch
+git -C SharedModules apply ../m2y-patches/SharedModules.patch
 # JDK 17, Android SDK platform 34, build-tools 30.0.3
 ./gradlew :smarttubetv:assembleStfdroidRelease
 ```
 
-Output: `smarttubetv/build/outputs/apk/stfdroid/release/M2YTube_fdroid_<version>_{arm64-v8a,x86}.apk` (the x86 build is for the Android emulator). Signing reads a properties file outside the repository (`m2y.signingProps` in `local.properties`).
+Output: `smarttubetv/build/outputs/apk/stfdroid/release/M2YTube_fdroid_<version>_arm64-v8a.apk`. For the Android emulator add `'x86_64'` to `splits.abi` in `smarttubetv/build.gradle`. M2Y's changes to the two submodules are kept as patches in `m2y-patches/` (applied above). Signing reads a properties file outside the repository (`m2y.signingProps` in `local.properties`).
 
 ### From the author
 
@@ -139,9 +148,10 @@ Bu uygulamaları önce **kendi BYD SEAL U DM-i aracım** için yaptım, çünkü
 ### Öne çıkanlar
 
 - **Önce dokunmatik.** Görüntüye dokun: duraklat/devam; sola ya da sağa kaydır: önceki/sonraki video; yukarı kaydır: öneriler; aşağı kaydır: denetimleri gizle. Sol üstte geri oku, oynatıcıda Ev düğmesi ve her panelde **X** kumandanın yerini alır.
-- **Ekrana uygun kalite.** Hiçbir zaman **1080p60**'ın üstü, 360p'nin altı yok; AV1, HDR, 2K ve 4K sunulmaz. Varsayılan, donanım kod çözücüde **720p30 VP9**.
+- **Ekrana uygun kalite.** Hiçbir zaman **1080p60**'ın üstü, 360p'nin altı yok; AV1, HDR, 2K ve 4K sunulmaz. Varsayılan, donanım kod çözücüde **480p30 VP9**.
 - **Müzik modu.** Kalite listesindeki tek bir seçenek görüntü kanalını kapatır, kapağı gösterir ve yalnız ses çalar: daha az veri, daha az kod çözme.
 - **Gezinirken çalmaya devam eder.** Arka planda ses varsayılan olarak açık; Ev düğmesi oynatıcıdan çıkarır, video çalmayı sürdürür.
+- **İnternetsiz de çalışır.** Oynatıcıdaki kaydet düğmesiyle bir videoyu kaydedin (360p–1080p) ya da sonuna kadar izleyin: sonuna kadar izlenen son 5 video oynatma akışının kendisinden saklanır (ek veri harcamaz) ve internetsiz oynar. Sol menüde **Kaydedilenler** ve **Hafızadakiler**.
 - **Reklamsız, izlemesiz.** Oturum açmadan reklam yok; kendi YouTube hesabınızla oturum açınca da yok. Analiz, çökme raporu ve güncelleme denetimi yok.
 - **Multimedya ekranına hafif.** Google Play hizmeti yok, kart gölgesi ve yakınlaştırma animasyonu yok, küçük resimler bellekte tutulur, özgün uygulamanın açılışta/ekran açılışında çalışan alıcısı kaldırıldı.
 
@@ -149,11 +159,17 @@ Bu uygulamaları önce **kendi BYD SEAL U DM-i aracım** için yaptım, çünkü
 
 **Oynatma**
 - **360p ile 1080p60** arasında görüntü kalitesi. Yalnız 360p'nin altında yüklenmiş bir videoda tüm biçimler kalır ve en iyisi çalınır.
-- Varsayılan kalite 720p30 (VP9, donanım kod çözme); video başına kalite listesinden değiştirilebilir.
+- Varsayılan kalite 480p30 (VP9, donanım kod çözme); video başına kalite listesinden değiştirilebilir.
 - AV1, HDR ve 1080p ya da 60 kare/sn üstü her şey kalıcı olarak gizlenir; "tüm biçimlerin kilidini aç" ayarı bunları geri getirmez.
 - **Müzik** kalitesi: görüntü kanalı kapalı, videonun kapağı gösterilir (yalnız ses, daha az veri ve kod çözme).
 - **Hız listesi:** 0,1 · 0,25 · 0,5 · 0,75 · 1 · 1,25 · 1,5 · 1,75 · 2 · 4×.
 - **Arka planda ses** varsayılan olarak açık; denetimler 6 saniye sonra kendiliğinden gizlenir (dokunarak bir düğmeye ulaşmaya yeter).
+
+**Çevrimdışı**
+- Oynatıcıda aramanın yanında **Kaydet** düğmesi: kaliteyi seçin (360p–1080p, VP9 önce, sonra H.264); indirme arka planda, ilerleme halkasıyla sürer. En çok 8 GB; en uzun süredir izlenmeyen önce silinir.
+- **Hafızadakiler:** sonuna kadar izlenen son 5 video oynatma akışından kendiliğinden saklanır; dosyalar YouTube'dakilerle bayt bayt aynıdır, ek veri harcanmaz. Altıncı video başladığı an en eskisi silinir.
+- İnternet yokken uygulama hata sayfası yerine Kaydedilenler'i (ya da Hafızadakiler'i) açar.
+- **Arama:** bir öneriye tek dokunuş onu hemen arar ve klavyeyi kapatır.
 
 **Dokunmatik denetimler ve hareketler**
 - Denetimler gizliyken ilk dokunuş yalnız denetimleri açar; denetimler görünürken görüntüye dokunmak duraklatır ya da devam ettirir.
@@ -180,7 +196,7 @@ Bu uygulamaları önce **kendi BYD SEAL U DM-i aracım** için yaptım, çünkü
 |---|---|
 | Android 10 (API 29), arm64-v8a, Google hizmeti yok | Google Play hizmetleri, Firebase ve Crashlytics olmadan derlenir; yalnız arm64 |
 | Qualcomm SM6125 (8 çekirdek, 4×1,8 + 4×2,0 GHz), Adreno 610, 8 GB RAM | Kart gölgesi, yakınlaştırma ve yuvarlak köşe kırpma yok; küçük resimler bellekte; özgün uygulamanın açılış/ekran açılışı alıcısı kaldırıldı |
-| Donanım kod çözücüler: AVC, HEVC, VP9 (AV1 yok); 1080p ile yaklaşık 120 kare/sn | Kalite **1080p60** ile sınırlı; AV1, HDR, 2K ve 4K hiç sunulmaz ya da seçilmez; varsayılan **720p30 VP9** |
+| Donanım kod çözücüler: AVC, HEVC, VP9 (AV1 yok); 1080p ile yaklaşık 120 kare/sn | Kalite **1080p60** ile sınırlı; AV1, HDR, 2K ve 4K hiç sunulmaz ya da seçilmez; varsayılan **480p30 VP9** |
 | 1920×1080 yatay dokunmatik ekran, 240 dpi, 60 Hz, kumanda yok | Dokunma ve kaydırma hareketleri, geri oku, Ev düğmesi, her panelde **X**, düğmelerin üstünde açılan listeler |
 | Sürüş sırasında müzik | Arka planda ses varsayılan olarak açık; görüntü kanalı kapalı **Müzik** modu |
 
@@ -190,7 +206,7 @@ Kablosuz ADB'si açık multimedya ekranı için (adım adım rehber: [byd.mehmet
 
 ```
 adb connect <araç-ip>:5555
-adb install -r M2YTube_1.25.07.68.0_arm64-v8a.apk
+adb install -r M2YTube_1.25.07.68.2_arm64-v8a.apk
 ```
 
 - **Windows tek tıkla kurulum aracı:** [m2y-kurulum.cmd](https://byd.mehmetmesut.com/m2y-kurulum.cmd) aracın IP adresini sorar, eksikse Google'ın platform-tools paketini indirir, seçtiğiniz uygulamaları indirir, SHA-256 değerlerini doğrular ve kurar.
@@ -228,11 +244,13 @@ BYD SEAL U DM-i (DiLink 3.0) üzerinde tasarlandı ve denendi. Android 10+ arm64
 ```
 git clone --recursive https://github.com/mehmetmesut/byd-m2y-tube.git
 cd byd-m2y-tube
+git -C MediaServiceCore apply ../m2y-patches/MediaServiceCore.patch
+git -C SharedModules apply ../m2y-patches/SharedModules.patch
 # JDK 17, Android SDK platform 34, build-tools 30.0.3
 ./gradlew :smarttubetv:assembleStfdroidRelease
 ```
 
-Çıktı: `smarttubetv/build/outputs/apk/stfdroid/release/M2YTube_fdroid_<sürüm>_{arm64-v8a,x86}.apk` (x86 derlemesi Android emülatörü içindir). İmzalama, depo dışındaki bir özellikler dosyasını okur (`local.properties` içindeki `m2y.signingProps`).
+Çıktı: `smarttubetv/build/outputs/apk/stfdroid/release/M2YTube_fdroid_<sürüm>_arm64-v8a.apk`. Android emülatörü için `smarttubetv/build.gradle` içindeki `splits.abi` satırına `'x86_64'` ekleyin. M2Y'nin iki alt modüldeki değişiklikleri `m2y-patches/` altında yama olarak durur (yukarıda uygulanır). İmzalama, depo dışındaki bir özellikler dosyasını okur (`local.properties` içindeki `m2y.signingProps`).
 
 ### Yazardan
 
@@ -252,9 +270,10 @@ YouTube'u kendi BYD SEAL U DM-i aracımın ekranında, reklamsız, telefon yerle
 ### Главное
 
 - **Сначала касания.** Коснитесь изображения — пауза или продолжение; смахните влево или вправо — предыдущее или следующее видео; вверх — рекомендации; вниз — скрыть элементы управления. Стрелка «назад» слева сверху, кнопка «Домой» в плеере и **X** на каждой панели заменяют пульт.
-- **Качество под экран.** Никогда выше **1080p60** и никогда ниже 360p; AV1, HDR, 2K и 4K не предлагаются. По умолчанию — **720p30 VP9** на аппаратном декодере.
+- **Качество под экран.** Никогда выше **1080p60** и никогда ниже 360p; AV1, HDR, 2K и 4K не предлагаются. По умолчанию — **480p30 VP9** на аппаратном декодере.
 - **Режим «Музыка».** Один пункт в списке качества отключает видеодорожку, показывает обложку и воспроизводит только звук: меньше трафика и меньше декодирования.
 - **Играет, пока вы ориентируетесь.** Фоновое воспроизведение звука включено по умолчанию; кнопка «Домой» выходит из плеера, а видео продолжает играть.
+- **Работает и без интернета.** Сохраните видео кнопкой в плеере (360p–1080p) или просто досмотрите его до конца: последние 5 досмотренных видео сохраняются из самого потока (без лишнего трафика) и воспроизводятся без интернета. В левом меню — **Saved** и **In memory**.
 - **Без рекламы и слежки.** Рекламы нет ни без входа в аккаунт, ни при входе в собственный аккаунт YouTube; нет аналитики, отчётов о сбоях и проверки обновлений.
 - **Лёгкое для головного устройства.** Без сервисов Google Play, без теней карточек и анимации увеличения, миниатюры хранятся в памяти, собственного приёмника загрузки и включения экрана у приложения нет.
 
@@ -262,11 +281,17 @@ YouTube'u kendi BYD SEAL U DM-i aracımın ekranında, reklamsız, telefon yerle
 
 **Воспроизведение**
 - Качество видео от **360p до 1080p60**. Если видео загружено только в качестве ниже 360p, все форматы остаются и играет лучший из доступных.
-- Качество по умолчанию — 720p30 (VP9, аппаратное декодирование); для каждого видео его можно изменить в списке качества.
+- Качество по умолчанию — 480p30 (VP9, аппаратное декодирование); для каждого видео его можно изменить в списке качества.
 - AV1, HDR и всё, что выше 1080p или 60 кадров/с, скрыто окончательно; настройка «разблокировать все форматы» их не возвращает.
 - Качество **«Музыка»**: видеодорожка выключена, показывается обложка видео (только звук, меньше трафика и декодирования).
 - **Список скоростей:** 0,1 · 0,25 · 0,5 · 0,75 · 1 · 1,25 · 1,5 · 1,75 · 2 · 4×.
 - **Фоновый звук** включён по умолчанию; элементы управления скрываются через 6 секунд — достаточно, чтобы дотянуться до кнопки касанием.
+
+**Без интернета**
+- Кнопка **«Сохранить»** рядом с поиском в плеере: выберите качество (360p–1080p, сначала VP9, затем H.264); загрузка идёт в фоне с кольцом прогресса. До 8 ГБ; первыми удаляются давно не смотревшиеся.
+- **In memory:** последние 5 досмотренных видео сохраняются автоматически из самого потока, побайтно совпадают с файлами YouTube, без лишнего трафика. Когда начинается шестое, самое старое сразу удаляется.
+- Без интернета приложение открывает Saved (или In memory) вместо страницы ошибки.
+- **Поиск:** одно касание подсказки сразу ищет её и закрывает клавиатуру.
 
 **Сенсорное управление и жесты**
 - Когда элементы управления скрыты, первое касание лишь показывает их; когда они видны, касание изображения ставит на паузу или продолжает воспроизведение.
@@ -293,7 +318,7 @@ YouTube'u kendi BYD SEAL U DM-i aracımın ekranında, reklamsız, telefon yerle
 |---|---|
 | Android 10 (API 29), arm64-v8a, без сервисов Google | Сборка без сервисов Google Play, Firebase и Crashlytics; только arm64 |
 | Qualcomm SM6125 (8 ядер, 4×1,8 + 4×2,0 ГГц), Adreno 610, 8 ГБ ОЗУ | Без теней карточек, увеличения и скругления углов; миниатюры в памяти; приёмник загрузки и включения экрана исходного приложения удалён |
-| Аппаратные декодеры: AVC, HEVC, VP9 (AV1 нет); 1080p примерно до 120 кадров/с | Качество ограничено **1080p60**; AV1, HDR, 2K и 4K не предлагаются и не выбираются; по умолчанию **720p30 VP9** |
+| Аппаратные декодеры: AVC, HEVC, VP9 (AV1 нет); 1080p примерно до 120 кадров/с | Качество ограничено **1080p60**; AV1, HDR, 2K и 4K не предлагаются и не выбираются; по умолчанию **480p30 VP9** |
 | Горизонтальный сенсорный экран 1920×1080, 240 dpi, 60 Гц, без пульта | Жесты касанием и смахиванием, стрелка «назад», кнопка «Домой», **X** на каждой панели, списки над кнопками |
 | Музыка во время поездки | Фоновый звук включён по умолчанию; режим **«Музыка»** с выключенной видеодорожкой |
 
@@ -303,7 +328,7 @@ YouTube'u kendi BYD SEAL U DM-i aracımın ekranında, reklamsız, telefon yerle
 
 ```
 adb connect <car-ip>:5555
-adb install -r M2YTube_1.25.07.68.0_arm64-v8a.apk
+adb install -r M2YTube_1.25.07.68.2_arm64-v8a.apk
 ```
 
 - **Установщик для Windows в один клик:** [m2y-kurulum.cmd](https://byd.mehmetmesut.com/m2y-kurulum.cmd) спрашивает IP-адрес автомобиля, при необходимости скачивает platform-tools от Google, скачивает выбранные вами приложения, проверяет SHA-256 и устанавливает их.
@@ -341,11 +366,13 @@ adb install -r M2YTube_1.25.07.68.0_arm64-v8a.apk
 ```
 git clone --recursive https://github.com/mehmetmesut/byd-m2y-tube.git
 cd byd-m2y-tube
+git -C MediaServiceCore apply ../m2y-patches/MediaServiceCore.patch
+git -C SharedModules apply ../m2y-patches/SharedModules.patch
 # JDK 17, Android SDK platform 34, build-tools 30.0.3
 ./gradlew :smarttubetv:assembleStfdroidRelease
 ```
 
-Результат: `smarttubetv/build/outputs/apk/stfdroid/release/M2YTube_fdroid_<версия>_{arm64-v8a,x86}.apk` (сборка x86 — для эмулятора Android). Для подписи читается файл свойств вне репозитория (`m2y.signingProps` в `local.properties`).
+Результат: `smarttubetv/build/outputs/apk/stfdroid/release/M2YTube_fdroid_<версия>_arm64-v8a.apk`. Для эмулятора Android добавьте `'x86_64'` в `splits.abi` в `smarttubetv/build.gradle`. Изменения M2Y в двух подмодулях хранятся как патчи в `m2y-patches/` (применяются выше). Для подписи читается файл свойств вне репозитория (`m2y.signingProps` в `local.properties`).
 
 ### От автора
 

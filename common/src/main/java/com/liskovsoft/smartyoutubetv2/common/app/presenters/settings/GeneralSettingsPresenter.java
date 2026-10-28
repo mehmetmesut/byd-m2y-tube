@@ -6,7 +6,6 @@ import android.content.Context;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaGroup;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
-import com.liskovsoft.sharedutils.okhttp.OkHttpManager;
 import com.liskovsoft.smartyoutubetv2.common.R;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.manager.PlayerConstants;
@@ -23,12 +22,9 @@ import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AppPrefs;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
-import com.liskovsoft.smartyoutubetv2.common.prefs.NetworkData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.SearchData;
-import com.liskovsoft.smartyoutubetv2.common.proxy.ProxyManager;
-import com.liskovsoft.smartyoutubetv2.common.proxy.WebProxyDialog;
 import com.liskovsoft.smartyoutubetv2.common.utils.AppDialogUtil;
 import com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog;
 import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
@@ -46,7 +42,6 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
     private final PlayerTweaksData mPlayerTweaksData;
     private final MainUIData mMainUIData;
     private final MediaServiceData mMediaServiceData;
-    private final NetworkData mNetworkData;
     private final SidebarService mSidebarService;
     private boolean mRestartApp;
     private final Runnable mOnFinish = () -> {
@@ -63,7 +58,6 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         mPlayerTweaksData = PlayerTweaksData.instance(context);
         mMainUIData = MainUIData.instance(context);
         mMediaServiceData = MediaServiceData.instance();
-        mNetworkData = NetworkData.instance(context);
         mSidebarService = SidebarService.instance(context);
     }
 
@@ -82,7 +76,6 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         appendBackgroundPlaybackCategory(settingsPresenter);
         appendScreenDimmingCategory(settingsPresenter);
         appendKeyRemappingCategory(settingsPresenter);
-        appendInternetCensorship(settingsPresenter);
         appendHistoryCategory(settingsPresenter);
         appendMiscCategory(settingsPresenter);
 
@@ -633,47 +626,6 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         settingsPresenter.appendCheckedCategory(getContext().getString(R.string.player_other), options);
     }
 
-    private void appendInternetCensorship(AppDialogPresenter settingsPresenter) {
-        List<OptionItem> options = new ArrayList<>();
-
-        appendProxyManager(settingsPresenter, options);
-
-        appendConscrypt(settingsPresenter, options);
-
-        settingsPresenter.appendCheckedCategory(getContext().getString(R.string.network_settings), options);
-    }
-
-    private void appendProxyManager(AppDialogPresenter settingsPresenter, List<OptionItem> options) {
-        ProxyManager proxyManager = new ProxyManager(getContext());
-
-        if (proxyManager.isProxySupported()) {
-            options.add(UiOptionItem.from(getContext().getString(R.string.enable_web_proxy),
-                    option -> {
-                        // Proxy with authentication supported only by OkHttp
-                        mPlayerTweaksData.setPlayerDataSource(
-                                option.isSelected() ? PlayerTweaksData.PLAYER_DATA_SOURCE_OKHTTP : PlayerTweaksData.PLAYER_DATA_SOURCE_CRONET);
-                        mGeneralData.setProxyEnabled(option.isSelected());
-                        new WebProxyDialog(getContext()).enable(option.isSelected());
-                        if (option.isSelected()) {
-                            settingsPresenter.closeDialog();
-                        }
-
-                        OkHttpManager.unhold();
-                    },
-                    mGeneralData.isProxyEnabled()));
-        }
-    }
-
-    private void appendConscrypt(AppDialogPresenter settingsPresenter, List<OptionItem> options) {
-        options.add(UiOptionItem.from(getContext().getString(R.string.enable_conscrypt),
-                getContext().getString(R.string.enable_conscrypt_desc),
-                option -> {
-                    mNetworkData.setConscryptEnabled(option.isSelected());
-                    mRestartApp = true;
-                },
-                mNetworkData.isConscryptEnabled()));
-    }
-
     private void enableChildMode(boolean enable) {
         mGeneralData.setChildModeEnabled(enable);
 
@@ -768,7 +720,6 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         menuNames.put(MainUIData.MENU_ITEM_EXCLUDE_FROM_CONTENT_BLOCK, R.string.content_block_exclude_channel);
         menuNames.put(MainUIData.MENU_ITEM_MARK_AS_WATCHED, R.string.mark_as_watched);
         menuNames.put(MainUIData.MENU_ITEM_OPEN_CHANNEL, R.string.open_channel);
-        menuNames.put(MainUIData.MENU_ITEM_UPDATE_CHECK, R.string.check_for_updates);
         menuNames.put(MainUIData.MENU_ITEM_CLEAR_HISTORY, R.string.clear_history);
         menuNames.put(MainUIData.MENU_ITEM_TOGGLE_HISTORY, R.string.pause_history);
         menuNames.put(MainUIData.MENU_ITEM_PLAYLIST_ORDER, R.string.playlist_order);
@@ -794,7 +745,6 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         menuNames.put(MainUIData.MENU_ITEM_PIN_TO_SIDEBAR, R.string.pin_unpin_from_sidebar);
         menuNames.put(MainUIData.MENU_ITEM_SHARE_LINK, R.string.share_link);
         menuNames.put(MainUIData.MENU_ITEM_SHARE_EMBED_LINK, R.string.share_embed_link);
-        menuNames.put(MainUIData.MENU_ITEM_SHARE_QR_LINK, R.string.share_qr_link);
         menuNames.put(MainUIData.MENU_ITEM_SELECT_ACCOUNT, R.string.dialog_account_list);
         menuNames.put(MainUIData.MENU_ITEM_MOVE_SECTION_UP, R.string.move_section_up);
         menuNames.put(MainUIData.MENU_ITEM_MOVE_SECTION_DOWN, R.string.move_section_down);

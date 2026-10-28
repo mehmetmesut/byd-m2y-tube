@@ -16,17 +16,13 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.AccountSelectionPresenter;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.BootDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.views.BrowseView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.SplashView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager;
-import com.liskovsoft.smartyoutubetv2.common.misc.GDriveBackupWorker;
-import com.liskovsoft.smartyoutubetv2.common.misc.LocalDriveBackupWorker;
 import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
 import com.liskovsoft.smartyoutubetv2.common.misc.StreamReminderService;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AccountsData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
-import com.liskovsoft.smartyoutubetv2.common.proxy.ProxyManager;
 import com.liskovsoft.smartyoutubetv2.common.utils.IntentExtractor;
 import com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
@@ -45,7 +41,6 @@ public class SplashPresenter extends BasePresenter<SplashView> {
     private final List<IntentProcessor> mIntentChain = new ArrayList<>();
     private String mBridgePackageName;
     private final Runnable mRunBackgroundTasks = this::runBackgroundTasks;
-    private final Runnable mCheckForUpdates = this::checkForUpdates;
 
     private interface IntentProcessor {
         boolean process(Intent intent);
@@ -90,7 +85,6 @@ public class SplashPresenter extends BasePresenter<SplashView> {
             sRunOnce = true;
             RxHelper.setupGlobalErrorHandler();
             initGlobalPrefs();
-            initProxy();
             initVideoStateService();
             initStreamReminderService();
         }
@@ -105,8 +99,6 @@ public class SplashPresenter extends BasePresenter<SplashView> {
     }
 
     private void runPerViewTasks() {
-        Utils.updateRemoteControlService(getContext());
-
         checkMasterPassword(() -> applyNewIntent(getView().getNewIntent()));
 
         showAccountSelectionIfNeeded(); // should be placed after Intent chain
@@ -116,9 +108,6 @@ public class SplashPresenter extends BasePresenter<SplashView> {
     private void runBackgroundTasks() {
         YouTubeServiceManager.instance().refreshCacheIfNeeded(); // warm up player engine
         enableHistoryIfNeeded();
-        Utils.updateChannels(getContext());
-        GDriveBackupWorker.schedule(getContext());
-        LocalDriveBackupWorker.schedule(getContext());
     }
 
     private void showAccountSelectionIfNeeded() {
@@ -133,11 +122,6 @@ public class SplashPresenter extends BasePresenter<SplashView> {
             PlaybackPresenter.instance(getContext()).forceFinish();
             BrowsePresenter.instance(getContext()).updateSections();
         }
-    }
-
-    private void checkForUpdates() {
-        BootDialogPresenter updatePresenter = BootDialogPresenter.instance(getContext());
-        updatePresenter.start();
     }
 
     private void initVideoStateService() {
@@ -164,15 +148,6 @@ public class SplashPresenter extends BasePresenter<SplashView> {
             // 1) Auth token storage init
             // 2) Media service language setup (I assume that context has proper language)
             GlobalPreferences.instance(getContext());
-        }
-    }
-
-    private void initProxy() {
-        if (getContext() != null) {
-            // Apply proxy config after global prefs but before starting networking.
-            if (GeneralData.instance(getContext()).isProxyEnabled()) {
-                new ProxyManager(getContext()).configureSystemProxy();
-            }
         }
     }
 

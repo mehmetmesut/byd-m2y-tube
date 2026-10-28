@@ -49,7 +49,6 @@ public class MotherActivity extends FragmentActivity {
     private static List<OnResult> mOnResults;
     private long mLastKeyDownTime;
     private boolean mEnableThrottleKeyDown;
-    private boolean mIsOculusQuestFixEnabled;
     private boolean mIsFullscreenModeEnabled;
     private boolean mIsBackPressed;
 
@@ -73,7 +72,6 @@ public class MotherActivity extends FragmentActivity {
 
         Log.d(TAG, "Starting %s...", this.getClass().getSimpleName());
 
-        mIsOculusQuestFixEnabled = PlayerTweaksData.instance(this).isOculusQuestFixEnabled();
         mIsFullscreenModeEnabled = GeneralData.instance(this).isFullscreenModeEnabled();
 
         initDpi();
@@ -89,10 +87,6 @@ public class MotherActivity extends FragmentActivity {
             //    Window w = getWindow();
             //    w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             //}
-        }
-
-        if (mIsOculusQuestFixEnabled && VERSION.SDK_INT != 26) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
         mScreensaverManager = new ScreensaverManager(this); // moved below the theme to fix side effects
@@ -197,6 +191,10 @@ public class MotherActivity extends FragmentActivity {
         Context contextWrapper = null;
 
         if (context != null) {
+            // M2Y: Turkish until the user picks a language in the settings ("" there = device language)
+            if (com.liskovsoft.sharedutils.prefs.GlobalPreferences.instance(context).getPreferredLanguage() == null) {
+                new LocaleUpdater(context).setPreferredLanguage("tr");
+            }
             // NOTE: Use only cached metrics. Because metrics creation involves using WindowManager, which isn't available at this stage.
             contextWrapper = LocaleContextWrapper.wrap(context, LocaleUpdater.getSavedLocale(context), sCachedDisplayMetrics);
         }
@@ -331,10 +329,6 @@ public class MotherActivity extends FragmentActivity {
     public void onBackPressed() {
         mIsBackPressed = true;
         super.onBackPressed();
-        // Oculus Quest fix: back button not closing the activity
-        if (mIsOculusQuestFixEnabled) {
-            finish();
-        }
     }
 
     public void addOnPermissions(OnPermissions onPermissions) {

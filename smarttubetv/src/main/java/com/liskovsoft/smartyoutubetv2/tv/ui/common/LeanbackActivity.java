@@ -3,15 +3,19 @@ package com.liskovsoft.smartyoutubetv2.tv.ui.common;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SearchPresenter;
-import com.liskovsoft.smartyoutubetv2.common.autoframerate.ModeSyncManager;
 import com.liskovsoft.smartyoutubetv2.common.misc.GlobalKeyTranslator;
 import com.liskovsoft.smartyoutubetv2.common.misc.MotherActivity;
 import com.liskovsoft.smartyoutubetv2.common.misc.PlayerKeyTranslator;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
+import com.liskovsoft.smartyoutubetv2.tv.R;
+import com.liskovsoft.smartyoutubetv2.tv.ui.browse.BrowseActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.common.keyhandler.DoubleBackManager2;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.PlaybackActivity;
 import com.liskovsoft.smartyoutubetv2.tv.ui.search.tags.SearchTagsActivity;
@@ -22,7 +26,6 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.search.tags.SearchTagsActivity;
 public abstract class LeanbackActivity extends MotherActivity {
     private static final String TAG = LeanbackActivity.class.getSimpleName();
     private UriBackgroundManager mBackgroundManager;
-    private ModeSyncManager mModeSyncManager;
     private DoubleBackManager2 mDoubleBackManager;
     private GlobalKeyTranslator mGlobalKeyTranslator;
     private final Runnable sOnFinish = () -> Utils.forceFinishTheApp(this);
@@ -31,12 +34,36 @@ public abstract class LeanbackActivity extends MotherActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBackgroundManager = new UriBackgroundManager(this);
-        mModeSyncManager = ModeSyncManager.instance();
         mDoubleBackManager = new DoubleBackManager2(this);
         mGlobalKeyTranslator = this instanceof PlaybackActivity ?
                 new PlayerKeyTranslator(this) :
                 new GlobalKeyTranslator(this);
         mGlobalKeyTranslator.apply();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // M2Y: the edge back-swipe is hard to discover on the head unit, so every screen that has a previous screen
+        // (search, channel, sign-in...) shows a back button. The player has its own; the root browse screen has none
+        // (Back there exits the app).
+        if (!(this instanceof PlaybackActivity) && !(this instanceof BrowseActivity)) {
+            addBackButton();
+        }
+    }
+
+    private void addBackButton() {
+        ViewGroup content = findViewById(android.R.id.content);
+        if (content == null || content.findViewById(R.id.m2y_screen_back) != null) {
+            return;
+        }
+        View back = LayoutInflater.from(this).inflate(R.layout.m2y_screen_back, content, false);
+        // a real Back key: fragments, the keyboard and the exit-shortcut settings handle it exactly as the system Back
+        back.setOnClickListener(v -> {
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+        });
+        content.addView(back);
     }
 
     @Override
@@ -73,7 +100,6 @@ public abstract class LeanbackActivity extends MotherActivity {
 
         mGlobalKeyTranslator.apply(); // adapt to state changes (like enter/exit from PIP mode)
 
-        mModeSyncManager.restore(this);
 
         getViewManager().addTop(this);
     }

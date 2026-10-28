@@ -34,8 +34,6 @@ import com.liskovsoft.sharedutils.helpers.FileHelpers;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.querystringparser.UrlQueryStringFactory;
 import com.liskovsoft.smartyoutubetv2.common.R;
-import com.liskovsoft.smartyoutubetv2.common.autoframerate.internal.DisplayHolder.Mode;
-import com.liskovsoft.smartyoutubetv2.common.autoframerate.internal.UhdHelper;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.versions.ExoUtils;
 import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AppPrefs;
@@ -71,9 +69,7 @@ public final class DebugInfoManager implements Runnable, Player.EventListener {
     private boolean mStarted;
     private LinearLayout column1;
     private LinearLayout column2;
-    private UhdHelper mUhdHelper;
     private final List<Pair<String, String>> mVideoInfo = new ArrayList<>();
-    private final List<Pair<String, String>> mDisplayModeId = new ArrayList<>();
     private final List<Pair<String, String>> mDisplayInfo = new ArrayList<>();
     private final String mAppVersion;
 
@@ -123,7 +119,6 @@ public final class DebugInfoManager implements Runnable, Player.EventListener {
 
         mStarted = true;
         mDebugViewGroup.setVisibility(View.VISIBLE);
-        mUhdHelper = new UhdHelper(mContext);
         mPlayer.addListener(this);
         updateAndPost();
     }
@@ -141,7 +136,6 @@ public final class DebugInfoManager implements Runnable, Player.EventListener {
         mDebugViewGroup.setVisibility(View.GONE);
         mPlayer.removeListener(this);
         mDebugViewGroup.removeCallbacks(this);
-        mUhdHelper = null;
     }
 
     // Player.EventListener implementation.
@@ -206,7 +200,6 @@ public final class DebugInfoManager implements Runnable, Player.EventListener {
         appendRuntimeInfo();
         appendPlayerState();
         appendDisplayInfo();
-        appendDisplayModeId();
         //appendPlayerWindowIndex();
         appendVersion();
         appendDeviceNameSDKCache();
@@ -224,7 +217,6 @@ public final class DebugInfoManager implements Runnable, Player.EventListener {
 
     private void updateRareChangedValues() {
         updateVideoInfo();
-        updateDisplayModeId();
         updateDisplayInfo();
     }
 
@@ -321,35 +313,6 @@ public final class DebugInfoManager implements Runnable, Player.EventListener {
         appendRow("Playback info", String.format("paused=%s;state=%s", !mPlayer.getPlayWhenReady(), state));
         appendRow("Volume",
                 String.format("original=%s;normalized=%s", PlayerData.instance(mContext).getPlayerVolume(), Helpers.formatFloat(boost * mPlayer.getVolume())));
-    }
-
-    private void appendDisplayModeId() {
-        for (Pair<String, String> pair : mDisplayModeId) {
-            appendRow(pair.first, pair.second);
-        }
-    }
-
-    private void updateDisplayModeId() {
-        if (mUhdHelper == null) {
-            return;
-        }
-
-        mDisplayModeId.clear();
-
-        Mode currentMode = mUhdHelper.getCurrentMode();
-        Mode[] supportedModes = mUhdHelper.getSupportedModes();
-
-        String bootResolution = AppPrefs.instance(mContext).getBootResolution();
-        String currentResolution = UhdHelper.toResolution(currentMode);
-
-        mDisplayModeId.add(new Pair<>("UI resolution", currentResolution != null ? currentResolution : NOT_AVAILABLE));
-        mDisplayModeId.add(new Pair<>("Boot resolution", bootResolution != null ? bootResolution : NOT_AVAILABLE));
-
-        //mDisplayModeId.add(new Pair<>("Display mode ID", currentMode != null ? String.valueOf(currentMode.getModeId()) : NOT_AVAILABLE));
-        //mDisplayModeId.add(new Pair<>("Display modes length", supportedModes != null ? String.valueOf(supportedModes.length) : NOT_AVAILABLE));
-        String modeId = currentMode != null ? String.valueOf(currentMode.getModeId()) : NOT_AVAILABLE;
-        String modeLength = supportedModes != null ? String.valueOf(supportedModes.length) : NOT_AVAILABLE;
-        mDisplayModeId.add(new Pair<>("Display mode (ID/Length)", modeId + "/" + modeLength));
     }
 
     private void appendDisplayInfo() {

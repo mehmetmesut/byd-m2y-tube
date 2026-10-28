@@ -48,7 +48,6 @@
     <string name="settings_other">Այլ</string>
     <string name="settings_player">Նվագարկիչ</string>
     <string name="settings_language">Լեզու</string>
-    <string name="settings_linked_devices">Կապված սարքեր</string>
     <string name="settings_about">Ծրագրի մասին</string>
     <string name="dialog_account_list">Ընտրեք հաշիվը</string>
     <string name="dialog_account_none">Ընտրված չէ</string>

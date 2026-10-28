@@ -25,6 +25,10 @@ import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.youtubeapi.service.YouTubeServiceManager;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineFormats;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineStore;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineStatus;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.PlaybackCache;
 
 import io.reactivex.disposables.Disposable;
 
@@ -255,6 +259,13 @@ public class VideoLoaderController extends BasePlayerController {
         Utils.post(mShowProgressBar);
         disposeActions();
 
+        OfflineStatus.init(getContext());
+        PlaybackCache.init(getContext()); // M2Y: the last watched videos also play offline
+        OfflineStatus.setCurrentVideoId(video.videoId); // M2Y: the save button shows this video's state
+        if (playSaved(video)) {
+            return;
+        }
+
         ServiceManager service = YouTubeServiceManager.instance();
         MediaItemService mediaItemManager = service.getMediaItemService();
         mFormatInfoAction = mediaItemManager.getFormatInfoObserve(video.videoId)
@@ -263,6 +274,26 @@ public class VideoLoaderController extends BasePlayerController {
                                getPlayer().showProgressBar(false);
                                mErrorFixerController.runFormatErrorAction(error);
                            });
+    }
+
+    /** M2Y: a video saved for offline viewing plays from its files (no network needed, no data used). */
+    private boolean playSaved(Video video) {
+        OfflineStore.Entry saved = OfflineStore.find(getContext(), video.videoId);
+        if (saved == null) {
+            return false;
+        }
+
+        if (video.title == null || video.title.isEmpty()) {
+            video.title = saved.getTitle();
+        }
+        OfflineStore.touch(getContext(), video.videoId);
+        java.util.List<String> paths = new java.util.ArrayList<>();
+        paths.add(saved.getVideoFile().getAbsolutePath());
+        paths.add(saved.getAudioFile().getAbsolutePath());
+        getPlayer().openFiles(paths);
+        getPlayer().showBackground(null);
+        mSuggestionsController.loadSuggestions(video); // only with network; fails quietly offline
+        return true;
     }
 
     private void processFormatInfo(MediaItemFormatInfo formatInfo) {
@@ -274,7 +305,9 @@ public class VideoLoaderController extends BasePlayerController {
 
         String bgImageUrl = null;
 
+        OfflineFormats.setCurrent(formatInfo); // M2Y: the save button downloads from these streams
         getVideo().sync(formatInfo);
+        PlaybackCache.setNames(getVideo().videoId, getVideo().getTitleFull(), getVideo().getAuthor()); // SABR info has none
 
         // Fix stretched video for a couple milliseconds (before the onVideoSizeChanged gets called)
         applyAspectRatio(formatInfo);

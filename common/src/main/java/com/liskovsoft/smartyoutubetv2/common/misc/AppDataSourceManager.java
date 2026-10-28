@@ -6,15 +6,12 @@ import com.liskovsoft.smartyoutubetv2.common.R;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsItem;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.AboutSimpleSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.AccountSettingsPresenter;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.AutoFrameRateSettingsPresenter;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.BackupSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.SponsorBlockSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.DeArrowSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.GeneralSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.LanguageSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.MainUISettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.PlayerSettingsPresenter;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.RemoteControlSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.SearchSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.SubtitleSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem.VideoPreset;
@@ -43,8 +40,6 @@ public class AppDataSourceManager {
         settingItems.add(new SettingsItem(
                 context.getString(R.string.settings_accounts), () -> AccountSettingsPresenter.instance(context).show(), R.drawable.settings_account));
         settingItems.add(new SettingsItem(
-                context.getString(R.string.settings_remote_control), () -> RemoteControlSettingsPresenter.instance(context).show(), R.drawable.settings_cast));
-        settingItems.add(new SettingsItem(
                 context.getString(R.string.settings_language_country), () -> LanguageSettingsPresenter.instance(context).show(), R.drawable.settings_language));
         settingItems.add(new SettingsItem(
                 context.getString(R.string.settings_general), () -> GeneralSettingsPresenter.instance(context).show(), R.drawable.settings_app));
@@ -55,8 +50,6 @@ public class AppDataSourceManager {
         // Don't add afr support check here.
         // Users want even fake afr settings.
         settingItems.add(new SettingsItem(
-                context.getString(R.string.auto_frame_rate), () -> AutoFrameRateSettingsPresenter.instance(context).show(), R.drawable.settings_afr));
-        settingItems.add(new SettingsItem(
                 context.getString(R.string.subtitle_category_title), () -> SubtitleSettingsPresenter.instance(context).show(), R.drawable.settings_subtitles));
         settingItems.add(new SettingsItem(
                 context.getString(R.string.settings_search), () -> SearchSettingsPresenter.instance(context).show(), R.drawable.settings_search));
@@ -64,9 +57,6 @@ public class AppDataSourceManager {
                 context.getString(R.string.content_block_provider), () -> SponsorBlockSettingsPresenter.instance(context).show(), R.drawable.settings_block));
         settingItems.add(new SettingsItem(
                 context.getString(R.string.dearrow_provider), () -> DeArrowSettingsPresenter.instance(context).show(), R.drawable.settings_dearrow));
-        settingItems.add(new SettingsItem(
-                context.getString(R.string.app_backup_restore), () -> BackupSettingsPresenter.instance(context).show(), R.drawable.settings_backup));
-
         settingItems.add(new SettingsItem(
                 context.getString(R.string.settings_about), () -> AboutSimpleSettingsPresenter.instance(context).show(), R.drawable.settings_about));
 

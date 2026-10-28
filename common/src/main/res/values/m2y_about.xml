@@ -11,4 +11,28 @@
     </string-array>
     <string name="m2y_more_settings">More settings…</string>
     <string name="m2y_music">Music</string>
+    <string name="m2y_recommended">%1$s · Recommended</string>
+    <string name="m2y_default_quality">Default · 480p 30fps vp9 · Recommended (quick start, less data)</string>
+    <string name="m2y_save_offline">Save for offline</string>
+    <string name="m2y_save_quality">Quality</string>
+    <string name="m2y_saved_videos">Saved</string>
+    <string name="m2y_memory_videos">In memory</string>
+    <string name="m2y_saving">Saving for offline</string>
+    <string name="m2y_saving_started">Saving (%1$s)… you can keep watching · %2$s used</string>
+    <string name="m2y_saved_done">Saved: %1$s</string>
+    <string name="m2y_save_failed">Could not save: %1$s</string>
+    <string name="m2y_save_no_space">Not enough free space to save: %1$s</string>
+    <string name="m2y_save_unavailable">This video cannot be saved (no direct stream)</string>
+    <string name="m2y_delete_saved">Delete saved copy</string>
+    <string name="m2y_deleted">Saved copy deleted</string>
+    <string name="m2y_saved_usage">%1$s / %2$s</string>
+    <string name="m2y_offline_badge">Saved · %1$s</string>
+    <string name="m2y_saving_percent">Downloading · %1$d%%</string>
+    <string name="m2y_save_cancel">Cancel download</string>
+    <string name="m2y_saved_row">✓ Saved · %1$s · %2$s</string>
+    <string name="m2y_save_cancelled">Download cancelled: %1$s</string>
+    <string name="m2y_save_preparing">Getting the qualities ready… tap again in a moment</string>
+    <string name="m2y_header_live">Live</string>
+    <string name="m2y_offline_showing_saved">No internet: showing saved videos</string>
+    <string name="m2y_save_blocked">YouTube does not allow saving this video right now: %1$s</string>
 </resources>

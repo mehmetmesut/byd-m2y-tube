@@ -55,6 +55,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Observable;
+import com.liskovsoft.sharedutils.helpers.MessageHelpers;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineStore;
 import io.reactivex.disposables.Disposable;
 
 public class BrowsePresenter extends BasePresenter<BrowseView> implements SectionPresenter, VideoGroupPresenter, AccountChangeListener {
@@ -67,6 +69,10 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
     private final Map<Integer, Observable<List<MediaGroup>>> mRowMapping;
     private final Map<Integer, Callable<List<SettingsItem>>> mSettingsGridMapping;
     private final Map<Integer, Callable<List<Video>>> mLocalGridMappings;
+    private static final int SECTION_M2Y_SAVED = 1001; // M2Y: not a YouTube group id
+    private static final int SECTION_M2Y_MEMORY = 1002; // M2Y: the last watched videos kept for offline (PlaybackCache)
+    private static final long ROW_STAGGER_MS = 34; // about two frames at 60 Hz
+    private int mRowsGeneration;
     private final Map<Integer, BrowseSection> mSectionsMapping;
     private final AppDataSourceManager mDataSourcePresenter;
     private final BrowseProcessorManager mBrowseProcessor;
@@ -191,7 +197,7 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         mSectionsMapping.put(MediaGroup.TYPE_TRENDING, new BrowseSection(MediaGroup.TYPE_TRENDING, getContext().getString(R.string.header_trending), BrowseSection.TYPE_ROW, R.drawable.icon_trending));
         mSectionsMapping.put(MediaGroup.TYPE_KIDS_HOME, new BrowseSection(MediaGroup.TYPE_KIDS_HOME, getContext().getString(R.string.header_kids_home), BrowseSection.TYPE_ROW, R.drawable.icon_kids_home));
         mSectionsMapping.put(MediaGroup.TYPE_SPORTS, new BrowseSection(MediaGroup.TYPE_SPORTS, getContext().getString(R.string.header_sports), BrowseSection.TYPE_ROW, R.drawable.icon_sports));
-        mSectionsMapping.put(MediaGroup.TYPE_LIVE, new BrowseSection(MediaGroup.TYPE_LIVE, getContext().getString(R.string.badge_live), BrowseSection.TYPE_ROW, R.drawable.icon_live));
+        mSectionsMapping.put(MediaGroup.TYPE_LIVE, new BrowseSection(MediaGroup.TYPE_LIVE, getContext().getString(R.string.m2y_header_live), BrowseSection.TYPE_ROW, R.drawable.icon_live));
         mSectionsMapping.put(MediaGroup.TYPE_MY_VIDEOS, new BrowseSection(MediaGroup.TYPE_MY_VIDEOS, getContext().getString(R.string.my_videos), BrowseSection.TYPE_GRID, R.drawable.icon_playlist));
         mSectionsMapping.put(MediaGroup.TYPE_GAMING, new BrowseSection(MediaGroup.TYPE_GAMING, getContext().getString(R.string.header_gaming), BrowseSection.TYPE_ROW, R.drawable.icon_gaming));
         if (!Helpers.equalsAny(country, "RU", "BY")) {
@@ -206,6 +212,8 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         mSectionsMapping.put(MediaGroup.TYPE_USER_PLAYLISTS, new BrowseSection(MediaGroup.TYPE_USER_PLAYLISTS, getContext().getString(R.string.header_playlists), BrowseSection.TYPE_ROW, R.drawable.icon_playlist, false));
         mSectionsMapping.put(MediaGroup.TYPE_NOTIFICATIONS, new BrowseSection(MediaGroup.TYPE_NOTIFICATIONS, getContext().getString(R.string.header_notifications), BrowseSection.TYPE_GRID, R.drawable.icon_notification, false));
         mSectionsMapping.put(MediaGroup.TYPE_PLAYBACK_QUEUE, new BrowseSection(MediaGroup.TYPE_PLAYBACK_QUEUE, getContext().getString(R.string.playback_queue_category_title), BrowseSection.TYPE_GRID, R.drawable.icon_queue, false));
+        mSectionsMapping.put(SECTION_M2Y_SAVED, new BrowseSection(SECTION_M2Y_SAVED, getContext().getString(R.string.m2y_saved_videos), BrowseSection.TYPE_GRID, R.drawable.icon_m2y_save, false));
+        mSectionsMapping.put(SECTION_M2Y_MEMORY, new BrowseSection(SECTION_M2Y_MEMORY, getContext().getString(R.string.m2y_memory_videos), BrowseSection.TYPE_GRID, R.drawable.icon_m2y_memory, false));
 
         if (getSidebarService().isSettingsSectionEnabled()) {
             mSectionsMapping.put(MediaGroup.TYPE_SETTINGS, new BrowseSection(MediaGroup.TYPE_SETTINGS, getContext().getString(R.string.header_settings), BrowseSection.TYPE_SETTINGS_GRID, R.drawable.icon_settings));
@@ -250,6 +258,17 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
                 }
             }
         }
+
+        // M2Y: saved videos right after Home and the ones kept from watching right below, also when the sidebar
+        // settings do not list them (reachable offline)
+        BrowseSection saved = mSectionsMapping.get(SECTION_M2Y_SAVED);
+        if (saved != null && !mSections.contains(saved)) {
+            mSections.add(Math.min(1, mSections.size()), saved);
+        }
+        BrowseSection memory = mSectionsMapping.get(SECTION_M2Y_MEMORY);
+        if (memory != null && !mSections.contains(memory)) {
+            mSections.add(mSections.indexOf(saved) + 1, memory);
+        }
     }
 
     private void initPinnedCallbacks() {
@@ -269,6 +288,28 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
     private void initLocalGridMapping() {
         mLocalGridMappings.put(MediaGroup.TYPE_PLAYBACK_QUEUE, () -> Playlist.instance().getAllReversed());
         mLocalGridMappings.put(MediaGroup.TYPE_BLOCKED_CHANNELS, this::getBlockedChannels);
+        mLocalGridMappings.put(SECTION_M2Y_SAVED, () -> getSavedVideos(false));
+        mLocalGridMappings.put(SECTION_M2Y_MEMORY, () -> getSavedVideos(true));
+    }
+
+    /**
+     * M2Y: videos kept for offline viewing, saved by hand or ([auto]) kept from watching; a card opens the player,
+     * which plays the saved files.
+     */
+    private List<Video> getSavedVideos(boolean auto) {
+        List<Video> result = new ArrayList<>();
+        for (OfflineStore.Entry entry : OfflineStore.list(getContext())) {
+            if (entry.getAuto() != auto) {
+                continue;
+            }
+            Video video = Video.from(entry.getVideoId());
+            video.title = entry.getTitle();
+            video.secondTitle = getContext().getString(R.string.m2y_offline_badge, entry.getLabel()) + " · " + entry.getAuthor();
+            video.channelId = entry.getChannelId();
+            video.cardImageUrl = entry.getThumbFile().isFile() ? android.net.Uri.fromFile(entry.getThumbFile()).toString() : null;
+            result.add(video);
+        }
+        return result;
     }
 
     private List<Video> getBlockedChannels() {
@@ -738,6 +779,10 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
 
                             filterHomeIfNeeded(mediaGroups);
 
+                            // M2Y: one row per frame or two, not all rows in one frame (the car measured a 300 ms layout
+                            // freeze when Home arrived: ~20 cards built at once); a section change drops the pending rows
+                            int generation = mRowsGeneration;
+                            long delayMs = 0;
                             for (MediaGroup mediaGroup : mediaGroups) {
                                 if (mediaGroup.isEmpty()) {
                                     Log.e(TAG, "loadRowsHeader: MediaGroup is empty. Group Name: " + mediaGroup.getTitle());
@@ -750,10 +795,20 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
                                     videoGroup.setTitle(getContext().getString(R.string.suggestions));
                                 }
 
-                                getView().updateSection(videoGroup);
-                                mBrowseProcessor.process(videoGroup);
-
-                                continueGroupIfNeeded(videoGroup, false);
+                                Runnable addRow = () -> {
+                                    if (generation != mRowsGeneration || getView() == null) {
+                                        return;
+                                    }
+                                    getView().updateSection(videoGroup);
+                                    mBrowseProcessor.process(videoGroup);
+                                    continueGroupIfNeeded(videoGroup, false);
+                                };
+                                if (delayMs == 0) {
+                                    addRow.run();
+                                } else {
+                                    Utils.postDelayed(addRow, delayMs);
+                                }
+                                delayMs += ROW_STAGGER_MS;
                             }
                         },
                         error -> {
@@ -920,6 +975,7 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
     }
 
     private void disposeActions() {
+        mRowsGeneration++; // M2Y: rows still waiting to be added belong to the old section
         RxHelper.disposeActions(mActions);
         Utils.removeCallbacks(mRefreshSection);
         mLastUpdateTimeMs = -1;
@@ -1187,6 +1243,15 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         }
 
         getView().showProgressBar(false);
+
+        // M2Y: no internet but saved videos on the device → open them instead of an error page (hand-saved ones first)
+        if (error != null && Helpers.containsAny(String.valueOf(error.getMessage()), "Unable to resolve host", "UnknownHost", "ConnectException", "Failed to connect")
+                && (mCurrentSection == null || (mCurrentSection.getId() != SECTION_M2Y_SAVED && mCurrentSection.getId() != SECTION_M2Y_MEMORY))
+                && !OfflineStore.list(getContext()).isEmpty()) {
+            MessageHelpers.showMessage(getContext(), R.string.m2y_offline_showing_saved);
+            selectSection(getSavedVideos(false).isEmpty() ? SECTION_M2Y_MEMORY : SECTION_M2Y_SAVED);
+            return;
+        }
 
         if (getView().isEmpty() || error != null) {
             ErrorFragmentData errorFragmentData;

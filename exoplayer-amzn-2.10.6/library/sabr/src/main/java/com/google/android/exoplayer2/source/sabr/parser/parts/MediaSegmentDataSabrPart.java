@@ -14,6 +14,8 @@ public class MediaSegmentDataSabrPart implements SabrPart {
     public final ExtractorInput data;
     public final int contentLength;
     public final int segmentStartBytes;
+    /** M2Y: offset of this part in the stream's original file, -1 when the server did not say */
+    public final long fileStartBytes;
 
     public MediaSegmentDataSabrPart(
             FormatSelector formatSelector,
@@ -24,7 +26,8 @@ public class MediaSegmentDataSabrPart implements SabrPart {
             long startTimeMs,
             ExtractorInput data,
             int contentLength,
-            int segmentStartBytes) {
+            int segmentStartBytes,
+            long fileStartBytes) {
         this.formatSelector = formatSelector;
         this.formatId = formatId;
         this.sequenceNumber = sequenceNumber;
@@ -34,5 +37,6 @@ public class MediaSegmentDataSabrPart implements SabrPart {
         this.data = data;
         this.contentLength = contentLength;
         this.segmentStartBytes = segmentStartBytes;
+        this.fileStartBytes = fileStartBytes;
     }
 }

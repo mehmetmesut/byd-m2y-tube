@@ -49,7 +49,6 @@
   <string name="settings_other">Egyebek</string>
   <string name="settings_player">Videólejátszó</string>
   <string name="settings_language">Nyelv</string>
-  <string name="settings_linked_devices">Társított eszközök</string>
   <string name="settings_about">Rólunk</string>
   <string name="dialog_account_list">Aktuális fiók</string>
   <string name="dialog_account_none">Fiók nélkül</string>
@@ -159,11 +158,6 @@
   <string name="player_remember_speed">Lejátszási sebesség</string>
   <string name="mark_channel_as_watched">Megjelölés nézettként</string>
   <string name="channel_marked_as_watched">Csatorna nézettként jelölve</string>
-  <string name="dialog_add_device">Eszköz hozzáadása</string>
-  <string name="dialog_remove_all_devices">Minden eszköz törlése</string>
-  <string name="device_link_enabled">Link engedélyezve</string>
-  <string name="device_connected">Eszköz \"%s\" csatlakoztatva</string>
-  <string name="device_disconnected">Eszköz \"%s\" leválasztva</string>
   <string name="settings_ui_scale">Felületméretezés</string>
   <string name="msg_restart_app">Kérjük, indítsa újra az alkalmazást a beállítások érvényesítéséhez</string>
   <string name="settings_block">Tartalomblokkolás</string>
@@ -189,7 +183,6 @@
   <string name="intent_force_close">Kényszerített kilépés, ha a videót külső forrásból nyitották meg</string>
   <string name="btn_confirm">Megerősítés</string>
   <string name="player_low_video_quality">Alacsony videóminőség</string>
-  <string name="remote_session_closed">A távoli munkamenet lezárult</string>
   <string name="msg_mode_switch_error">Nem lehet átállítani a megjelenítési módot \"%s\"</string>
   <string name="msg_player_error">Lejátszási hiba történt %s. A lejátszás újraindítása..</string>
   <string name="open_playlist">Videólista megnyitása</string>
@@ -238,8 +231,6 @@
   <string name="add_remove_from_playback_queue">Videó Hozzáadása/eltávolítása</string>
   <string name="add_to_playback_queue">Hozzáadás a Megnézendő videókhoz</string>
   <string name="remove_from_playback_queue">Videó eltávolítása</string>
-  <string name="proxy_enabled">Proxy engedélyezve</string>
-  <string name="proxy_disabled">Proxy letiltva</string>
   <string name="uploads_row_name">Feltöltések</string>
   <string name="playlists_row_name">Létrehozott videólisták</string>
   <string name="popular_uploads_row_name">Népszerű feltöltések</string>
@@ -247,9 +238,6 @@
   <string name="covid_news_row_name">COVID-19 hírek</string>
   <string name="enable_voice_search">Hangalapú keresés engedélyezése (firmware támogatás szükséges)</string>
   <string name="subscribe_unsubscribe_from_channel">Feliratkozás/Leiratkozás a csatornáról</string>
-  <string name="app_backup_restore">Biztonsági mentés</string>
-  <string name="app_backup">Adatok biztonsági mentése</string>
-  <string name="app_restore">Adatok visszaállítása biztonsági másolatból</string>
   <string name="skip_each_segment_once">Az egyes szegmenseket csak egyszer hagyja ki</string>
   <string name="disable_ok_long_press">Az OK gomb hosszú lenyomása tiltása</string>
   <string name="player_time_correction">Az idő megjelenítése a sebesség függvényében</string>
@@ -258,8 +246,6 @@
   <string name="refresh_section">Videólista frissítése</string>
   <string name="live_now_row_name">Élő adás</string>
   <string name="run_in_background">Lejátszás a háttérben</string>
-  <string name="settings_remote_control">Távvezérlés</string>
-  <string name="background_service_started">Elindult a háttér szolgáltatás</string>
   <string name="dialog_add_to">Hozzáadás ehhez: %s</string>
   <string name="dialog_remove_from">Eltávolítás innen: %s</string>
   <string name="added_to">Hozzáadva ehhez: %s</string>
@@ -325,37 +311,10 @@
   <string name="player_seek_confirmation_pause">Megerősítéssel (szünet tekerés közben)</string>
   <string name="player_seek_confirmation_play">Megerősítéssel (lejátszás tekerés közben)</string>
   <string name="hide_shorts_from_home">Rövid klipek elrejtése a kezdőlapon</string>
-  <string name="finish_on_disconnect">Az alkalmazás bezárása a telefon/táblagép leválasztása után</string>
   <string name="update_error">Frissítési hiba!</string>
   <string name="hide_shorts_from_history">Rövid klipek elrejtése az előzményekből</string>
   <string name="disable_screensaver">Képernyővédő tiltása</string>
   <string name="description_not_found">Leírás nem található</string>
-  <string name="proxy_port_hint">Proxy port</string>
-  <string name="proxy_host_hint">Proxy gépnév vagy IP</string>
-  <string name="proxy_username_hint">Proxy felhasználónév</string>
-  <string name="proxy_password_hint">Proxy jelszó</string>
-  <string name="proxy_type">Proxy típus</string>
-  <string name="enable_web_proxy">Web proxy használata</string>
-  <string name="proxy_not_supported">Web proxy használata (Android 4.4+)</string>
-  <string name="proxy_test_btn">Teszt</string>
-  <string name="proxy_settings_title">Proxy szerver beállítások</string>
-  <string name="proxy_test_cancelled">Teszt#%d: törölve.</string>
-  <string name="proxy_type_invalid">Proxy típus nincs beállítva</string>
-  <string name="proxy_host_invalid">Proxy nincs beállítva</string>
-  <string name="proxy_port_invalid">Érvénytelen proxy port, &gt;0</string>
-  <string name="proxy_credentials_invalid">Érvénytelen felhasználónév vagy jelszó</string>
-  <string name="proxy_test_aborted">A teszt megszakadt, először javítsa ki a proxy beállításait.</string>
-  <string name="proxy_application_aborted">Kérjük, először javítsa ki a proxy beállításait.</string>
-  <string name="proxy_test_start">Teszt#%d: %s …</string>
-  <string name="proxy_test_error">Hiba#%d: %s …</string>
-  <string name="proxy_test_status">Státusz#%d: %s %d %s</string>
-  <string name="openvpn_config_address_hint">Konfigurációs fájl címe (*.ovpn)</string>
-  <string name="enable_openvpn">OpenVPN használata</string>
-  <string name="openvpn_settings_title">OpenVPN beállítások</string>
-  <string name="openvpn_application_aborted">Kérjük, először javítsa ki az OpenVPN beállításait.</string>
-  <string name="openvpn_test_aborted">A teszt megszakadt, először javítsa ki az OpenVPN beállításait.</string>
-  <string name="openvpn_address_invalid">Az OpenVPN konfigurációs címe nincs beállítva.</string>
-  <string name="internet_censorship">Proxy beállítása</string>
   <string name="rename_section">Bejegyzés átnevezése</string>
   <string name="simple_edit_value_hint">Új érték</string>
   <string name="seek_interval">Gyorstekerési intervallum</string>
@@ -439,7 +398,6 @@
   <string name="player_ending_time">Vége: %s</string>
   <string name="badge_new_content">ÚJ TARTALOM</string>
   <string name="badge_live">ÉLŐ</string>
-  <string name="add_device_view_description">Az eszköz összekapcsolásához írja be ezt a kódot telefonja YouTube-alkalmazásában a Beállítások/Megtekintés tévén szakaszban. \n MEGJEGYZÉS. Csak Gboard billentyűzettel működik.</string>
   <string name="playback_controls_repeat_pause">Szünet ismétlése</string>
   <string name="playback_controls_repeat_list">Ismétlési lista</string>
   <string name="action_subscribe_off">Feliratkozás kikapcsolva</string>
@@ -552,7 +510,6 @@
   <string name="old_update_notifications">A frissítési értesítések régi megjelenése</string>
   <string name="mark_as_watched">Megjelölés nézettként</string>
   <string name="player_ui_animations">UI animációk engedélyezése</string>
-  <string name="player_likes_count">A Tetszik/Nem tetszik számának megjelenítése</string>
   <string name="sorting_alphabetically2">Rendezés ABC szerint</string>
   <string name="sorting_default">Alapértelmezett rendezés</string>
   <string name="content_block_exclude_channel">Csatorna kizárása a SponsorBlock-ból</string>
@@ -598,7 +555,6 @@
   <string name="protect_account_with_password">Védje ezt a fiókot jelszóval</string>
   <string name="multi_profiles">Használjon külön beállításokat minden fiókhoz</string>
   <string name="enter_account_password">Adja meg a fiók jelszavát</string>
-  <string name="show_connect_messages">Csatlakozási üzenetek megjelenítése</string>
   <string name="prefer_avc_over_vp9_desc">Figyelem!: Maximum 1080p</string>
   <string name="news_row_name">Hírek</string>
   <string name="play_next">Következő lejátszása</string>
@@ -613,8 +569,6 @@
   <string name="hide_unwanted_content">Kéretlen tartalom elrejtése</string>
   <string name="hide_watched_from_home">Megnézett videók elrejtése a Főoldalról</string>
   <string name="login_from_browser">Bejelentkezés böngészőből</string>
-  <string name="disable_remote_history">Előzmények kikapcsolása távvezérlő használatakor</string>
-  <string name="remote_control_permission">A háttérben való távvezérléshez átfedés-engedély szükséges</string>
   <string name="keyboard_fix">Megakadályozza a billentyűzet megjelenítését az OK gomb megnyomásával (G20s és egyebek)</string>
   <string name="hide_shorts_channel">Rövid klipek elrejtése a Csatornák menüből</string>
   <string name="channel_filter_hint">Csatornaszűrés</string>
@@ -660,9 +614,6 @@
   <string name="prefer_ipv4_desc">Kijavíthatja azokat a helyzeteket, amikor az alkalmazás egyáltalán nem működik.\nMegjegyzés. Lefagyást és összeomlást okozhat (különösen Android 8 vagy Dune HD eszközökön)</string>
   <string name="long_press_for_settings">HOSSZAN MEGNYOMVA: Beállítások</string>
   <string name="long_press_for_options">HOSSZAN MEGNYOMVA: Opciók</string>
-  <string name="device_specific_backup">Biztonsági mentés csak ehhez az eszközhöz</string>
-  <string name="local_backup">Helyi biztonsági mentés</string>
-  <string name="auto_backup">Automatikus biztonsági mentés (naponta egyszer)</string>
   <string name="repeat_mode_reverse_list">Játssza le a lejátszási listát vagy a csatornavideókat fordított sorrendben</string>
   <string name="unpin_group_from_sidebar">A csoport eltávolítása</string>
   <string name="calm_msg">Rendbe hozzuk a problémát. Időnként ellenőrizze a frissítéseket</string>
@@ -689,7 +640,6 @@
   <string name="context_menu_sorting">Helyi menü rendezése</string>
   <string name="hide_shorts_from_search">Rövid klipek elrejtése a keresési eredményekből</string>
   <string name="video_flip">Tükrözés</string>
-  <string name="import_subscriptions_group">Importálás</string>
   <string name="lb_playback_controls_closed_captioning_disable">Feliratozás letiltása</string>
   <string name="lb_playback_controls_closed_captioning_enable">Feliratozás engedélyezése</string>
   <string name="my_videos">Saját videók</string>
@@ -702,7 +652,6 @@
   <string name="card_preview_full">Videó hanggal</string>
   <string name="card_preview">Előnézet</string>
   <string name="card_unlocalized_titles">Nem lokalizált videócímek</string>
-  <string name="oculus_quest_fix">Oculus Quest javítása</string>
   <string name="original_lang">Eredeti</string>
   <string name="remove_playlist_fmt">%s végleges eltávolítása\?</string>
   <string name="play_from_start">Lejátszás az elejétől</string>
@@ -717,10 +666,6 @@
   <string name="channel_unblocked">Csatorna blokkolás feloldva</string>
   <string name="header_blocked_channels">Blokkolt csatornák</string>
   <string name="msg_no_blocked_channels">Nincs blokkolt csatorna</string>
-  <string name="auto_backup_category">Automata biztonsági mentés</string>
-  <string name="once_a_day">Naponta</string>
-  <string name="once_a_week">Hetente</string>
-  <string name="once_a_month">Havonta</string>
   <string name="action_debug_info">Hibakeresési információ</string>
   <string name="confirm_block_channel">Az összes tartalom elrejtése a %s-ból</string>
   <string name="player_time_stretching">Hangsebesség</string>
@@ -728,7 +673,6 @@
   <string name="queue_respects_playback_mode">A várólista tiszteletben tartja a lejátszási módot</string>
   <string name="ignore_short_segments">Rövid szegmensek figyelmen kívül hagyása</string>
   <string name="fix_empty_subs_and_channels">Az üres feliratkozások és csatornák javítása</string>
-  <string name="local_backup_not_supported">Az automatikus biztonsági mentés az Android TV 11+ rendszeren a rendszerkorlátozások miatt nem támogatott. Használja helyette a GDRive-ot.</string>
   <string name="rounded_card_corners">Lekerekített kártya sarkok</string>
   <string name="install_bridge">ATV/Amazon híd telepítése</string>
   <string name="prefer_google_dns">Google DNS-t előnyben részesítése</string>
@@ -740,12 +684,7 @@
   <string name="player_unexpected_error">Váratlan lejátszási hiba</string>
   <string name="player_toggle_speed">Lejátszási sebesség be/ki váltása</string>
   <string name="remove_from_search_history">Eltávolítás a keresési előzményekből</string>
-  <string name="app_restore_desc">MEGJEGYZÉS: A biztonsági mentési zip fájlt ebbe a mappába kell másolni manuálisan vagy a fájlkezelőben, használja a \'Megnyitás ezzel\'</string>
-  <string name="app_backup_desc">MEGJEGYZÉS: A biztonsági mentés zip formátumban készül</string>
   <string name="add_video_to_watch_later">Hozzáadás a Watchhoz később</string>
   <string name="remove_video_to_watch_later">Eltávolítás a Watchból később</string>
-  <string name="enable_conscrypt">Conscrypt engedélyezése</string>
-  <string name="enable_conscrypt_desc">Javítja a HTTPS, TLS - és VPN-kompatibilitást egyes eszközökön, de esetenként lejátszási problémákat vagy lassabb hálózati teljesítményt okozhat</string>
-  <string name="network_settings">Hálózati beállítások</string>
   <string name="comments_disabled">A komment szakasz letiltva</string>
 </resources>

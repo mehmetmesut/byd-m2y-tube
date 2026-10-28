@@ -72,6 +72,7 @@ import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.m2y.MusicCover;
 import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.m2y.OptionsPopup;
+import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.m2y.DownloadBadge;
 import com.liskovsoft.smartyoutubetv2.tv.adapter.VideoGroupObjectAdapter;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.CustomListRowPresenter;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.ShortsCardPresenter;
@@ -113,11 +114,11 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
     private static final long BACK_BUTTON_SYNC_DELAY_MS = 400; // after the row scroll animation settles
     private static final int SWIPE_DOWN_MIN_DP = 60;
     private static final int SWIPE_SIDE_MIN_DP = 120;
-    private static final long POPUP_TOUCH_MAX_AGE_MS = 1_500; // a button press without a recent touch came from a remote
     private float mLastTouchRawX;
     private float mLastTouchRawY;
-    private long mLastTouchUptime;
+    private boolean mLastInputFromRemote; // a D-pad/OK key came after the last touch: the side dialog, not the compact list
     private MusicCover mMusicCover;
+    private DownloadBadge mDownloadBadge;
     private boolean mSwallowGesture; // the touch started with the controls hidden: it must not reach the rows that appear under the finger
     private static final int BACK_BUTTON_MAX_SCROLL_DP = 48;
     private final Runnable mBackButtonSync = () -> showBackButton(isBackButtonWanted());
@@ -235,6 +236,8 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
     public void onStop() {
         super.onStop();
 
+        OptionsPopup.dismiss(); // a popup window left open would leak this activity
+
         if (Util.SDK_INT > 23) {
             maybeReleasePlayer();
         }
@@ -272,7 +275,12 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
     }
 
     public void onDispatchKeyEvent(KeyEvent event) {
-        // NOP
+        // the car's steering-wheel and media keys must not count as a remote
+        int code = event.getKeyCode();
+        if (event.getAction() == KeyEvent.ACTION_DOWN && ((code >= KeyEvent.KEYCODE_DPAD_UP && code <= KeyEvent.KEYCODE_DPAD_CENTER)
+                || code == KeyEvent.KEYCODE_ENTER || code == KeyEvent.KEYCODE_NUMPAD_ENTER)) {
+            mLastInputFromRemote = true;
+        }
     }
 
     /** @return true if the views must not get this event */
@@ -297,7 +305,7 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
         if (event.getAction() == MotionEvent.ACTION_DOWN) { // anchor for the compact option list
             mLastTouchRawX = event.getRawX();
             mLastTouchRawY = event.getRawY();
-            mLastTouchUptime = event.getEventTime();
+            mLastInputFromRemote = false;
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP && getView() != null) {
@@ -316,8 +324,7 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
     /** M2Y: a confirmed single tap on the picture (not on a control) toggles play/pause. */
     private GestureDetector getVideoTapDetector() {
         if (mVideoTapDetector == null) {
-            mVideoTapDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
-                private boolean mControlsAtDown; // the gesture started on the controls row, not on the suggestions
+            mVideoTapDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {                private boolean mControlsAtDown; // the gesture started on the controls row, not on the suggestions
                 private boolean mOnControlAtDown; // started on a button, the seek bar or a card row (they scroll sideways)
                 private boolean mOverlayAtDown; // with the controls hidden, the first tap only shows them
 
@@ -377,6 +384,9 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
                     return false;
                 }
             });
+            // SimpleOnGestureListener also listens for double taps, and then a quick second tap never reaches
+            // onSingleTapUp (the play/pause tap would be lost)
+            mVideoTapDetector.setOnDoubleTapListener(null);
         }
 
         return mVideoTapDetector;
@@ -456,7 +466,8 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
 
     @Override
     public boolean showOptionsPopup(List<OptionItem> items, Runnable onMore, Runnable onClose) {
-        if (getView() == null || android.os.SystemClock.uptimeMillis() - mLastTouchUptime > POPUP_TOUCH_MAX_AGE_MS) {
+        // M2Y: no time limit since the touch; on the car's touch-only screen the side dialog came up instead of this list
+        if (getView() == null || mLastInputFromRemote) {
             return false;
         }
 
@@ -610,6 +621,8 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
     }
 
     private void releasePlayer() {
+        OptionsPopup.dismiss();
+
         if (mPlayer != null) {
             Log.d(TAG, "releasePlayer: Start releasing player engine...");
             mPlaybackPresenter.onEngineReleased();
@@ -695,6 +708,9 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
         createPlayer();
 
         mMusicCover = MusicCover.attach(getSurfaceView(), mPlayer, this); // M2Y: cover while "Music" quality plays audio only
+        if (mDownloadBadge == null) {
+            mDownloadBadge = DownloadBadge.attach(getSurfaceView()); // M2Y: download ring while the controls are hidden
+        }
 
         createPlayerGlue();
 
@@ -1106,14 +1122,6 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
             result = TextUtils.concat( result, " ", Video.TERTIARY_TEXT_DELIM, " ", Utils.color(getContext().getString(R.string.badge_live), ContextCompat.getColor(getContext(), R.color.red)));
         }
 
-        if (getContext() != null && video.likeCount != null) {
-            result = TextUtils.concat(result, " ", Video.TERTIARY_TEXT_DELIM, " ", video.likeCount, Helpers.NON_BREAKING_SPACE, Helpers.THUMB_UP); // color of thumb cannot be changed
-        }
-
-        if (getContext() != null && video.dislikeCount != null) {
-            result = TextUtils.concat(result, " ", Video.TERTIARY_TEXT_DELIM, " ", video.dislikeCount, Helpers.NON_BREAKING_SPACE, Helpers.THUMB_DOWN); // color of thumb cannot be changed
-        }
-
         if (getContext() != null && video.subscriberCount != null) {
             result = TextUtils.concat(result, " ", Video.TERTIARY_TEXT_DELIM, " ", video.subscriberCount.replace(" ", Helpers.NON_BREAKING_SPACE));
         }
@@ -1216,6 +1224,11 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
     @Override
     public void openUrlList(List<String> urlList) {
         mExoPlayerController.openUrlList(urlList);
+    }
+
+    @Override
+    public void openFiles(List<String> paths) {
+        mExoPlayerController.openFiles(paths);
     }
 
     @Override
@@ -1487,6 +1500,9 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
         if (mPlaybackPresenter != null) {
             mPlaybackPresenter.onControlsShown(true);
         }
+        if (mDownloadBadge != null) {
+            mDownloadBadge.setControlsShown(true);
+        }
 
         mIsControlsShownPreviously = true;
     }
@@ -1508,6 +1524,9 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
 
         if (mPlaybackPresenter != null) {
             mPlaybackPresenter.onControlsShown(false);
+        }
+        if (mDownloadBadge != null) {
+            mDownloadBadge.setControlsShown(false);
         }
 
         mIsControlsShownPreviously = false;

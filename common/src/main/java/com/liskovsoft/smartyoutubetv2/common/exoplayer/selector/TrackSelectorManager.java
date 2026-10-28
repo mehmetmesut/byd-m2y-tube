@@ -1,7 +1,6 @@
 package com.liskovsoft.smartyoutubetv2.common.exoplayer.selector;
 
 import android.content.Context;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -352,6 +351,10 @@ public class TrackSelectorManager implements TrackSelectorCallback {
 
         MediaTrack matchedTrack = findBestMatch(selectedTrack);
 
+        if (matchedTrack.groupIndex == -1 && selectedTrack.rendererIndex == RENDERER_INDEX_VIDEO) {
+            matchedTrack = lowestTrack(selectedTrack.rendererIndex, matchedTrack); // M2Y: nothing at or below the choice
+        }
+
         if (matchedTrack.groupIndex != -1) {
             Definition definition = new Definition(groups.get(matchedTrack.groupIndex), matchedTrack.trackIndex);
             definitionPair = new Pair<>(definition, matchedTrack);
@@ -523,7 +526,7 @@ public class TrackSelectorManager implements TrackSelectorCallback {
                 }
 
                 for (MediaTrack mediaTrack : trackGroup) {
-                    if (mediaTrack == null || hasPlaybackGlitch(mediaTrack)) {
+                    if (mediaTrack == null) {
                         continue;
                     }
 
@@ -592,6 +595,36 @@ public class TrackSelectorManager implements TrackSelectorCallback {
         Log.d(TAG, "findBestMatch: Found: " + result.format);
 
         return result;
+    }
+
+    /**
+     * M2Y: the chosen quality is a ceiling, but when every track is above it (a saved file has one track, a wide
+     * film is 818p where 720p was chosen) the lowest one plays instead of no video at all.
+     */
+    private MediaTrack lowestTrack(int rendererIndex, MediaTrack fallback) {
+        Renderer renderer = mRenderers[rendererIndex];
+        MediaTrack lowest = null;
+        if (renderer != null && renderer.mediaTracks != null) {
+            for (MediaTrack[] group : renderer.mediaTracks) {
+                if (group == null) {
+                    continue;
+                }
+                for (MediaTrack track : group) {
+                    if (track != null && track.groupIndex != -1 && (lowest == null || track.compare(lowest) < 0)) {
+                        lowest = track;
+                    }
+                }
+            }
+        }
+        if (lowest == null && renderer != null && renderer.trackGroups != null && renderer.trackGroups.length > 0
+                && renderer.trackGroups.get(0).length > 0) {
+            // every track was filtered out (e.g. the device check doubts its decoder): a saved file's own track still plays
+            lowest = MediaTrack.forRendererIndex(rendererIndex);
+            lowest.format = renderer.trackGroups.get(0).getFormat(0);
+            lowest.groupIndex = 0;
+            lowest.trackIndex = 0;
+        }
+        return lowest != null ? lowest : fallback;
     }
 
     private void applyOverride(int rendererIndex) {
@@ -890,11 +923,6 @@ public class TrackSelectorManager implements TrackSelectorCallback {
             return isUnsafeFormat(mediaTrack);
         }
 
-        switch (Build.MODEL) {
-            case "Smart TV Pro": // Smart TV Pro (G03_4K_GB) - TCL
-                return isUnsafeFormat(mediaTrack);
-        }
-
         return false;
     }
 
@@ -925,12 +953,5 @@ public class TrackSelectorManager implements TrackSelectorCallback {
         }
 
         return renderer.selectedTrack;
-    }
-
-    private boolean hasPlaybackGlitch(MediaTrack mediaTrack) {
-        // Shorts on Fire TV Cube has green screen or crashed
-        return mediaTrack.isAV1Codec()
-                && !TrackSelectorUtil.isWideScreen(mediaTrack.format)
-                && Helpers.equals(Helpers.getDeviceName(), "AFTGAZL (gazelle)");
     }
 }

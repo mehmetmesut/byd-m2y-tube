@@ -8,6 +8,8 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineStore;
+import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.utils.AppDialogUtil;
 
 import java.util.ArrayList;
@@ -86,9 +88,16 @@ public class HQDialogController extends BasePlayerController {
         List<OptionItem> options = new ArrayList<>();
         for (FormatItem format : formats) {
             // the audio-only item also counts as selected while the player picks qualities by itself; show the real state
-            options.add(format.isDefault()
+            OptionItem item = format.isDefault()
                     ? UiOptionItem.from(format, this::selectFormatOption, music, getPlayer().isAudioOnly())
-                    : UiOptionItem.from(format, this::selectFormatOption, music));
+                    : UiOptionItem.from(format, this::selectFormatOption, music);
+            // the recommendation is the default 480p vp9 track (avc at 480p decodes the same but uses ~30% more data)
+            if (!format.isDefault() && item != null && item.getTitle() != null
+                    && item.getTitle().toString().contains("vp9")
+                    && PlayerData.isRecommendedQuality(format.getWidth(), format.getHeight(), format.getFrameRate())) {
+                UiOptionItem.retitle(item, getContext().getString(R.string.m2y_recommended, item.getTitle()));
+            }
+            options.add(item);
         }
         return options;
     }
@@ -177,11 +186,15 @@ public class HQDialogController extends BasePlayerController {
 
     private void persistFormat(FormatItem formatItem) {
         if (formatItem.getType() == FormatItem.TYPE_VIDEO) {
-            if (!getPlayerData().getFormat(FormatItem.TYPE_VIDEO).isPreset()) {
-                getPlayerData().setFormat(formatItem);
-            } else {
+            // "Music" (audio only) and any pick on a saved (offline) video are for this video alone
+            if (formatItem.isDefault() || OfflineStore.find(getContext(), getVideo() != null ? getVideo().videoId : null) != null) {
                 getPlayerData().setTempVideoFormat(formatItem);
+                return;
             }
+            // M2Y: the chosen quality is the ceiling for this and every next video (also over a preset and after a
+            // restart); the track matcher takes the best track at or below it, never a higher one
+            getPlayerData().setFormat(formatItem);
+            getPlayerData().setTempVideoFormat(null);
         } else {
             getPlayerData().setFormat(formatItem);
         }

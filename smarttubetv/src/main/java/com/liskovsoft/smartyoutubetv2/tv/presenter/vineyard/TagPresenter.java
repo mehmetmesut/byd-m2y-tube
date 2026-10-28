@@ -39,7 +39,8 @@ public class TagPresenter extends LongClickPresenter {
         };
 
         cardView.setFocusable(true);
-        cardView.setFocusableInTouchMode(true);
+        // M2Y: on the touch screen one tap on a suggestion fills the field and searches (it took a focus tap first)
+        cardView.setFocusableInTouchMode(false);
         updateCardBackgroundColor(cardView, false);
         updateCardTextColor(cardView, false);
         //if (VERSION.SDK_INT >= 23 && MainUIData.instance(parent.getContext()).isUiTweakEnabled(MainUIData.UI_TWEAK_ROUNDED_CORNERS)) {

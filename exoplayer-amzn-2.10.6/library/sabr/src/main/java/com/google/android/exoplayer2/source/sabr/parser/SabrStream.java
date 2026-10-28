@@ -82,6 +82,7 @@ public class SabrStream {
     private int sqMismatchBacktrackCount;
     private boolean receivedNewSegments;
     private String url;
+    private final String videoId;
     private List<? extends  SabrPart> multiResult = null;
 
     private static class NoSegmentsTracker {
@@ -128,6 +129,7 @@ public class SabrStream {
                 durationMs
         );
         url = serverAbrStreamingUrl;
+        this.videoId = videoId;
 
         // Whether we got any new (not consumed) segments in the request
         noNewSegmentsTracker = new NoSegmentsTracker();
@@ -531,6 +533,10 @@ public class SabrStream {
 
     public String getUrl() {
         return this.url;
+    }
+
+    public String getVideoId() {
+        return videoId;
     }
 
     public void setServerAbrStreamingUrl(String url) {

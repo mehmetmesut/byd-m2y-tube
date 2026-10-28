@@ -49,7 +49,6 @@
   <string name="settings_other">Altele</string>
   <string name="settings_player">Player video</string>
   <string name="settings_language">Limbă</string>
-  <string name="settings_linked_devices">Dispozitive conectate</string>
   <string name="settings_about">Despre</string>
   <string name="dialog_account_list">Selectează contul</string>
   <string name="dialog_account_none">Nici unul</string>
@@ -167,11 +166,6 @@
   <string name="player_remember_speed">Amintiți-vă viteza</string>
   <string name="mark_channel_as_watched">Marcați ca vizionat</string>
   <string name="channel_marked_as_watched">Canalul a fost marcat ca vizionat</string>
-  <string name="dialog_add_device">Adăugați un dispozitiv</string>
-  <string name="dialog_remove_all_devices">Eliminați toate dispozitivele</string>
-  <string name="device_link_enabled">Link activat</string>
-  <string name="device_connected">Dispozitivul \"%s\" a fost conectat</string>
-  <string name="device_disconnected">Dispozitivul \"%s\" a fost deconectat</string>
   <string name="settings_ui_scale">Scalare Interfață</string>
   <string name="msg_restart_app">Vă rugăm să reporniți aplicația pentru a aplica aceste setări</string>
   <string name="settings_block">Blocarea conținutului</string>
@@ -198,7 +192,6 @@
   <string name="intent_force_close">Forțați ieșirea dacă videoclipul a fost deschis dintr-o sursă externă</string>
   <string name="btn_confirm">Confirmă</string>
   <string name="player_low_video_quality">Calitate video scăzută</string>
-  <string name="remote_session_closed">Sesiunea la distanță a fost închisă</string>
   <string name="msg_mode_switch_error">Nu se poate comuta modul de afișare la \"%s</string>
   <string name="msg_player_error">A apărut eroarea %s la player. Se repornește redării..</string>
   <string name="video_preset_disabled">Fără presetare</string>
@@ -250,8 +243,6 @@
   <string name="add_remove_from_playback_queue">Adăugare/Eliminare din coada de redare</string>
   <string name="add_to_playback_queue">Adăugați din coada de redare</string>
   <string name="remove_from_playback_queue">Eliminați din coada de redare</string>
-  <string name="proxy_enabled">Proxy activat</string>
-  <string name="proxy_disabled">Proxy dezactivat</string>
   <string name="uploads_row_name">Încărcări</string>
   <string name="playlists_row_name">Liste de redare create</string>
   <string name="popular_uploads_row_name">Încărcări populare</string>
@@ -260,9 +251,6 @@
   <string name="covid_news_row_name">Știri COVID-19</string>
   <string name="enable_voice_search">Activați căutarea globală (este necesar suport firmware)</string>
   <string name="subscribe_unsubscribe_from_channel">Abonează-te/Dezabonează-te de la canal</string>
-  <string name="app_backup_restore">Copie de rezervă/Restaurare</string>
-  <string name="app_backup">Faceți copie de rezervă datelor aplicației</string>
-  <string name="app_restore">Restabiliți datele aplicației</string>
   <string name="skip_each_segment_once">Nu omiteți segmente din nou</string>
   <string name="disable_ok_long_press">Dezactivați butonul OK apăsați lung</string>
   <string name="disable_ok_long_press_desc">Destinat controlerelor buggy unde butonul OK nu funcționează corect</string>
@@ -272,8 +260,6 @@
   <string name="option_disabled">Dezactivat</string>
   <string name="live_now_row_name">În Direct acum</string>
   <string name="run_in_background">Redare în fundal</string>
-  <string name="settings_remote_control">Telecomandă</string>
-  <string name="background_service_started">Serviciul de fundal a început</string>
   <string name="dialog_add_to">Adăugați la %s</string>
   <string name="dialog_remove_from">Eliminați din %s</string>
   <string name="added_to">Adăugat la %s</string>
@@ -345,38 +331,11 @@
   <string name="player_seek_confirmation_pause">Cu confirmare (întrerupeți în timp ce căutați)</string>
   <string name="player_seek_confirmation_play">Cu confirmare (redare în timp ce căutați)</string>
   <string name="hide_shorts_from_home">Ascundeți shorts din Acasă</string>
-  <string name="finish_on_disconnect">Închideți aplicația după deconectarea telefonului/tabletei</string>
   <string name="update_error">Eroare de actualizare</string>
   <string name="hide_shorts_from_history">Ascundeți shorts din Istoric</string>
   <string name="hide_shorts_from_trending">Ascundeți shorts din Tendințe</string>
   <string name="disable_screensaver">Dezactivați economizatorul de ecran</string>
   <string name="description_not_found">Descrierea nu a fost găsită</string>
-  <string name="proxy_port_hint">Port proxy</string>
-  <string name="proxy_host_hint">Nume de gazdă proxy sau IP</string>
-  <string name="proxy_username_hint">Nume utilizator proxy</string>
-  <string name="proxy_password_hint">Parolă proxy</string>
-  <string name="proxy_type">Tip proxy</string>
-  <string name="enable_web_proxy">Utilizați proxy web</string>
-  <string name="proxy_not_supported">Utilizați proxy web (are nevoie de Android 4.4+)</string>
-  <string name="proxy_test_btn">Test</string>
-  <string name="proxy_settings_title">Setări server proxy</string>
-  <string name="proxy_test_cancelled">Testul #%d, s-a anulat.</string>
-  <string name="proxy_type_invalid">Tipul proxy nu este setat.</string>
-  <string name="proxy_host_invalid">Gazda proxy nu este setată.</string>
-  <string name="proxy_port_invalid">Port proxy invalid, trebuie să fie &gt; 0.</string>
-  <string name="proxy_credentials_invalid">Nume de utilizator sau parolă incorectă</string>
-  <string name="proxy_test_aborted">Test abandonat, vă rugăm să remediați mai întâi setările proxy.</string>
-  <string name="proxy_application_aborted">Vă rugăm să corectați mai întâi setările proxy.</string>
-  <string name="proxy_test_start">Test #%d: %s ...</string>
-  <string name="proxy_test_error">Eroare #%d: %s</string>
-  <string name="proxy_test_status">Stare #%d: %s %d %s</string>
-  <string name="openvpn_config_address_hint">Adresa fișierului Configurații (*.ovpn)</string>
-  <string name="enable_openvpn">Utilizați OpenVPN</string>
-  <string name="openvpn_settings_title">Setări OpenVPN</string>
-  <string name="openvpn_application_aborted">Vă rugăm să corectați mai întâi setările OpenVPN.</string>
-  <string name="openvpn_test_aborted">Test abandonat, vă rugăm să remediați mai întâi setările OpenVPN.</string>
-  <string name="openvpn_address_invalid">Adresa de configurare OpenVPN nu este setată.</string>
-  <string name="internet_censorship">Cenzură Internet</string>
   <string name="rename_section">Redenumiți această secțiune</string>
   <string name="simple_edit_value_hint">Introduceți valoarea</string>
   <string name="seek_interval">Căutați intervalul</string>
@@ -466,7 +425,6 @@
   <string name="player_ending_time">Se termină în %s</string>
   <string name="badge_new_content">CONȚINUT NOU</string>
   <string name="badge_live">ÎN DIRECT</string>
-  <string name="add_device_view_description">Pentru a vă conecta dispozitivul, introduceți acest cod în aplicația YouTube a telefonului, în secțiunea Setări/Vizionează pe televizor\nNOTĂ: Aceasta funcționează numai cu tastatura Gboard!</string>
   <string name="playback_controls_repeat_pause">Repetați Pauza</string>
   <string name="playback_controls_repeat_list">Repetați Lista</string>
   <string name="action_subscribe_off">Abonare Oprită</string>
@@ -584,7 +542,6 @@
   <string name="dialog_notification">Notificați despre actualizări printr-un dialog pop-up</string>
   <string name="mark_as_watched">Marcați ca vizionat</string>
   <string name="player_ui_animations">Activați animațiile în panoului de control</string>
-  <string name="player_likes_count">Afișați numărul de aprecieri/neaprecieri</string>
   <string name="sorting_alphabetically2">În ordine alfabetică (previzualizări rapide, animate)</string>
   <string name="sorting_default">Implicit (previzualizări rapide, animate)</string>
   <string name="content_block_exclude_channel">Exclude acest canal din SponsorBlock</string>
@@ -620,7 +577,6 @@
   <string name="multi_profiles">Utilizați setări separate pentru fiecare cont</string>
   <string name="protect_account_with_password">Protejați acest cont cu parolă</string>
   <string name="enter_account_password">Introduceți parola contului</string>
-  <string name="show_connect_messages">Afișați mesajele de conectare</string>
   <string name="prefer_avc_over_vp9_desc">AVERTIZARE: maxim 1080p</string>
   <string name="play_next">Rada următorul</string>
   <string name="hide_watched_from_subscriptions">Ascunde videoclipurile vizionate din Abonamente</string>
@@ -628,9 +584,7 @@
   <string name="hide_unwanted_content">Ascundeți conținutul nedorit</string>
   <string name="hide_watched_from_home">Ascunde videoclipurile vizionate din Acasă</string>
   <string name="hide_watched_from_watch_later">Ascundeți videoclipurile vizionate din lista de redare Vizionează mai târziu</string>
-  <string name="remote_control_permission">Telecomanda în fundal necesită permisiunea Suprapunere</string>
   <string name="login_from_browser">Conectează-te din browser</string>
-  <string name="disable_remote_history">Dezactivați istoricul atunci când utilizați telecomanda</string>
   <string name="keyboard_fix">Împiedicați deschiderea tastaturii de către butonul OK (G20s și altele)</string>
   <string name="nothing_found">Nu s-a găsit nimic</string>
   <string name="auto_frame_rate_desc">Această opțiune elimină jittering-ul în scenele în care camera se mișcă rapid, de ex. flux sportiv</string>
@@ -660,8 +614,5 @@
   <string name="prefer_ipv4_desc">S-ar putea remedia situațiile în care aplicația nu funcționează deloc.\nNotă. Poate provoca blocări și prăbușiri (în special pe dispozitivele Android 8 sau Dune HD)</string>
   <string name="long_press_for_settings">APĂSAȚI LUNG PENTRU SETĂRI</string>
   <string name="long_press_for_options">APĂSAȚI LUNG PENTRU OPȚIUNI</string>
-  <string name="device_specific_backup">Faceți copie de rezervă doar pentru acest dispozitiv</string>
-  <string name="local_backup">Copie de rezervă locală</string>
-  <string name="auto_backup">Copie de rezervă automată (o dată pe zi)</string>
   <string name="repeat_mode_reverse_list">Redă lista de redare sau videoclipurile canalului în ordine inversă</string>
 </resources>

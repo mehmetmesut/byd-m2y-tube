@@ -1,5 +1,6 @@
 package com.liskovsoft.smartyoutubetv2.tv.ui.search.tags;
 
+import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
@@ -39,6 +40,13 @@ public class SearchTagsFragment extends SearchTagsFragmentBase {
     private Map<Integer, VideoGroupObjectAdapter> mSearchGroupAdapters;
     private String mSearchQuery;
     private String mNewQuery;
+    private String mPendingTagQuery;
+    private static final long TAGS_DELAY_MS = 250;
+    private final Runnable mLoadTags = () -> {
+        if (isAdded()) {
+            loadSearchTags(mPendingTagQuery);
+        }
+    };
     private VideoCardPresenter mCardPresenter;
     private ShortsCardPresenter mShortsPresenter;
     private SearchData mSearchData;
@@ -186,14 +194,13 @@ public class SearchTagsFragment extends SearchTagsFragmentBase {
 
     @Override
     public boolean onQueryTextChange(String newQuery) {
-        loadSearchTags(newQuery);
-
-        // Commit on voice input.
-        // Note, that voice detection is far from ideal and may results duplicate search loading.
-        if (isVoiceQuery(newQuery)) {
-            loadSearchResult(newQuery);
-        }
-
+        mNewQuery = TextUtils.isEmpty(newQuery) ? null : newQuery;
+        // M2Y: suggestions once typing pauses, not on every letter (each one rebuilt the row: half the frames janky in
+        // the car). No voice-input commit: voice search is gone, and the keyboard's first multi-letter change was taken
+        // for voice and started a full video search under the suggestions while typing.
+        mPendingTagQuery = newQuery;
+        Utils.removeCallbacks(mLoadTags);
+        Utils.postDelayed(mLoadTags, TAGS_DELAY_MS);
         return true;
     }
 
@@ -239,6 +246,9 @@ public class SearchTagsFragment extends SearchTagsFragmentBase {
         if (item instanceof Video) {
             mSearchPresenter.onVideoItemClicked((Video) item);
         } else if (item instanceof Tag) {
+            if (getView() != null) {
+                Helpers.hideKeyboard(getContext(), getView()); // M2Y: the suggestion is the answer, show its results in full
+            }
             startSearch(((Tag) item).tag, false);
         }
     }
@@ -317,12 +327,7 @@ public class SearchTagsFragment extends SearchTagsFragmentBase {
     }
 
     private boolean isRecognitionAvailable() {
-        try {
-            return SpeechRecognizer.isRecognitionAvailable(getContext());
-        } catch (NullPointerException e) {
-            // Attempt to invoke virtual method 'android.content.pm.PackageManager android.content.Context.getPackageManager()' on a null object reference
-            return false;
-        }
+        return false; // M2Y: voice search removed, the search opens on the text field
     }
 
     private void update(VideoGroup group) {
@@ -369,21 +374,6 @@ public class SearchTagsFragment extends SearchTagsFragmentBase {
         }
     }
 
-    /**
-     * Check that previous query is null
-     */
-    private boolean isVoiceQuery(String newQuery) {
-        if (TextUtils.isEmpty(newQuery)) {
-            mNewQuery = null;
-            return false;
-        }
-
-        boolean isVoice = mNewQuery == null && newQuery.length() > 1;
-
-        mNewQuery = newQuery;
-
-        return isVoice;
-    }
 
     private int findPositionById(int id) {
         if (getResultsAdapter() != null) {

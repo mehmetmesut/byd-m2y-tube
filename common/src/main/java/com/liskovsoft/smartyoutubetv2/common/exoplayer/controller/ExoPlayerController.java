@@ -109,6 +109,11 @@ public class ExoPlayerController implements Player.EventListener {
         openMediaSource(mediaSource);
     }
 
+    public void openFiles(List<String> paths) {
+        // M2Y: local files are merged too, but are not HLS+DASH twins: their tracks must not be filtered as duplicates
+        openMediaSource(mMediaSourceFactory.fromFiles(paths), false);
+    }
+
     public void openMerged(MediaItemFormatInfo formatInfo, String hlsPlaylistUrl) {
         MediaSource dashMediaSource = mMediaSourceFactory.fromDashFormatInfo(formatInfo);
         MediaSource hlsMediaSource = mMediaSourceFactory.fromHlsPlaylist(hlsPlaylistUrl);
@@ -122,10 +127,14 @@ public class ExoPlayerController implements Player.EventListener {
     }
 
     private void openMediaSource(MediaSource mediaSource) {
+        openMediaSource(mediaSource, mediaSource instanceof MergingMediaSource);
+    }
+
+    private void openMediaSource(MediaSource mediaSource, boolean merged) {
         resetPlayerState(); // fixes occasional video artifacts and problems with quality switching
         setQualityInfo("");
 
-        mTrackSelectorManager.setMergedSource(mediaSource instanceof MergingMediaSource);
+        mTrackSelectorManager.setMergedSource(merged);
         mTrackSelectorManager.invalidate();
         mOnSourceChanged = true;
         mEventListener.onSourceChanged(getVideo());

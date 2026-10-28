@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- M2Y: round back button behind every non-root screen (LeanbackActivity.addBackButton); same grey as the title orbs -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="#40FFFFFF">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#FF282828" />
+        </shape>
+    </item>
+</ripple>

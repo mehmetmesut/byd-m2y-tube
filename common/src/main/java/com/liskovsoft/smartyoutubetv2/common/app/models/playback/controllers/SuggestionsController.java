@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat;
 import com.liskovsoft.mediaserviceinterfaces.ContentService;
 import com.liskovsoft.mediaserviceinterfaces.MediaItemService;
 import com.liskovsoft.mediaserviceinterfaces.data.ChapterItem;
-import com.liskovsoft.mediaserviceinterfaces.data.DislikeData;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaGroup;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItemMetadata;
 import com.liskovsoft.sharedutils.helpers.Helpers;
@@ -225,11 +224,10 @@ public class SuggestionsController extends BasePlayerController {
         }
 
         video.sync(mediaItemMetadata);
+        com.liskovsoft.smartyoutubetv2.common.m2y.offline.PlaybackCache.setNames(video.videoId, video.getTitleFull(), video.getAuthor());
         getPlayer().setVideo(video);
 
         getPlayer().setNextTitle(getNext());
-
-        appendDislikes(video);
     }
 
     public void loadSuggestions(Video video) {
@@ -856,28 +854,4 @@ public class SuggestionsController extends BasePlayerController {
         }
     }
 
-    private void appendDislikes(Video video) {
-        if (video == null) {
-            return;
-        }
-
-        if (!getPlayerTweaksData().isLikesCounterEnabled()) {
-            video.likeCount = null;
-            video.dislikeCount = null;
-            getPlayer().setVideo(video);
-            return;
-        }
-
-        Observable<DislikeData> dislikeDataObserve = mMediaItemService.getDislikeDataObserve(video.videoId);
-
-        Disposable dislikeAction = dislikeDataObserve.subscribe(
-                dislikeData -> {
-                    video.sync(dislikeData);
-                    getPlayer().setVideo(video);
-                },
-                error -> Log.e(TAG, "Dislike not working...")
-        );
-
-        mActions.add(dislikeAction);
-    }
 }

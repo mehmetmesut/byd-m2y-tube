@@ -202,7 +202,6 @@ public class PlayerSettingsPresenter extends BasePresenter<Void> {
         List<OptionItem> options = new ArrayList<>();
 
         for (int[] pair : new int[][] {
-                {R.string.auto_frame_rate, PlayerTweaksData.PLAYER_BUTTON_AFR},
                 {R.string.action_sound_off, PlayerTweaksData.PLAYER_BUTTON_SOUND_OFF},
                 {R.string.video_rotate, PlayerTweaksData.PLAYER_BUTTON_VIDEO_ROTATE},
                 {R.string.video_flip, PlayerTweaksData.PLAYER_BUTTON_VIDEO_FLIP},
@@ -459,10 +458,6 @@ public class PlayerSettingsPresenter extends BasePresenter<Void> {
                 option -> mPlayerTweaksData.setUIAnimationsEnabled(option.isSelected()),
                 mPlayerTweaksData.isUIAnimationsEnabled()));
 
-        options.add(UiOptionItem.from(getContext().getString(R.string.player_likes_count),
-                option -> mPlayerTweaksData.setLikesCounterEnabled(option.isSelected()),
-                mPlayerTweaksData.isLikesCounterEnabled()));
-
         options.add(UiOptionItem.from(getContext().getString(R.string.player_show_tooltips),
                 option -> mPlayerData.setTooltipsEnabled(option.isSelected()),
                 mPlayerData.isTooltipsEnabled()));
@@ -502,14 +497,6 @@ public class PlayerSettingsPresenter extends BasePresenter<Void> {
                 getContext().getString(R.string.disable_network_error_fixing_desc),
                 option -> mPlayerTweaksData.setNetworkErrorFixingDisabled(option.isSelected()),
                 mPlayerTweaksData.isNetworkErrorFixingDisabled()));
-
-        // Oculus Quest fix: back button not closing the activity
-        options.add(UiOptionItem.from(getContext().getString(R.string.oculus_quest_fix),
-                option -> {
-                    mPlayerTweaksData.setOculusQuestFixEnabled(option.isSelected());
-                    mRestartApp = true;
-                },
-                mPlayerTweaksData.isOculusQuestFixEnabled()));
 
         options.add(UiOptionItem.from(getContext().getString(R.string.prefer_ipv4),
                 getContext().getString(R.string.prefer_ipv4_desc),

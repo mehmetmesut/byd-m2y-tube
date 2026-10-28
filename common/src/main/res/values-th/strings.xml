@@ -50,7 +50,6 @@
     <string name="settings_other">อื่นๆ</string>
     <string name="settings_player">เครื่องเล่นวิดีโอ</string>
     <string name="settings_language">ภาษา</string>
-    <string name="settings_linked_devices">อุปกรณ์ที่เชื่อมโยง</string>
     <string name="settings_about">เกี่ยวกับ</string>
     <string name="dialog_account_list">เลือกบัญชี</string>
     <string name="dialog_account_none">ไม่ได้เลือก</string>
@@ -161,11 +160,6 @@
     <string name="player_remember_speed">บันทึกความเร็วในการเล่น</string>
     <string name="mark_channel_as_watched">ทำเครื่องหมาย</string>
     <string name="channel_marked_as_watched">ทำเครื่องหมายแล้ว</string>
-    <string name="dialog_add_device">เพิ่มอุปกรณ์</string>
-    <string name="dialog_remove_all_devices">ลบอุปกรณ์ทั้งหมด</string>
-    <string name="device_link_enabled">เชื่อมต่ออุปกรณ์แล้ว</string>
-    <string name="device_connected">อุปกรณ์ \"%s\" ได้รับการเชื่อมโยงแล้ว</string>
-    <string name="device_disconnected">อุปกรณ์ \"%s\" ได้ยกเลิกการเชื่อมโยงแล้ว</string>
     <string name="settings_ui_scale">ขนาดของ UI</string>
     <string name="msg_restart_app">โปรดรีสตาร์ทแอปเพื่อใช้การตั้งค่านี้</string>
     <string name="settings_block">การปิดกั้นเนื้อหา</string>
@@ -192,7 +186,6 @@
     <string name="intent_force_close">Force exit if video has been opened from external source</string>
     <string name="btn_confirm">Confirm</string>
     <string name="player_low_video_quality">คุณภาพวิดีโอต่ำ</string>
-    <string name="remote_session_closed">Remote session has been closed</string>
     <string name="msg_mode_switch_error">Can\'t switch display mode to \"%s\"</string>
     <string name="msg_player_error">Player error occurred %s. Restarting playback…</string>
     <string name="video_preset_disabled">ไม่ได้ตั้งค่า</string>
@@ -233,8 +226,6 @@
     <string name="removed_from_playback_queue">ลบออกจากคิวการเล่น</string>
     <string name="added_to_playback_queue">เพิ่มไปยังคิวการเล่น</string>
     <string name="add_remove_from_playback_queue">เพิ่ม/ลบ จากคิวการเล่น</string>
-    <string name="proxy_enabled">Proxy enabled</string>
-    <string name="proxy_disabled">Proxy disabled</string>
     <string name="uploads_row_name">อัปโหลด</string>
     <string name="playlists_row_name">เพลย์ลิสต์ที่สร้างขึ้น</string>
     <string name="popular_uploads_row_name">อัปโหลดยอดนิยม</string>
@@ -242,9 +233,6 @@
     <string name="covid_news_row_name">ข่าว COVID-19</string>
     <string name="enable_voice_search">เปิดใช้งานการค้นหาด้วยเสียง</string>
     <string name="subscribe_unsubscribe_from_channel">ติดตาม/ยกเลิกการติดตาม จากช่องนี้</string>
-    <string name="app_backup_restore">การสำรอง/คืนค่า</string>
-    <string name="app_backup">สำรองข้อมูล</string>
-    <string name="app_restore">คืนค่าข้อมูล</string>
     <string name="skip_each_segment_once">Don\'t skip segments again</string>
     <string name="disable_ok_long_press">Disable OK button long press</string>
     <string name="player_time_correction">Display the time with respect of speed</string>
@@ -253,8 +241,6 @@
     <string name="option_disabled">ปิดการใช้งาน</string>
     <string name="live_now_row_name">ไลฟ์สดอยู่</string>
     <string name="run_in_background">ใช้งานบนพื้นหลัง</string>
-    <string name="settings_remote_control">การควบคุมระยะไกล</string>
-    <string name="background_service_started">Background service started</string>
     <string name="dialog_add_to">เพิ่มไปที่ %s</string>
     <string name="dialog_remove_from">ลบจาก %s</string>
     <string name="added_to">เพิ่มไปที่ %s แล้ว</string>
@@ -319,7 +305,6 @@
     <string name="player_seek_confirmation_pause">With confirmation (หยุดชั่วคราวเมื่อกรอวิดีโอ)</string>
     <string name="player_seek_confirmation_play">With confirmation (เล่นขณะกรอวิดีโอ)</string>
     <string name="hide_shorts_from_home">ซ่อน shorts จากหน้าแรก</string>
-    <string name="finish_on_disconnect">ปิดแอปเมื่อยกเลิกการเชื่อมโยงกับโทรศัพท์</string>
     <string name="update_error">อัปเดตข้อผิดพลาด</string>
     <string name="hide_shorts_from_history">ซ่อน shorts จากประวัติการเข้าชม</string>
     <string name="disable_screensaver">Disable screensaver</string>

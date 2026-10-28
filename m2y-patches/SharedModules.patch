@@ -1,0 +1,86 @@
+diff --git a/core_settings.gradle b/core_settings.gradle
+index d7d7ba9..57662c9 100644
+--- a/core_settings.gradle
++++ b/core_settings.gradle
+@@ -1,8 +1,7 @@
+ def rootDir = gradle.ext.sharedModulesRoot
+ 
+-include ':sharedutils', ':sharedtests', ':appupdatechecker2', ':commons-io-2.8.0', ':j2v8'
++include ':sharedutils', ':sharedtests', ':commons-io-2.8.0', ':j2v8'
+ project(':sharedutils').projectDir = new File(rootDir, 'sharedutils')
+ project(':sharedtests').projectDir = new File(rootDir, 'sharedtests')
+-project(':appupdatechecker2').projectDir = new File(rootDir, 'appupdatechecker2')
+ project(':commons-io-2.8.0').projectDir = new File(rootDir, 'commons-io-2.8.0')
+ project(':j2v8').projectDir = new File(rootDir, 'j2v8')
+\ No newline at end of file
+diff --git a/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/DeviceHelpers.java b/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/DeviceHelpers.java
+index c8fbd82..010f25b 100644
+--- a/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/DeviceHelpers.java
++++ b/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/DeviceHelpers.java
+@@ -191,20 +191,12 @@ public final class DeviceHelpers {
+     public static boolean isWebViewSupported() {
+         try {
+             CookieManager.getInstance();
+-            return !isWebViewBroken();
++            return true;
+         } catch (final Throwable ignored) {
+             return false;
+         }
+     }
+ 
+-    private static boolean isWebViewBroken() {
+-        return Build.VERSION.SDK_INT == 19 && isTCL(); // "TCL TV - Harman"
+-    }
+-
+-    private static boolean isTCL() {
+-        return Build.MANUFACTURER.toLowerCase().contains("tcl") || Build.BRAND.toLowerCase().contains("tcl");
+-    }
+-
+     @SuppressWarnings("deprecation")
+     public static String getPrimaryAbi() {
+         String primaryAbi;
+diff --git a/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/Helpers.java b/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/Helpers.java
+index 64477e0..be5f249 100644
+--- a/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/Helpers.java
++++ b/sharedutils/src/main/java/com/liskovsoft/sharedutils/helpers/Helpers.java
+@@ -96,7 +96,6 @@ public final class Helpers {
+     private static final Pattern URL_PREFIX = Pattern.compile("^[a-z.]+://.+$");
+     private static Random sRandom;
+     private static Boolean sIsAndroidTVLauncher;
+-    private static Boolean sIsAmazonFireTVDevice;
+     private static Boolean sIsAndroidAuto;
+     // https://unicode-table.com/en/
+     // https://www.compart.com/en/unicode/
+@@ -559,7 +558,7 @@ public final class Helpers {
+ 
+     public static boolean isATVRecommendationsSupported(Context context) {
+         boolean isApiSupported = VERSION.SDK_INT >= 21 && VERSION.SDK_INT < 26;
+-        return isApiSupported && (isAndroidTVLauncher(context) || isAmazonFireTVDevice());
++        return isApiSupported && isAndroidTVLauncher(context);
+     }
+ 
+     public static boolean isPictureInPictureSupported(Context context) {
+@@ -1040,23 +1039,6 @@ public final class Helpers {
+         });
+     }
+ 
+-    /**
+-     * Utility method to check if device is Amazon Fire TV device
+-     * @return {@code true} true if device is Amazon Fire TV device.
+-     */
+-    public static boolean isAmazonFireTVDevice() {
+-        if (sIsAmazonFireTVDevice != null) {
+-            return sIsAmazonFireTVDevice;
+-        }
+-
+-        String deviceName = Build.MODEL;
+-        String manufacturerName = Build.MANUFACTURER;
+-        sIsAmazonFireTVDevice = (deviceName.startsWith("AFT")
+-                && "Amazon".equalsIgnoreCase(manufacturerName));
+-
+-        return sIsAmazonFireTVDevice;
+-    }
+-
+     public static boolean isActivityExists(Intent intent, Context context) {
+         if (intent == null || context == null) {
+             return false;

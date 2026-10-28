@@ -86,7 +86,13 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
             //mVideoLoaderController.restartEngine();
 
             // SABR may hang if the server issues a high backoffTime
-            mVideoLoaderController.reloadVideo();
+            if (getPlayerTweaksData().isNetworkErrorFixingDisabled()) {
+                mVideoLoaderController.reloadVideo();
+            } else {
+                // M2Y: a stall flips Cronet <-> OkHttp; the restart rebuilds the data source and reloads at the same position
+                switchNextEngine();
+                mVideoLoaderController.restartEngine();
+            }
         }
     }
 
@@ -246,7 +252,7 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
             }
         } else if (Helpers.containsAny(errorContent, "Exception in CronetUrlRequest") && !getPlayerTweaksData().isNetworkErrorFixingDisabled()) {
             if (getVideo() != null && !getVideo().isLive) { // Finished live stream may provoke errors in Cronet
-                getPlayerTweaksData().setPlayerDataSource(PlayerTweaksData.PLAYER_DATA_SOURCE_DEFAULT);
+                getPlayerTweaksData().setPlayerDataSource(PlayerTweaksData.PLAYER_DATA_SOURCE_OKHTTP);
             } else {
                 restartEngine = false;
             }
@@ -442,7 +448,7 @@ public class ErrorFixerController extends BasePlayerController implements OnLong
         int currentEngine = getPlayerTweaksData().getPlayerDataSource();
         Integer[] engineList = Utils.skipCronet() ?
                 new Integer[] { PlayerTweaksData.PLAYER_DATA_SOURCE_DEFAULT, PlayerTweaksData.PLAYER_DATA_SOURCE_OKHTTP } :
-                new Integer[] { PlayerTweaksData.PLAYER_DATA_SOURCE_CRONET, PlayerTweaksData.PLAYER_DATA_SOURCE_DEFAULT, PlayerTweaksData.PLAYER_DATA_SOURCE_OKHTTP };
+                new Integer[] { PlayerTweaksData.PLAYER_DATA_SOURCE_CRONET, PlayerTweaksData.PLAYER_DATA_SOURCE_OKHTTP };
         return Helpers.getNextValue(engineList, currentEngine);
     }
 

@@ -214,6 +214,7 @@ public class SearchSupportFragment extends Fragment {
     SearchBar mSearchBar;
     SearchEditText mSearchTextEditor;
     SpeechOrbView mSpeechOrbView;
+    private static final boolean M2Y_VOICE_SEARCH = false; // M2Y: voice search removed
     SearchResultProvider mProvider;
     String mPendingQuery = null;
     SearchOrbView mSearchOrbView;
@@ -311,6 +312,17 @@ public class SearchSupportFragment extends Fragment {
 
         FrameLayout searchFrame = (FrameLayout) root.findViewById(R.id.lb_search_frame);
         mSearchBar = (SearchBar) searchFrame.findViewById(R.id.lb_search_bar);
+        // M2Y: the bar stays visible while result rows are scrolled by touch; an opaque background (up to the screen top,
+        // over the bar's top margin, in the window's own colour scheme) lets the suggestion row pass under the search field
+        Drawable windowBg = getActivity() != null ? getActivity().getWindow().getDecorView().getBackground() : null;
+        if (windowBg != null && windowBg.getConstantState() != null) {
+            int left = mSearchBar.getPaddingLeft(), top = mSearchBar.getPaddingTop(), right = mSearchBar.getPaddingRight(),
+                    bottom = mSearchBar.getPaddingBottom();
+            mSearchBar.setBackground(new android.graphics.drawable.InsetDrawable(windowBg.getConstantState().newDrawable(),
+                    0, -getResources().getDimensionPixelSize(R.dimen.lb_search_bar_padding_top), 0, 0));
+            // a background's insets become the view's padding (here a negative top, which cut the field off): restore it
+            mSearchBar.setPadding(left, top, right, bottom);
+        }
         mSearchBar.setOnFocusChangeListener((v, focused) -> {
             Log.d(TAG, "search bar focused");
         });
@@ -403,6 +415,9 @@ public class SearchSupportFragment extends Fragment {
         mSearchSettingsOrbView.setOnOrbClickedListener(v -> onSearchSettingsClicked());
 
         mSpeechOrbView = mSearchBar.findViewById(R.id.lb_search_bar_speech_orb);
+        // M2Y: no voice search (no microphone use, no Google speech service in the car)
+        mSpeechOrbView.setVisibility(View.GONE);
+        mSpeechOrbView.setFocusable(false);
         OnFocusChangeListener previousListener = mSpeechOrbView.getOnFocusChangeListener();
         mSpeechOrbView.setOnFocusChangeListener((v, focused) -> {
             if (!focused) {
@@ -486,7 +501,7 @@ public class SearchSupportFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mSpeechRecognitionCallback == null && null == mSpeechRecognizer) {
+        if (M2Y_VOICE_SEARCH && mSpeechRecognitionCallback == null && null == mSpeechRecognizer) {
             mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(
                     getContext());
             mSearchBar.setSpeechRecognizer(mSpeechRecognizer);

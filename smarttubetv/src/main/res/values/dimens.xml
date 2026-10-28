@@ -43,6 +43,9 @@
     <!-- Margin for items from the right side of search field. -->
     <dimen name="search_bar_right_items_margin">20dp</dimen>
 
+    <!-- M2Y: settings orb keeps its old place after the search orb moved next to the field (2 × 20dp margin + 52dp orb). -->
+    <dimen name="search_bar_settings_orb_margin_end">92dp</dimen>
+
     <!-- Margin for items from the right side of search field. -->
     <dimen name="search_bar_global_time_margin">120dp</dimen>
 

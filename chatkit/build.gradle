@@ -30,7 +30,6 @@ dependencies {
     implementation project(':sharedutils')
 
     implementation 'androidx.appcompat:appcompat:' + appCompatXVersion
-    implementation 'com.google.android.material:material:' + materialVersion
     implementation "com.google.android.flexbox:flexbox:" + flexboxVersion
     implementation 'androidx.recyclerview:recyclerview:' + recyclerviewXVersion
 }

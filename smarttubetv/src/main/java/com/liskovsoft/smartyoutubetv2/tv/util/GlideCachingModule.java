@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.request.RequestOptions;
 
 /**
  * https://bumptech.github.io/glide/doc/configuration.html#disk-cache<br/>
@@ -22,5 +24,7 @@ public class GlideCachingModule extends AppGlideModule {
 
         // Limit cache size
         builder.setDiskCache(new InternalCacheDiskCacheFactory(context, CACHE_SIZE));
+        // M2Y: thumbnails in 16 bit (half the memory and upload time per card; images with transparency keep 32 bit)
+        builder.setDefaultRequestOptions(new RequestOptions().format(DecodeFormat.PREFER_RGB_565));
     }
 }

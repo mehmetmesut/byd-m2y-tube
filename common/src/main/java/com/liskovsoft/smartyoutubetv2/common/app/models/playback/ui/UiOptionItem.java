@@ -55,6 +55,14 @@ public class UiOptionItem implements OptionItem {
         return uiOptionItem;
     }
 
+    /** M2Y: the same item under another title (e.g. "480p · Recommended"). */
+    public static OptionItem retitle(OptionItem item, CharSequence title) {
+        if (item instanceof UiOptionItem) {
+            ((UiOptionItem) item).mTitle = title;
+        }
+        return item;
+    }
+
     /** M2Y: like from(format, ...), with the selected state decided by the caller. */
     public static OptionItem from(FormatItem format, OptionCallback callback, String defaultTitle, boolean isSelected) {
         OptionItem item = from(format, callback, defaultTitle);

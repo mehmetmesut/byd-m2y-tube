@@ -1,8 +1,5 @@
 package com.liskovsoft.smartyoutubetv2.tv.ui.search.tags.vineyard;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,6 @@ import androidx.leanback.widget.ListRow;
 import androidx.leanback.widget.ListRowPresenter;
 import androidx.leanback.widget.ObjectAdapter;
 import androidx.leanback.widget.RowPresenter.ViewHolder;
-import androidx.leanback.widget.SpeechRecognitionCallback;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
 import com.liskovsoft.sharedutils.helpers.PermissionHelpers;
 import com.liskovsoft.sharedutils.mylogger.Log;
@@ -32,11 +28,6 @@ import com.liskovsoft.smartyoutubetv2.tv.presenter.vineyard.TagPresenter;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.misc.ProgressBarManager;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.search.SearchSupportFragment;
 
-import net.gotev.speech.GoogleVoiceTypingDisabledException;
-import net.gotev.speech.Speech;
-import net.gotev.speech.SpeechDelegate;
-import net.gotev.speech.SpeechRecognitionNotAvailable;
-import net.gotev.speech.SpeechUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +35,6 @@ import java.util.List;
 public abstract class SearchTagsFragmentBase extends SearchSupportFragment
         implements SearchSupportFragment.SearchResultProvider, SearchView {
     private static final String TAG = SearchTagsFragmentBase.class.getSimpleName();
-    private static final int REQUEST_SPEECH = 0x00000010;
 
     private TagAdapter mSearchTagsAdapter;
     //private ObjectAdapter mItemResultsAdapter;
@@ -89,22 +79,6 @@ public abstract class SearchTagsFragmentBase extends SearchSupportFragment
     public void onStop() {
         super.onStop();
         mIsStopping = true;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_SPEECH:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        setSearchQuery(data, true);
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Log.i(TAG, "Recognizer canceled");
-                        break;
-                }
-                break;
-        }
     }
 
     @Override
@@ -155,37 +129,11 @@ public abstract class SearchTagsFragmentBase extends SearchSupportFragment
         // NOTE: External recognizer makes voice search behave unexpectedly (broken by Google app updates).
         // You should avoid using it till there be a solution.
 
-        switch (getSearchData().getSpeechRecognizerType()) {
-            case SearchData.SPEECH_RECOGNIZER_SYSTEM:
-                // Don't uncomment. Sometimes system recognizer works on lower api
-                // Do nothing unless we have old api.
-                // Internal recognizer needs API >= 23. See: androidx.leanback.widget.SearchBar.startRecognition()
-                //if (Build.VERSION.SDK_INT < 23) {
-                //    setSpeechRecognitionCallback(mDefaultCallback);
-                //}
-                break;
-            case SearchData.SPEECH_RECOGNIZER_INTENT:
-                setSpeechRecognitionCallback(mDefaultCallback);
-                break;
-            case SearchData.SPEECH_RECOGNIZER_GOTEV:
-                Speech.init(getContext());
-                setSpeechRecognitionCallback(mGotevCallback);
-                break;
-        }
+        // M2Y: voice search removed — no recognizer is set up (SearchData's recognizer setting is ignored)
     }
 
     protected void stopSpeechService() {
-        // Note: Other services don't need to be stopped
-
-        if (getSearchData().getSpeechRecognizerType() != SearchData.SPEECH_RECOGNIZER_GOTEV) {
-            return;
-        }
-
-        try {
-            Speech.getInstance().stopListening();
-        } catch (IllegalArgumentException | NoSuchMethodError e) { // Speech service not registered/Android 4 (no such method)
-            e.printStackTrace();
-        }
+        // M2Y: voice search removed, nothing to stop
     }
 
     protected void loadSearchTags(String searchQuery) {
@@ -301,78 +249,5 @@ public abstract class SearchTagsFragmentBase extends SearchSupportFragment
         return SearchData.instance(getContext());
     }
 
-    @SuppressWarnings("deprecation")
-    private final SpeechRecognitionCallback mDefaultCallback = () -> {
-        if (isAdded()) {
-            if (PermissionHelpers.hasMicPermissions(getContext())) {
-                MessageHelpers.showMessage(getContext(), R.string.disable_mic_permission);
-            }
 
-            try {
-                startActivityForResult(getRecognizerIntent(), REQUEST_SPEECH);
-            } catch (ActivityNotFoundException e) {
-                Log.e(TAG, "Cannot find activity for speech recognizer", e);
-            } catch (NullPointerException e) {
-                Log.e(TAG, "Speech recognizer can't obtain applicationInfo", e);
-            }
-        } else {
-            Log.e(TAG, "Can't perform search. Fragment is detached.");
-        }
-    };
-
-    @SuppressWarnings("deprecation")
-    private final SpeechRecognitionCallback mGotevCallback = () -> {
-        if (isAdded()) {
-            try {
-                // you must have android.permission.RECORD_AUDIO granted at this point
-                PermissionHelpers.verifyMicPermissions(getContext());
-                Speech.getInstance().startListening(new SpeechDelegate() {
-                    @Override
-                    public void onStartOfSpeech() {
-                        Log.i(TAG, "speech recognition is now active");
-                        showListening();
-                    }
-
-                    @Override
-                    public void onSpeechRmsChanged(float value) {
-                        Log.d(TAG, "rms is now: " + value);
-                    }
-
-                    @Override
-                    public void onSpeechPartialResults(List<String> results) {
-                        StringBuilder str = new StringBuilder();
-                        for (String res : results) {
-                            str.append(res).append(" ");
-                        }
-
-                        String result = str.toString().trim();
-                        Log.i(TAG, "partial result: " + result);
-                        setSearchQuery(result, true);
-
-                        showNotListening();
-                    }
-
-                    @Override
-                    public void onSpeechResult(String result) {
-                        Log.i(TAG, "result: " + result);
-                        setSearchQuery(result, true);
-
-                        showNotListening();
-                    }
-                });
-            } catch (SpeechRecognitionNotAvailable | GoogleVoiceTypingDisabledException exc) {
-                Log.e(TAG, "Speech recognition is not available on this device!");
-                // You can prompt the user if he wants to install Google App to have
-                // speech recognition, and then you can simply call:
-                try {
-                    SpeechUtil.redirectUserToGoogleAppOnPlayStore(getContext());
-                } catch (ActivityNotFoundException | NullPointerException e) {
-                    // NullPointerException: android.os.Parcel.readException (Parcel.java:1478)
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            Log.e(TAG, "Can't perform search. Fragment is detached.");
-        }
-    };
 }

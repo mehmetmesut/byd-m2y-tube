@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- M2Y: icon_home is a 301px nodpi PNG; give it the 24dp size of the other title orb icons -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/icon_home" android:width="24dp" android:height="24dp" />
+</layer-list>

@@ -208,7 +208,9 @@ import java.util.IdentityHashMap;
 
   @Override
   public long getAdjustedSeekPositionUs(long positionUs, SeekParameters seekParameters) {
-    return enabledPeriods[0].getAdjustedSeekPositionUs(positionUs, seekParameters);
+    // M2Y: a seek can come before tracks are enabled (resuming a saved video); upstream 2.11 falls back the same way
+    MediaPeriod mediaPeriod = enabledPeriods.length > 0 ? enabledPeriods[0] : periods[0];
+    return mediaPeriod.getAdjustedSeekPositionUs(positionUs, seekParameters);
   }
 
   // MediaPeriod.Callback implementation

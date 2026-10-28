@@ -292,7 +292,8 @@ public class SabrProcessor {
                     segment.startMs,
                     data,
                     contentLength,
-                    segmentStartBytes
+                    segmentStartBytes,
+                    segment.startRange != NO_VALUE ? segment.startRange + segmentStartBytes : NO_VALUE
             );
         } else {
             Log.d(TAG, "processMedia: part discarded. contentLength: %s, itag: %s", contentLength, segment.formatId.getItag());

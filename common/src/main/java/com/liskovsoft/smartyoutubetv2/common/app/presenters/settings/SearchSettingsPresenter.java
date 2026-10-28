@@ -30,7 +30,6 @@ public class SearchSettingsPresenter extends BasePresenter<Void> {
     public void show() {
         AppDialogPresenter settingsPresenter = AppDialogPresenter.instance(getContext());
 
-        appendSpeechRecognizerCategory(settingsPresenter);
         appendMiscCategory(settingsPresenter);
 
         settingsPresenter.showDialog(getContext().getString(R.string.dialog_search), () -> {
@@ -38,21 +37,6 @@ public class SearchSettingsPresenter extends BasePresenter<Void> {
                 MediaServiceManager.instance().clearSearchHistory();
             }
         });
-    }
-
-    private void appendSpeechRecognizerCategory(AppDialogPresenter settingsPresenter) {
-        List<OptionItem> options = new ArrayList<>();
-
-        for (int[] pair : new int[][] {
-                {R.string.speech_recognizer_system, SearchData.SPEECH_RECOGNIZER_SYSTEM},
-                {R.string.speech_recognizer_external_1, SearchData.SPEECH_RECOGNIZER_INTENT},
-                {R.string.speech_recognizer_external_2, SearchData.SPEECH_RECOGNIZER_GOTEV}}) {
-            options.add(UiOptionItem.from(getContext().getString(pair[0]),
-                    optionItem -> mSearchData.setSpeechRecognizerType(pair[1]),
-                    mSearchData.getSpeechRecognizerType() == pair[1]));
-        }
-
-        settingsPresenter.appendRadioCategory(getContext().getString(R.string.speech_engine), options);
     }
 
     private void appendMiscCategory(AppDialogPresenter settingsPresenter) {

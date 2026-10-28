@@ -23,6 +23,8 @@ public final class SabrExtractorInput implements ExtractorInput {
     private long startPosition;
     private int remaining;
     private MediaSegmentDataSabrPart data;
+    private static final int TAP_BUFFER_BYTES = 64 * 1024;
+    private byte[] tapBuffer;
 
     public SabrExtractorInput(SabrStream sabrStream) {
         this.sabrStream = sabrStream;
@@ -62,7 +64,7 @@ public final class SabrExtractorInput implements ExtractorInput {
 
     @Override
     public int read(byte[] buffer, int offset, int length) throws IOException, InterruptedException {
-        return forward(length, newLength -> data.data.read(buffer, offset, newLength));
+        return forward(length, newLength -> tap(data.data.read(buffer, offset, newLength), buffer, offset, 0));
     }
 
     @Override
@@ -76,13 +78,23 @@ public final class SabrExtractorInput implements ExtractorInput {
             int offset,
             int length,
             boolean allowEndOfInput) throws IOException, InterruptedException {
-        return forwardFully(length,
-                (total, newLength) -> data.data.readFully(buffer, offset + total, newLength, ALLOW_END_OF_INPUT)
-        );
+        return forwardFully(length, (total, newLength) -> {
+            boolean ok = data.data.readFully(buffer, offset + total, newLength, ALLOW_END_OF_INPUT);
+            if (ok) {
+                tap(newLength, buffer, offset + total, 0);
+            }
+            return ok;
+        });
     }
 
     @Override
     public int skip(int length) throws IOException, InterruptedException {
+        if (SabrMediaTap.listener != null) { // M2Y: read skipped bytes too, so the offline copy has no hole
+            return forward(length, newLength -> {
+                byte[] b = tapBuffer();
+                return tap(data.data.read(b, 0, Math.min(newLength, b.length)), b, 0, 0);
+            });
+        }
         return forward(length, newLength -> data.data.skip(newLength));
     }
 
@@ -95,8 +107,43 @@ public final class SabrExtractorInput implements ExtractorInput {
     public boolean skipFully(
             int length,
             boolean allowEndOfInput) throws IOException, InterruptedException {
+        if (SabrMediaTap.listener != null) { // M2Y: see skip()
+            return forwardFully(length, (total, newLength) -> {
+                byte[] b = tapBuffer();
+                for (int done = 0; done < newLength; ) {
+                    int n = Math.min(newLength - done, b.length);
+                    if (!data.data.readFully(b, 0, n, ALLOW_END_OF_INPUT)) {
+                        return false;
+                    }
+                    tap(n, b, 0, done);
+                    done += n;
+                }
+                return true;
+            });
+        }
         return forwardFully(length,
                 (total, newLength) -> data.data.skipFully(newLength, ALLOW_END_OF_INPUT));
+    }
+
+    /** M2Y: gives [count] bytes just read (at [advanceDelta] past the current advance) to the tap; returns [count]. */
+    private int tap(int count, byte[] buffer, int offset, int advanceDelta) {
+        SabrMediaTap.Listener listener = SabrMediaTap.listener;
+        if (count > 0 && listener != null && data.fileStartBytes >= 0) {
+            try {
+                listener.onMediaBytes(sabrStream.getVideoId(), data.formatId.getItag(),
+                        data.fileStartBytes + getAdvance() + advanceDelta, buffer, offset, count);
+            } catch (RuntimeException e) { // the copy is optional: playback must go on
+                Log.e(TAG, "Media tap failed: %s", e.getMessage());
+            }
+        }
+        return count;
+    }
+
+    private byte[] tapBuffer() {
+        if (tapBuffer == null) {
+            tapBuffer = new byte[TAP_BUFFER_BYTES];
+        }
+        return tapBuffer;
     }
 
     @Override

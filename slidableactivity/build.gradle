@@ -25,11 +25,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.legacy:legacy-support-v4:' + legacySupportV4XVersion
     implementation 'androidx.appcompat:appcompat:' + appCompatXVersion
-    implementation 'androidx.recyclerview:recyclerview:' + recyclerviewXVersion
-    implementation 'androidx.cardview:cardview:' + cardviewXVersion
-    implementation 'com.52inc:52Kit-core:0.6.2'
 
     implementation project(':fragment-1.1.0')
     

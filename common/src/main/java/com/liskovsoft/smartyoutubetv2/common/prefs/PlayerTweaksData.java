@@ -93,7 +93,6 @@ public class PlayerTweaksData implements ProfileChangeListener {
     private int mScreenOffTimeoutSec;
     private int mScreenOffDimmingPercents;
     private boolean mIsUIAnimationsEnabled;
-    private boolean mIsLikesCounterEnabled;
     private boolean mIsChapterNotificationEnabled;
     private boolean mIsPlayerUiOnNextEnabled;
     private boolean mIsPlayerAutoVolumeEnabled;
@@ -104,7 +103,6 @@ public class PlayerTweaksData implements ProfileChangeListener {
     private boolean mIsQuickSkipShortsAltEnabled;
     private boolean mIsQuickSkipVideosEnabled;
     private boolean mIsQuickSkipVideosAltEnabled;
-    private boolean mIsOculusQuestFixEnabled;
     private boolean mIsAudioFocusEnabled;
     private boolean mIsNetworkErrorFixingDisabled;
     private boolean mIsDontResizeVideoToFitDialogEnabled;
@@ -404,15 +402,6 @@ public class PlayerTweaksData implements ProfileChangeListener {
         persistData();
     }
 
-    public boolean isOculusQuestFixEnabled() {
-        return mIsOculusQuestFixEnabled;
-    }
-
-    public void setOculusQuestFixEnabled(boolean enable) {
-        mIsOculusQuestFixEnabled = enable;
-        persistData();
-    }
-
     public boolean isButtonLongClickEnabled() {
         return mIsButtonLongClickEnabled;
     }
@@ -512,15 +501,6 @@ public class PlayerTweaksData implements ProfileChangeListener {
 
     public void setUIAnimationsEnabled(boolean enable) {
         mIsUIAnimationsEnabled = enable;
-        persistData();
-    }
-
-    public boolean isLikesCounterEnabled() {
-        return mIsLikesCounterEnabled;
-    }
-
-    public void setLikesCounterEnabled(boolean enable) {
-        mIsLikesCounterEnabled = enable;
         persistData();
     }
 
@@ -736,7 +716,6 @@ public class PlayerTweaksData implements ProfileChangeListener {
         mIsScreenOffTimeoutEnabled = Helpers.parseBoolean(split, 32, false);
         mScreenOffTimeoutSec = Helpers.parseInt(split, 33, 0);
         mIsUIAnimationsEnabled = Helpers.parseBoolean(split, 34, false);
-        mIsLikesCounterEnabled = Helpers.parseBoolean(split, 35, false); // M2Y: one request less per video
         mIsChapterNotificationEnabled = Helpers.parseBoolean(split, 36, false);
         mScreenOffDimmingPercents = Helpers.parseInt(split, 37, 100);
         mIsBootScreenOffEnabled = Helpers.parseBoolean(split, 38, false);
@@ -748,7 +727,6 @@ public class PlayerTweaksData implements ProfileChangeListener {
         mIsLoopShortsEnabled = Helpers.parseBoolean(split, 44, true);
         mIsQuickSkipShortsEnabled = Helpers.parseBoolean(split, 45, true);
         mIsRememberPositionOfLiveVideosEnabled = Helpers.parseBoolean(split, 46, true);
-        mIsOculusQuestFixEnabled = Helpers.parseBoolean(split, 47, Utils.isOculusQuest());
         // mPlayerDataSource was here
         // Cronet is buffering too, unfortunately, so leave the default as a safest method (e.g. for "strtarmenia")
         // mPlayerDataSource = Helpers.parseInt(split, 48, PLAYER_DATA_SOURCE_DEFAULT);
@@ -786,10 +764,10 @@ public class PlayerTweaksData implements ProfileChangeListener {
                 mIsAvcOverVp9Preferred, mIsChatPlacedLeft, mIsRealChannelIconEnabled, mPixelRatio, mIsQualityInfoBitrateEnabled,
                 mIsSpeedButtonOldBehaviorEnabled, mIsButtonLongClickEnabled, mIsLongSpeedListEnabled, mPlayerDataSource, mUnlockAllFormats,
                 mIsDashUrlStreamsForced, mIsSonyFrameDropFixEnabled, mIsBufferOnStreamsDisabled, mIsSectionPlaylistEnabled,
-                mIsScreenOffTimeoutEnabled, mScreenOffTimeoutSec, mIsUIAnimationsEnabled, mIsLikesCounterEnabled, mIsChapterNotificationEnabled,
+                mIsScreenOffTimeoutEnabled, mScreenOffTimeoutSec, mIsUIAnimationsEnabled, null, mIsChapterNotificationEnabled,
                 mScreenOffDimmingPercents, mIsBootScreenOffEnabled, mIsPlayerUiOnNextEnabled, mIsPlayerAutoVolumeEnabled, mIsSyncRowButtonIndexEnabled,
                 mIsUnsafeAudioFormatsEnabled, null, mIsLoopShortsEnabled, mIsQuickSkipShortsEnabled, mIsRememberPositionOfLiveVideosEnabled,
-                mIsOculusQuestFixEnabled, null, mIsExtraLongSpeedListEnabled, mIsQuickSkipVideosEnabled, mIsNetworkErrorFixingDisabled, mIsCommentsPlacedLeft,
+                null, null, mIsExtraLongSpeedListEnabled, mIsQuickSkipVideosEnabled, mIsNetworkErrorFixingDisabled, mIsCommentsPlacedLeft,
                 null, mIsAudioFocusEnabled, mIsDontResizeVideoToFitDialogEnabled, mIsSuggestionsHorizontallyScrolled,
                 mIsQuickSkipShortsAltEnabled, mIsQuickSkipVideosAltEnabled, mIsAudioTimeStretchingEnabled, mIsQueueRespectsPlaybackMode
                 ));

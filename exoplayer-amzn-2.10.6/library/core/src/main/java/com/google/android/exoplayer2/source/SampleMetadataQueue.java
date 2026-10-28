@@ -308,6 +308,31 @@ import com.google.android.exoplayer2.util.Util;
   }
 
   /**
+   * M2Y: keyframe timestamps around {@code timeUs} among all queued samples (the back buffer included),
+   * without moving the read position. Returns {before, after}; {@link C#TIME_UNSET} for a side with no
+   * queued keyframe.
+   */
+  public synchronized long[] getKeyframeTimesAroundUs(long timeUs) {
+    long before = C.TIME_UNSET;
+    long after = C.TIME_UNSET;
+    int index = relativeFirstIndex;
+    for (int i = 0; i < length; i++) {
+      if ((flags[index] & C.BUFFER_FLAG_KEY_FRAME) != 0) {
+        if (timesUs[index] <= timeUs) {
+          before = timesUs[index];
+        } else {
+          after = timesUs[index];
+          break;
+        }
+      }
+      if (++index == capacity) {
+        index = 0;
+      }
+    }
+    return new long[] {before, after};
+  }
+
+  /**
    * Advances the read position to the end of the queue.
    *
    * @return The number of samples that were skipped.

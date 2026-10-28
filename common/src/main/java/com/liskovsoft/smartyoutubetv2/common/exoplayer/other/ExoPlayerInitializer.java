@@ -28,6 +28,7 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
 import java.util.UUID;
 
 public class ExoPlayerInitializer {
+    private static final int M2Y_BACK_BUFFER_MS = 10_000;
     private final int mMaxBufferBytes;
     private final PlayerData mPlayerData;
     private final PlayerTweaksData mPlayerTweaksData;
@@ -130,6 +131,8 @@ public class ExoPlayerInitializer {
             case PlayerData.BUFFER_MEDIUM:
                 //minBufferMs = 30_000;
                 //maxBufferMs = 30_000;
+                // M2Y: keep the last 10 s played so a short seek back does not reload (30 s held 15–25 MB at 1080p)
+                baseBuilder.setBackBuffer(M2Y_BACK_BUFFER_MS, true);
                 break;
             case PlayerData.BUFFER_LOW:
                 minBufferMs = 5_000; // LIVE fix

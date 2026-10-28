@@ -1,9 +1,11 @@
 package com.liskovsoft.smartyoutubetv2.tv.ui.browse;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,8 +97,43 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
         mProgressBarManager.setRootView((ViewGroup) root);
+        addMenuButton((ViewGroup) root);
+        fixTitleBar((ViewGroup) root);
 
         return root;
+    }
+
+    /** M2Y: the orbs never hide (showTitle), so the title strip gets the screen background and the rows scroll under it. */
+    private void fixTitleBar(ViewGroup root) {
+        View title = root.findViewById(androidx.leanback.R.id.browse_title_group);
+        if (title == null) {
+            return;
+        }
+        TypedValue bg = new TypedValue();
+        boolean isColor = requireContext().getTheme().resolveAttribute(android.R.attr.windowBackground, bg, true)
+                && bg.type >= TypedValue.TYPE_FIRST_COLOR_INT && bg.type <= TypedValue.TYPE_LAST_COLOR_INT;
+        title.setBackgroundColor(isColor ? bg.data : Color.BLACK);
+    }
+
+    /** M2Y: a touch screen has no "left" key, so a Home orb left of Search (lb_title_view) opens and closes the section menu. */
+    private void addMenuButton(ViewGroup root) {
+        androidx.leanback.widget.SearchOrbView home = root.findViewById(R.id.home_orb);
+        if (home == null) {
+            return;
+        }
+        home.setContentDescription(getString(R.string.header_home));
+        home.setFocusable(false); // remote navigation keeps using the "left" key
+        home.setOnOrbClickedListener(v -> startHeadersTransitionSafe(!isShowingHeaders()));
+        home.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * M2Y: the Home / Search / Account orbs stay on screen while the rows scroll. Leanback hides the title row below
+     * the first row (a remote brings it back with "up"); a touch screen has no way back to it.
+     */
+    @Override
+    public void showTitle(boolean show) {
+        super.showTitle(true);
     }
 
     @Override

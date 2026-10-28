@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 
 import com.liskovsoft.mediaserviceinterfaces.data.ItemGroup;
 import com.liskovsoft.mediaserviceinterfaces.data.ChapterItem;
-import com.liskovsoft.mediaserviceinterfaces.data.DislikeData;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaGroup;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItem;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItemFormatInfo;
@@ -90,8 +89,6 @@ public final class Video {
     public boolean isPending;
     public boolean finishOnEnded;
     public boolean incognito;
-    public String likeCount;
-    public String dislikeCount;
     public String subscriberCount;
     public float volume = 1.0f;
     public boolean deArrowProcessed;
@@ -762,8 +759,6 @@ public final class Video {
         shuffleMediaItem = metadata.getShuffleVideo();
         playlistInfo = metadata.getPlaylistInfo();
         isSubscribed = metadata.isSubscribed();
-        likeCount = metadata.getLikeCount();
-        dislikeCount = metadata.getDislikeCount();
         subscriberCount = metadata.getSubscriberCount();
         notificationStates = metadata.getNotificationStates();
         author = metadata.getAuthor();
@@ -796,21 +791,6 @@ public final class Video {
 
         volume = formatInfo.getVolumeLevel();
         isUnplayable = formatInfo.isUnplayable();
-    }
-
-    public void sync(DislikeData dislikeData) {
-        if (dislikeData == null) {
-            return;
-        }
-
-        String likeCountNew = dislikeData.getLikeCount();
-        String dislikeCountNew = dislikeData.getDislikeCount();
-        if (likeCountNew != null) {
-            likeCount = likeCountNew;
-        }
-        if (dislikeCountNew != null) {
-            dislikeCount = dislikeCountNew;
-        }
     }
 
     /**

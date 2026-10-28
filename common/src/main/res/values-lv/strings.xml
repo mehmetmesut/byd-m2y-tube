@@ -48,7 +48,6 @@
     <string name="settings_other">Cits</string>
     <string name="settings_player">Video atskaņotājs</string>
     <string name="settings_language">Valoda</string>
-    <string name="settings_linked_devices">Saistītās ierīces</string>
     <string name="settings_about">Par</string>
     <string name="dialog_account_list">Izvēlies kontu</string>
     <string name="dialog_account_none">Neviens</string>

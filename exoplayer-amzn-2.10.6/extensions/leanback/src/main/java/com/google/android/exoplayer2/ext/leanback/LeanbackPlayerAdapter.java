@@ -29,7 +29,9 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
+import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.PlaybackPreparer;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Player.DiscontinuityReason;
@@ -189,7 +191,17 @@ public final class LeanbackPlayerAdapter extends PlayerAdapter implements Runnab
 
   @Override
   public void seekTo(long positionMs) {
+    // M2Y: only user seeks (seek bar, touch, rewind/forward) come here, so only they snap to the nearest
+    // buffered keyframe; programmatic seeks (SponsorBlock skips, resume) stay exact and cannot loop
+    if (!(player instanceof ExoPlayer)) {
+      controlDispatcher.dispatchSeekTo(player, player.getCurrentWindowIndex(), positionMs);
+      return;
+    }
+    ExoPlayer exo = (ExoPlayer) player;
+    SeekParameters previous = exo.getSeekParameters();
+    exo.setSeekParameters(SeekParameters.CLOSEST_SYNC);
     controlDispatcher.dispatchSeekTo(player, player.getCurrentWindowIndex(), positionMs);
+    exo.setSeekParameters(previous);
   }
 
   @Override

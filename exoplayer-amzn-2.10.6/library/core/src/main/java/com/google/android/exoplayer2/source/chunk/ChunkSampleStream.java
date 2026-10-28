@@ -269,6 +269,17 @@ public class ChunkSampleStream<T extends ChunkSource> implements SampleStream, S
    * @return The adjusted seek position, in microseconds.
    */
   public long getAdjustedSeekPositionUs(long positionUs, SeekParameters seekParameters) {
+    // M2Y: inside the buffer, snap to a buffered keyframe so playback resumes at once instead of
+    // decoding (hidden) every frame from the previous keyframe up to the target
+    if (!SeekParameters.EXACT.equals(seekParameters)
+        && !isPendingReset()
+        && positionUs <= primarySampleQueue.getLargestQueuedTimestampUs()) {
+      long[] sync = primarySampleQueue.getKeyframeTimesAroundUs(positionUs);
+      if (sync[0] != C.TIME_UNSET) {
+        long after = sync[1] != C.TIME_UNSET ? sync[1] : sync[0];
+        return Util.resolveSeekPositionUs(positionUs, seekParameters, sync[0], after);
+      }
+    }
     return chunkSource.getAdjustedSeekPositionUs(positionUs, seekParameters);
   }
 

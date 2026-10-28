@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.common.R;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.AddDevicePresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SignInPresenter;
@@ -325,7 +324,7 @@ public class ScreensaverManager {
             return false;
         }
 
-        return SignInPresenter.instance(activity).getView() != null || AddDevicePresenter.instance(activity).getView() != null;
+        return SignInPresenter.instance(activity).getView() != null;
     }
 
     private void hidePlayerOverlay() {

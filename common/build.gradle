@@ -62,7 +62,6 @@ dependencies {
     implementation project(':fragment-1.1.0')
     implementation project(':mediaserviceinterfaces')
     implementation project(':youtubeapi')
-    implementation project(':filepicker-lib')
 
     implementation 'io.reactivex.rxjava2:rxandroid:' + rxAndroidVersion
     implementation 'io.reactivex.rxjava2:rxjava:' + rxJavaVersion
@@ -88,7 +87,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:' + glideVersion
 
     implementation 'androidx.work:work-runtime:' + workVersion
-    implementation 'com.google.guava:guava:' + guavaVersion // Work library deps
 
     implementation 'androidx.browser:browser:' + browserXVersion
 
@@ -98,9 +96,8 @@ dependencies {
 
     implementation 'com.jakewharton:process-phoenix:' + phoenixVersion
 
-    implementation project(':leanbackassistant')
 
-    implementation project(':appupdatechecker2')
+    implementation project(':leanback-1.0.0') // leanback ids (lb_control_*), came through leanbackassistant before
 
     implementation project(':slidableactivity') // https://github.com/r0adkll/Slidr
 }

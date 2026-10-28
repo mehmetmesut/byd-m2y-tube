@@ -11,4 +11,28 @@
     </string-array>
     <string name="m2y_more_settings">Diğer ayarlar…</string>
     <string name="m2y_music">Müzik</string>
+    <string name="m2y_recommended">%1$s · Önerilen</string>
+    <string name="m2y_default_quality">Varsayılan · 480p 30fps vp9 · Önerilen (hızlı açılış, az veri)</string>
+    <string name="m2y_save_offline">Çevrimdışı kaydet</string>
+    <string name="m2y_save_quality">Kalite</string>
+    <string name="m2y_saved_videos">Kaydedilenler</string>
+    <string name="m2y_memory_videos">Hafızadakiler</string>
+    <string name="m2y_saving">Çevrimdışı için kaydediliyor</string>
+    <string name="m2y_saving_started">Kaydediliyor (%1$s)… izlemeye devam edebilirsiniz · %2$s dolu</string>
+    <string name="m2y_saved_done">Kaydedildi: %1$s</string>
+    <string name="m2y_save_failed">Kaydedilemedi: %1$s</string>
+    <string name="m2y_save_no_space">Kaydedilemedi, yeterli boş alan yok: %1$s</string>
+    <string name="m2y_save_unavailable">Bu video kaydedilemiyor (doğrudan akış yok)</string>
+    <string name="m2y_delete_saved">Kaydı sil</string>
+    <string name="m2y_deleted">Kayıt silindi</string>
+    <string name="m2y_saved_usage">%1$s / %2$s</string>
+    <string name="m2y_offline_badge">Kayıtlı · %1$s</string>
+    <string name="m2y_saving_percent">İndiriliyor · %%%1$d</string>
+    <string name="m2y_save_cancel">İndirmeyi iptal et</string>
+    <string name="m2y_saved_row">✓ Kayıtlı · %1$s · %2$s</string>
+    <string name="m2y_save_cancelled">İndirme iptal edildi: %1$s</string>
+    <string name="m2y_save_preparing">Kaliteler hazırlanıyor… birazdan tekrar dokunun</string>
+    <string name="m2y_header_live">Canlı</string>
+    <string name="m2y_offline_showing_saved">İnternet yok: kaydedilen videolar gösteriliyor</string>
+    <string name="m2y_save_blocked">YouTube bu videonun kaydedilmesine şu an izin vermiyor: %1$s</string>
 </resources>

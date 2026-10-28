@@ -37,7 +37,7 @@ public final class OptionsPopup {
     private static final int ITEM_PADDING_DP = 18;
     private static final int TEXT_SP = 17;
     private static final int MIN_WIDTH_DP = 150;
-    private static final int MAX_WIDTH_DP = 320;
+    private static final int MAX_WIDTH_DP = 380; // fits "480p, 25fps, 0.71Mbps, vp9 · Önerilen" without an ellipsis
     private static final int ABOVE_TOUCH_DP = 40; // clears the button the finger is on
     private static final int SCREEN_MARGIN_DP = 8;
     private static final long REOPEN_GUARD_MS = 300; // tapping the same button again only closes the list

@@ -15,6 +15,7 @@ import com.liskovsoft.mediaserviceinterfaces.data.PlaylistInfo;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.helpers.KeyHelpers;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineDialog;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.sharedutils.rx.RxHelper;
 import com.liskovsoft.smartyoutubetv2.common.R;
@@ -32,7 +33,6 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.ChannelPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SearchPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.VideoMenuPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.VideoMenuPresenter.VideoMenuCallback;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.AutoFrameRateSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.track.SubtitleTrack;
 import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
@@ -382,7 +382,6 @@ public class PlayerUIController extends BasePlayerController {
         setSubtitleButtonState();
         getPlayer().setButtonState(R.id.action_rotate, getPlayerData().getRotationAngle() == 0 ? PlayerUI.BUTTON_OFF : PlayerUI.BUTTON_ON);
         getPlayer().setButtonState(R.id.action_subscribe, metadata.isSubscribed() ? PlayerUI.BUTTON_ON : PlayerUI.BUTTON_OFF);
-        getPlayer().setButtonState(R.id.action_afr, getPlayerData().isAfrEnabled() ? PlayerUI.BUTTON_ON : PlayerUI.BUTTON_OFF);
     }
 
     @Override
@@ -527,7 +526,6 @@ public class PlayerUIController extends BasePlayerController {
 
         int positionSec = Utils.toSec(getPlayer().getPositionMs());
         AppDialogUtil.appendShareLinkDialogItem(getContext(), dialogPresenter, getVideo(), positionSec);
-        AppDialogUtil.appendShareQRLinkDialogItem(getContext(), dialogPresenter, getVideo(), positionSec);
         AppDialogUtil.appendShareEmbedLinkDialogItem(getContext(), dialogPresenter, getVideo(), positionSec);
 
         dialogPresenter.showDialog(getVideo().getTitle());
@@ -543,6 +541,21 @@ public class PlayerUIController extends BasePlayerController {
         getPlayer().blockEngine(true);
         getPlayer().finish();
         BrowsePresenter.instance(getContext()).selectSection(MediaGroup.TYPE_HOME);
+    }
+
+    /** M2Y: like the HQ list, just above the button; the side dialog only for remote-control presses. */
+    private void onSaveClicked() {
+        Video video = getVideo();
+        List<OptionItem> items = OfflineDialog.items(getContext(), video, () -> {
+            // the direct streams of a SABR video arrived: open the list if the same video still plays and the controls are
+            // still up (the list belongs to the controls row and would hang there once they hide)
+            if (getPlayer() != null && getPlayer().isControlsShown() && video != null && video.equals(getVideo())) {
+                onSaveClicked();
+            }
+        });
+        if (items != null && getPlayer() != null && !getPlayer().showOptionsPopup(items, null, null)) {
+            OfflineDialog.showDialog(getContext(), getAppDialogPresenter(), items);
+        }
     }
 
     private void onSearchClicked() {
@@ -603,8 +616,6 @@ public class PlayerUIController extends BasePlayerController {
             onSubscribe(buttonState);
         } else if (buttonId == R.id.action_sound_off) {
             applySoundOff(buttonState);
-        } else if (buttonId == R.id.action_afr) {
-            applyAfr(buttonState);
         } else if (buttonId == R.id.action_repeat) {
             applyRepeatMode(buttonState);
         } else if (buttonId == R.id.action_channel) {
@@ -625,6 +636,8 @@ public class PlayerUIController extends BasePlayerController {
             onSearchClicked();
         } else if (buttonId == R.id.action_m2y_home) {
             onHomeClicked();
+        } else if (buttonId == R.id.action_m2y_save) {
+            onSaveClicked();
         } else if (buttonId == R.id.action_video_stats) {
             onDebugInfoClicked(buttonState);
         } else if (buttonId == R.id.action_playlist_add) {
@@ -646,8 +659,6 @@ public class PlayerUIController extends BasePlayerController {
             showNotificationsDialog();
         } else if (buttonId == R.id.action_sound_off) {
             showSoundOffDialog();
-        } else if (buttonId == R.id.action_afr) {
-            AutoFrameRateSettingsPresenter.instance(getContext()).show(() -> applyAfr(getPlayerData().isAfrEnabled() ? PlayerUI.BUTTON_OFF : PlayerUI.BUTTON_ON));
         } else if (buttonId == R.id.action_repeat) {
             showPlaybackModeDialog();
         } else if (buttonId == R.id.lb_control_closed_captioning) {
@@ -1055,16 +1066,6 @@ public class PlayerUIController extends BasePlayerController {
             getPlayer().setButtonState(R.id.action_sound_off,
                     (getPlayer().getAudioFormat().isDefault() || getPlayerData().getPlayerVolume() == 0) ? PlayerUI.BUTTON_ON : PlayerUI.BUTTON_OFF);
         }
-    }
-
-    private void applyAfr(int buttonState) {
-        if (getPlayer() == null) {
-            return;
-        }
-
-        getPlayerData().setAfrEnabled(buttonState == PlayerUI.BUTTON_OFF);
-        getController(AutoFrameRateController.class).applyAfr();
-        getPlayer().setButtonState(R.id.action_afr, buttonState == PlayerUI.BUTTON_OFF ? PlayerUI.BUTTON_ON : PlayerUI.BUTTON_OFF);
     }
 
     private void applyRepeatMode(int buttonState) {

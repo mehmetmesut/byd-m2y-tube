@@ -2,21 +2,16 @@ package com.liskovsoft.smartyoutubetv2.common.utils;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
 
 import com.liskovsoft.mediaserviceinterfaces.MediaItemService;
-import com.liskovsoft.mediaserviceinterfaces.data.ItemGroup;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItem;
 import com.liskovsoft.mediaserviceinterfaces.data.PlaylistInfo;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
-import com.liskovsoft.sharedutils.helpers.PermissionHelpers;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.sharedutils.rx.RxHelper;
 import com.liskovsoft.smartyoutubetv2.common.R;
@@ -29,17 +24,14 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionCatego
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.BrowsePresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.VideoMenuPresenter.VideoMenuCallback;
-import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.channelgroup.ChannelGroupServiceWrapper;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.other.SubtitleManager.SubtitleStyle;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem.VideoPreset;
 import com.liskovsoft.smartyoutubetv2.common.misc.AppDataSourceManager;
 import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
-import com.liskovsoft.smartyoutubetv2.common.misc.MotherActivity;
 import com.liskovsoft.smartyoutubetv2.common.prefs.SponsorBlockData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
@@ -47,7 +39,6 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
 import com.liskovsoft.youtubeapi.service.YouTubeMediaItemService;
 import com.liskovsoft.youtubeapi.playlist.impl.YouTubePlaylistInfo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -56,9 +47,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import arte.programar.materialfile.MaterialFilePicker;
-import arte.programar.materialfile.ui.FilePickerActivity;
-import arte.programar.materialfile.utils.FileUtils;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
@@ -83,7 +71,6 @@ public class AppDialogUtil {
     private static final int SUBTITLE_STYLES_ID = 45;
     private static final int SUBTITLE_SIZE_ID = 46;
     private static final int SUBTITLE_POSITION_ID = 47;
-    private static final int FILE_PICKER_REQUEST_CODE = 205;
 
     /**
      * Adds share link items to existing dialog.
@@ -146,32 +133,9 @@ public class AppDialogUtil {
     /**
      * Adds QR code item to existing dialog.
      */
-    public static void appendShareQRLinkDialogItem(Context context, AppDialogPresenter dialogPresenter, Video video) {
-        appendShareQRLinkDialogItem(context, dialogPresenter, video, -1);
-    }
-
     /**
      * Adds QR code item to existing dialog.
      */
-    public static void appendShareQRLinkDialogItem(Context context, AppDialogPresenter dialogPresenter, Video video, int positionSec) {
-        if (video == null) {
-            return;
-        }
-
-        if (video.videoId == null) {
-            return;
-        }
-
-        dialogPresenter.appendSingleButton(
-                UiOptionItem.from(context.getString(R.string.share_qr_link), optionItem -> {
-                    dialogPresenter.closeDialog(); // pause bg video
-                    if (video.videoId != null) {
-                        Utils.openLink(context, Utils.toQrCodeLink(
-                                Utils.convertToFullVideoUrl(video.videoId, positionSec == -1 ? Utils.toSec(video.getPositionMs()) : positionSec).toString()));
-                    }
-                }));
-    }
-
     public static OptionCategory createBackgroundPlaybackCategory(Context context, PlayerData playerData, GeneralData generalData) {
         return createBackgroundPlaybackCategory(context, playerData, generalData, () -> {});
     }
@@ -301,8 +265,9 @@ public class AppDialogUtil {
         //                setFormat(noVideo, playerData, onFormatSelected),
         //        isPresetSelection && Helpers.equals(noVideo, selectedFormat)));
 
+        // M2Y: "no preset" = the car default (480p 30fps vp9), named and marked as the recommendation instead of "Disabled"
         result.add(0, UiOptionItem.from(
-                context.getString(R.string.option_disabled),
+                context.getString(R.string.m2y_default_quality),
                 optionItem -> setFormat(playerData.getDefaultVideoFormat(), playerData, onFormatSelected),
                 !isPresetSelection));
 
@@ -945,76 +910,6 @@ public class AppDialogUtil {
         return OptionCategory.from(SLEEP_TIMER_ID, OptionCategory.TYPE_RADIO_LIST, title, options);
     }
 
-    public static OptionItem createSubscriptionsBackupButton(Context context) {
-        AppDialogPresenter dialogPresenter = AppDialogPresenter.instance(context);
-        List<OptionItem> options = new ArrayList<>();
-
-        // Import from the file
-        String filePickerTitle = context.getString(R.string.import_subscriptions_group) + " (GrayJay/PocketTube/NewPipe)";
-        OptionItem item = UiOptionItem.from(filePickerTitle, optionItem -> {
-            dialogPresenter.closeDialog();
-
-            MotherActivity activity = getMotherActivity(context);
-
-            if (PermissionHelpers.hasStoragePermissions(activity)) {
-                runFilePicker(activity, filePickerTitle);
-            } else {
-                activity.addOnPermissions((requestCode, permissions, grantResults) -> {
-                    if (requestCode == PermissionHelpers.REQUEST_EXTERNAL_STORAGE) {
-                        if (grantResults.length >= 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                            runFilePicker(activity, filePickerTitle);
-                        }
-                    }
-                });
-                PermissionHelpers.verifyStoragePermissions(activity);
-            }
-        });
-
-        return item;
-    }
-
-    private static void runFilePicker(Activity activity, String title) {
-        File filesDir = FileUtils.getFile(activity, null);
-
-        if (filesDir == null) {
-            Log.e(TAG, "Storage device is unavailable");
-            return;
-        }
-
-        new MaterialFilePicker()
-                .withActivity(activity)
-                .withTitle(title)
-                .withRootPath(filesDir.getAbsolutePath())
-                .start(FILE_PICKER_REQUEST_CODE);
-    }
-
-    @NonNull
-    private static MotherActivity getMotherActivity(Context context) {
-        ChannelGroupServiceWrapper mService = ChannelGroupServiceWrapper.instance(context);
-        MotherActivity activity = (MotherActivity) context;
-        activity.addOnResult((requestCode, resultCode, data) -> {
-            if (FILE_PICKER_REQUEST_CODE == requestCode && resultCode == Activity.RESULT_OK) {
-                String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-                RxHelper.execute(mService.importGroupsObserve(new File(filePath)), result -> pinGroups(context, result),
-                        error -> MessageHelpers.showLongMessage(context, error.getMessage()));
-            }
-        });
-        return activity;
-    }
-
-    private static void pinGroups(Context context, @NonNull List<ItemGroup> newGroups) {
-        if (newGroups.isEmpty()) {
-            // Already added to Subscriptions section
-            MessageHelpers.showMessage(context, context.getString(R.string.msg_done));
-            return;
-        }
-
-        for (ItemGroup group : newGroups) {
-            BrowsePresenter.instance(context).pinItem(Video.from(group));
-        }
-        MessageHelpers.showMessage(context, context.getString(R.string.pinned_to_sidebar));
-    }
-
     public static void showConfirmationDialog(Context context, String title, Runnable onConfirm) {
         showConfirmationDialog(context, title, onConfirm, () -> {});
     }
@@ -1024,7 +919,7 @@ public class AppDialogUtil {
 
         List<OptionItem> options = new ArrayList<>();
 
-        options.add(UiOptionItem.from(context.getString(R.string.cancel),
+        options.add(UiOptionItem.from(context.getString(android.R.string.cancel),
                 option -> {
                     settingsPresenter.goBack();
                     onCancel.run();

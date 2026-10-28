@@ -49,7 +49,6 @@
   <string name="settings_other">Muut</string>
   <string name="settings_player">Videosoitin</string>
   <string name="settings_language">Kieli</string>
-  <string name="settings_linked_devices">Linkitetyt laitteet</string>
   <string name="settings_about">Tietoja</string>
   <string name="dialog_account_list">Valitse tili</string>
   <string name="dialog_account_none">Ei mitään</string>
@@ -158,11 +157,6 @@
   <string name="player_remember_speed">Muista nopeus</string>
   <string name="mark_channel_as_watched">Merkitse katsotuksi</string>
   <string name="channel_marked_as_watched">Kanava on merkitty katsotuksi</string>
-  <string name="dialog_add_device">Lisää laite</string>
-  <string name="dialog_remove_all_devices">Poista kaikki laitteet</string>
-  <string name="device_link_enabled">Yhteys luotu</string>
-  <string name="device_connected">Laite \"%s\" on yhdistetty</string>
-  <string name="device_disconnected">Laite \"%s\" on poistettu</string>
   <string name="settings_ui_scale">Valikon koko</string>
   <string name="msg_restart_app">Käynnistä sovellus uudestaan muuttaaksesi asetukset</string>
   <string name="settings_block">Sisällön esto</string>
@@ -188,7 +182,6 @@
   <string name="intent_force_close">Pakota lopetus jos video avattu ulkoisesta lähteestä</string>
   <string name="btn_confirm">Vahvista</string>
   <string name="player_low_video_quality">Matala videolaatu</string>
-  <string name="remote_session_closed">Etäyhteys on suljettu</string>
   <string name="msg_mode_switch_error">Ei voida vaihtaa kuvatilaa \"%s\"</string>
   <string name="msg_player_error">Soittimen virhe %s. Uudelleen käynnistetään toistoa…</string>
   <string name="video_preset_disabled">Ei oletusasetusta</string>
@@ -228,8 +221,6 @@
   <string name="removed_from_playback_queue">Poistettu toistojonosta</string>
   <string name="added_to_playback_queue">Lisätty toistojonoon</string>
   <string name="add_remove_from_playback_queue">Lisää/poista toistojonosta</string>
-  <string name="proxy_enabled">Proxy käytössä</string>
-  <string name="proxy_disabled">Proxy pois käytöstä</string>
   <string name="uploads_row_name">Sivustolle lähetetyt</string>
   <string name="playlists_row_name">Tehdyt toistolistat</string>
   <string name="popular_uploads_row_name">Suositut sivustolle lähetetyt videot</string>
@@ -237,9 +228,6 @@
   <string name="covid_news_row_name">Covid-19 uutisia</string>
   <string name="enable_voice_search">Käytä äänihakua</string>
   <string name="subscribe_unsubscribe_from_channel">Tilaa/poista kanavan tilaus</string>
-  <string name="app_backup_restore">Tallenna/palauta asetukset</string>
-  <string name="app_backup">Tallenna asetukset</string>
-  <string name="app_restore">Palauta asetukset</string>
   <string name="skip_each_segment_once">Älä hyppää osioita uudelleen</string>
   <string name="disable_ok_long_press">Poista käytöstä pitkä OK painallus</string>
   <string name="sponsor_color_markers">Värimerkitty aikajana</string>
@@ -247,8 +235,6 @@
   <string name="option_disabled">Ei käytössä</string>
   <string name="live_now_row_name">Livenä nyt</string>
   <string name="run_in_background">Toista taustalla</string>
-  <string name="settings_remote_control">Kaukosäädin</string>
-  <string name="background_service_started">Toista taustalla</string>
   <string name="dialog_add_to">Lisää %s</string>
   <string name="dialog_remove_from">Poista %s</string>
   <string name="added_to">Lisätty %s</string>
@@ -315,7 +301,6 @@
   <string name="player_seek_confirmation_pause">Vahvistuksella (tauko etsimisen aikana)</string>
   <string name="player_seek_confirmation_play">Vahvistuksella (toista kun etsitään)</string>
   <string name="hide_shorts_from_home">Piilota Shorts-videot Koti-näkymästä</string>
-  <string name="finish_on_disconnect">Lopeta sovellus kun laite irroitetaan</string>
   <string name="update_error">Päivitys ei onnistunut</string>
   <string name="unpin_from_sidebar">Poista sivuvalikosta</string>
   <string name="player_show_ending_time">Näytä loppuaika</string>
@@ -323,27 +308,6 @@
   <string name="disable_screensaver">Älä käytä näytönsäästäjää</string>
   <string name="action_video_info">Videon kuvaus</string>
   <string name="description_not_found">Kuvausta ei löydy</string>
-  <string name="proxy_host_hint">Välityspalvelimen isäntänimi tai IP</string>
-  <string name="proxy_username_hint">Välityspalvelimen käyttäjätunnus</string>
-  <string name="proxy_port_hint">Välityspalvelimen portti</string>
-  <string name="proxy_password_hint">Välityspalvelimen salasana</string>
-  <string name="proxy_type">Välityspalvelimen tyyppi</string>
-  <string name="enable_web_proxy">Käytä välityspalvelimena nettiä</string>
-  <string name="proxy_not_supported">Käytä välityspalvelimena nettiä (Android 4.4+)</string>
-  <string name="proxy_test_btn">Testi</string>
-  <string name="proxy_settings_title">Välityspalvelimen asetukset</string>
-  <string name="proxy_test_cancelled">Testi#%d: peruttu</string>
-  <string name="proxy_type_invalid">Välityspalvelimen tyyppiä ei ole asetettu</string>
-  <string name="proxy_host_invalid">Välityspalvelimen isäntää ei ole asetettu</string>
-  <string name="proxy_port_invalid">Välityspalvelimen portti väärä, tulöee olla &gt;0</string>
-  <string name="proxy_credentials_invalid">Väärä käyttäjänimi tai salasana</string>
-  <string name="proxy_test_aborted">Testi keskeytetty, korjaa ensin välityspalvelimen asetukset.</string>
-  <string name="enable_openvpn">Käytä OpenVPN</string>
-  <string name="openvpn_settings_title">OpenVPN asetukset</string>
-  <string name="openvpn_application_aborted">Korjaa OpenVPN asetuksia</string>
-  <string name="openvpn_test_aborted">Testi keskeytetty, korjaa ensin OpenVPN asetukset.</string>
-  <string name="openvpn_address_invalid">OpenVPN-asetukset asettamatta</string>
-  <string name="internet_censorship">Internetsensuuri</string>
   <string name="rename_section">Nimeä tämä osio uudelleen</string>
   <string name="simple_edit_value_hint">Uusi arvo</string>
   <string name="seek_interval">Hakuväli</string>
@@ -427,7 +391,6 @@
   <string name="player_ending_time">Päättyy %s</string>
   <string name="badge_new_content">Uutta sisältöä</string>
   <string name="badge_live">Live</string>
-  <string name="add_device_view_description">Linkitä laite kirjoittamalla tämä koodi puhelimesi YouTube-sovelluksen kohtaan Asetukset/katso televisiossa.</string>
   <string name="playback_controls_repeat_pause">Toista tauko</string>
   <string name="playback_controls_repeat_list">Toista lista</string>
   <string name="action_subscribe_off">Tilaus pois päältä</string>
@@ -438,11 +401,6 @@
   <string name="sources">Lähteet</string>
   <string name="releases">Julkaisut</string>
   <string name="prefer_avc_over_vp9">Koodekin valinta: mieluummin avc kuin vp9</string>
-  <string name="proxy_application_aborted">Korjaa ensin välityspalvelimen asetukset</string>
-  <string name="proxy_test_start">Testi#%d: %s</string>
-  <string name="proxy_test_error">Virhe#%d: %s</string>
-  <string name="proxy_test_status">Tila#%d: %s %d %s</string>
-  <string name="openvpn_config_address_hint">Määritystiedoston osoite (*.ovpn)</string>
   <string name="add_to_playback_queue">Lisää toistojonoon</string>
   <string name="remove_from_playback_queue">Poista toistojonosta</string>
   <string name="pin_unpin_playlist">Kiinnitä/irrota soittolista sivuvalikosta</string>
@@ -552,7 +510,6 @@
   <string name="old_update_notifications">Päivitysilmoitusten vanha ulkoasu</string>
   <string name="mark_as_watched">Merkitse katselluksi</string>
   <string name="player_ui_animations">Ota ohjauspaneelin animaatiot käyttöön</string>
-  <string name="player_likes_count">Näytä tykkäysten/alapeukkujen määrä</string>
   <string name="sorting_alphabetically2">Aakkosjärjestyksessä (nopea)</string>
   <string name="sorting_default">Oletusarvo (nopea)</string>
   <string name="content_block_exclude_channel">Jätä tämä kanava pois SponsorBlockista</string>
@@ -596,16 +553,13 @@
   <string name="multi_profiles">Käytä eri asetuksia eri käyttäjille</string>
   <string name="protect_account_with_password">Suojaa tämä tili salasanalla</string>
   <string name="enter_account_password">Syötä tilin salasana</string>
-  <string name="show_connect_messages">Näytä yhteysviestit</string>
   <string name="prefer_avc_over_vp9_desc">Huom. max 1080P</string>
   <string name="news_row_name">Uutiset</string>
   <string name="play_next">Toista seuraava</string>
   <string name="hide_watched_from_subscriptions">Piilota katsotut tilauksista</string>
   <string name="hide_unwanted_content">Piilota ei-toivottu sisältö</string>
   <string name="hide_watched_from_home">Piilota katsotut videot pääsivulta</string>
-  <string name="remote_control_permission">Taustakauko-ohjaus vaatii Overlay-luvan</string>
   <string name="login_from_browser">Sisäänkirjautuminen selaimella</string>
-  <string name="disable_remote_history">Poista historia käytöstä kaukosäädintä käytettäessä</string>
   <string name="keyboard_fix">Korjaa näppäimistön näyttäminen OK-näppäimen painalluksella (G20s ja muut)</string>
   <string name="nothing_found">Ei hakutuloksia</string>
   <string name="auto_frame_rate_desc">Tämä vaihtoehto poistaa värinän kohtauksista, joissa kamera liikkuu nopeasti, esim. urheilulähetykset.</string>
@@ -660,9 +614,6 @@
   <string name="prefer_ipv4_desc">Voi korjata tilanteet, joissa sovellus ei toimi.\nHuom. Saattaa aiheuttaa kaatumisia (erityisesti Android 8 -laitteissa tai Dune HD:ssa)</string>
   <string name="long_press_for_settings">Pitkä painallus -&gt; asetuksiin</string>
   <string name="long_press_for_options">Pitkä painallus -&gt; vaihtoehtoihin</string>
-  <string name="device_specific_backup">Varmuuskopiointi vain tätä laitetta varten</string>
-  <string name="local_backup">Paikallinen varmuuskopiointi</string>
-  <string name="auto_backup">Automaattinen varmuuskopiointi (kerran päivässä)</string>
   <string name="repeat_mode_reverse_list">Toista soittolistan tai kanavan videot käänteisessä järjestyksessä</string>
   <string name="calm_msg">Korjaamme ongelmaa. Tarkista päivitykset aika ajoin</string>
   <string name="without_picture">Ilman kuvaa</string>
@@ -685,7 +636,6 @@
   <string name="playlists_rows">Näytä soittolistojen osio riveinä</string>
   <string name="suggestions">Ehdotukset</string>
   <string name="not_supported_by_device">Laite ei tue tätä toimintoa</string>
-  <string name="import_subscriptions_group">Tuo tilaukset</string>
   <string name="lb_playback_controls_closed_captioning_disable">Poista suljetut tekstitykset käytöstä</string>
   <string name="lb_playback_controls_closed_captioning_enable">Ota käyttöön suljettu tekstitykset</string>
   <string name="my_videos">Omat videoni</string>
@@ -695,7 +645,6 @@
   <string name="card_preview">Korttien esikatselu</string>
   <string name="card_preview_full">Videon esikatselu äänellä</string>
   <string name="card_preview_muted">Videon esikatselu ilman ääntä</string>
-  <string name="oculus_quest_fix">Oculus Quest korjaus</string>
   <string name="playback_buffering_fix">Toiston puskuroinnin korjaaminen</string>
   <string name="premium_users_only">Vain Youtube Premium-käyttäjille. Korjaa epätäydellinen videoformaattiluettelo</string>
   <string name="card_unlocalized_titles">Älä suomenna videoiden otsikoita</string>
@@ -709,10 +658,6 @@
   <string name="typing_corrections">Poista automaattinen korjaus käytöstä tekstiä kirjoitettaessa</string>
   <string name="suggestions_horizontally_scrolled">Vaakasuunnassa vieritettävät ehdotukset</string>
   <string name="stable_restore">Palauta vakaa versio (kaikki SmartTuben tiedot menetetään)</string>
-  <string name="auto_backup_category">Automaattinen asetusten tallentaminen</string>
-  <string name="once_a_day">Kerran päivässä</string>
-  <string name="once_a_week">Kerran viikossa</string>
-  <string name="once_a_month">Kerran kuukaudessa</string>
   <string name="action_debug_info">Virheenkorjaustiedot</string>
   <string name="dialog_block_channel">Estä kanava</string>
   <string name="dialog_unblock_channel">Poista kanavan esto</string>
@@ -728,7 +673,6 @@
   <string name="ignore_short_segments">Ohita lyhyet video-osiot</string>
   <string name="install_bridge">Asenna Android TV/Amazon yhteys</string>
   <string name="fix_empty_subs_and_channels">Korjaa tyhjät tilaukset ja kanavat</string>
-  <string name="local_backup_not_supported">Automaattista varmuuskopiointia ei tueta Android TV 11:ssä tai sitä uudemmissa versioissa järjestelmärajoitusten vuoksi. Käytä sen sijaan GDrivea.</string>
   <string name="rounded_card_corners">Pyöristä videokorttien kulmat</string>
   <string name="player_quick_skip_videos_alt">Ohita tavallisia videoita ylös/alas-painikkeilla</string>
   <string name="player_quick_shorts_skip_alt">Ohita shorts-videoita ylös/alas-napeilla</string>
@@ -738,13 +682,8 @@
   <string name="prefer_google_dns">Suosi Googlen DNS:ää</string>
   <string name="sidebar_notification">Näytä ilmoitus sivupalkissa</string>
   <string name="player_chapter_notification2">Siirry seuraavaan lukuun napsauttamalla ilmoitusta</string>
-  <string name="app_restore_desc">Varmuuskopiotiedosto zip tulee kopioida tähän kansioon manuaalisesti tai tiedostonhallinnassa käyttämällä \'Avaa sovelluksella\' -toimintoa.</string>
-  <string name="app_backup_desc">Varmuuskopio luodaan zip-muodossa</string>
   <string name="remove_from_search_history">Poista hakuhistoriasta</string>
   <string name="add_video_to_watch_later">Lisää katsottavaksi myöhemmin</string>
-  <string name="enable_conscrypt_desc">Parantaa HTTPS-, TLS- ja VPN-yhteensopivuutta joillakin laitteilla mutta saattaa toisinaan aiheuttaa toisto-ongelmia tai hitaampaa verkon suorituskykyä</string>
-  <string name="network_settings">Verkkoasetukset</string>
   <string name="comments_disabled">Kommentit on poistettu käytöstä tässä videossa</string>
-  <string name="enable_conscrypt">Ota Conscrypt käyttöön</string>
   <string name="remove_video_to_watch_later">Poista ”Katso myöhemmin” listalta</string>
 </resources>

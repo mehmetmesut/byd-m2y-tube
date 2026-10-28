@@ -53,7 +53,6 @@
   <string name="settings_other">Overig</string>
   <string name="settings_player">Videospeler</string>
   <string name="settings_language">Taal</string>
-  <string name="settings_linked_devices">Gekoppelde apparaten</string>
   <string name="settings_about">Informatie</string>
   <string name="dialog_account_list">Account kiezen</string>
   <string name="dialog_account_none">Geen account</string>
@@ -169,11 +168,6 @@
   <string name="player_remember_speed">Videosnelheid onthouden</string>
   <string name="mark_channel_as_watched">Markeren als bekeken</string>
   <string name="channel_marked_as_watched">Het kanaal is gemarkeerd als bekeken</string>
-  <string name="dialog_add_device">Apparaat toevoegen</string>
-  <string name="dialog_remove_all_devices">Apparaten verwijderen</string>
-  <string name="device_link_enabled">Meldingen weergeven</string>
-  <string name="device_connected">\‘%s\’ is gekoppeld</string>
-  <string name="device_disconnected">\‘%s\’ is ontkoppeld</string>
   <string name="settings_ui_scale">Formaat</string>
   <string name="msg_restart_app">Start de app opnieuw op om de instellingen toe te passen</string>
   <string name="settings_block">Inhoudsblokkade</string>
@@ -200,7 +194,6 @@
   <string name="intent_force_close">Video van externe bron geforceerd afsluiten</string>
   <string name="btn_confirm">Bevestigen</string>
   <string name="player_low_video_quality">Lage videokwaliteit</string>
-  <string name="remote_session_closed">De sessie op afstand is beëindigd</string>
   <string name="msg_mode_switch_error">De verhouding kan niet worden aangepast naar \‘%s\’</string>
   <string name="msg_player_error">\‘%s\’ kan niet worden afgespeeld - er wordt opnieuw gestart</string>
   <string name="video_preset_disabled">Geen voorinstelling</string>
@@ -253,8 +246,6 @@
   <string name="add_remove_from_playback_queue">In afspeelwachtrij</string>
   <string name="add_to_playback_queue">Toevoegen aan afspeelwachtrij</string>
   <string name="remove_from_playback_queue">Verwijderen uit afspeelwachtrij</string>
-  <string name="proxy_enabled">De proxy is ingeschakeld</string>
-  <string name="proxy_disabled">De proxy is uitgeschakeld</string>
   <string name="uploads_row_name">Uploads</string>
   <string name="playlists_row_name">Gemaakte afspeellijsten</string>
   <string name="popular_uploads_row_name">Populaire uploads</string>
@@ -263,9 +254,6 @@
   <string name="covid_news_row_name">Coronanieuws</string>
   <string name="enable_voice_search">Spraakgestuurd zoeken inschakelen</string>
   <string name="subscribe_unsubscribe_from_channel">(De)abonneren op kanaal</string>
-  <string name="app_backup_restore">Back-up/Herstel</string>
-  <string name="app_backup">Gegevens back-uppen</string>
-  <string name="app_restore">Gegevens herstellen uit back-up</string>
   <string name="skip_each_segment_once">Segmenten niet meer overslaan</string>
   <string name="disable_ok_long_press">OK-knop uitschakelen lang indrukken</string>
   <string name="disable_ok_long_press_desc">Bedoelt voor controllers met bugs waar de OK knop niet goed werkt</string>
@@ -275,8 +263,6 @@
   <string name="option_disabled">Uitgeschakeld</string>
   <string name="live_now_row_name">Nu live</string>
   <string name="run_in_background">Op de achtergrond uitvoeren</string>
-  <string name="settings_remote_control">Afstandsbediening</string>
-  <string name="background_service_started">Achtergrondservice gestart</string>
   <string name="dialog_add_to">Toevoegen aan %s</string>
   <string name="dialog_remove_from">Verwijderd uit %s</string>
   <string name="added_to">Toegevoegd aan %s</string>
@@ -348,38 +334,11 @@
   <string name="player_seek_confirmation_pause">Met bevestiging (pauze tijdens zoeken)</string>
   <string name="player_seek_confirmation_play">Met bevestiging (spelen tijdens het zoeken)</string>
   <string name="hide_shorts_from_home">Shorts verbergen op Home</string>
-  <string name="finish_on_disconnect">Voltooi de app nadat de telefoon/tablet is losgekoppeld</string>
   <string name="update_error">Update fout</string>
   <string name="hide_shorts_from_history">Shorts verbergen bij geschiedenis</string>
   <string name="hide_shorts_from_trending">Shorts verbergen bij Trending</string>
   <string name="disable_screensaver">Schermbeveiliging uitschakelen</string>
   <string name="description_not_found">Beschrijving niet gevonden</string>
-  <string name="proxy_port_hint">Proxy poort</string>
-  <string name="proxy_host_hint">Proxy-hostnaam of IP</string>
-  <string name="proxy_username_hint">Proxy gebruikersnaam</string>
-  <string name="proxy_password_hint">Proxy wachtwoord</string>
-  <string name="proxy_type">Proxy Type</string>
-  <string name="enable_web_proxy">Gebruik Web Proxy</string>
-  <string name="proxy_not_supported">Gebruik Web Proxy (Heeft Android 4.4+ nodig)</string>
-  <string name="proxy_test_btn">Test</string>
-  <string name="proxy_settings_title">Proxy Server Instellingen</string>
-  <string name="proxy_test_cancelled">Test#%d: geannuleerd.</string>
-  <string name="proxy_type_invalid">Proxy type niet gezet.</string>
-  <string name="proxy_host_invalid">Proxy host niet gezet.</string>
-  <string name="proxy_port_invalid">Ongeldige proxy poort, moet &gt; 0.</string>
-  <string name="proxy_credentials_invalid">ongeldige gebruikersnaam of wachtwoord.</string>
-  <string name="proxy_test_aborted">Test afgebroken, repareer eerst de proxy-instellingen.</string>
-  <string name="proxy_application_aborted">Corrigeer eerst de proxy-instellingen.</string>
-  <string name="proxy_test_start">Test#%d: %s …</string>
-  <string name="proxy_test_error">Error#%d: %s</string>
-  <string name="proxy_test_status">Status#%d: %s %d %s</string>
-  <string name="openvpn_config_address_hint">Adres configuratiebestand (*.ovpn)</string>
-  <string name="enable_openvpn">Gebruik OpenVPN</string>
-  <string name="openvpn_settings_title">OpenVPN Settings</string>
-  <string name="openvpn_application_aborted">Corrigeer eerst de OpenVPN-instellingen.</string>
-  <string name="openvpn_test_aborted">Test afgebroken, corrigeer eerst de OpenVPN-instellingen.</string>
-  <string name="openvpn_address_invalid">OpenVPN-configuratieadres niet ingesteld.</string>
-  <string name="internet_censorship">Internetcensuur</string>
   <string name="rename_section">Hernoem sectie</string>
   <string name="simple_edit_value_hint">Nieuwe waarde</string>
   <string name="seek_interval">Interval zoeken</string>
@@ -467,7 +426,6 @@
   <string name="player_ending_time">Eindigt om %s</string>
   <string name="badge_new_content">NIEUWE INHOUD</string>
   <string name="badge_live">LIVE</string>
-  <string name="add_device_view_description">Om het apparaat te koppelen, voert u deze code in op de YouTube-app van uw apparaat in het gedeelte Instellingen/Op tv bekijken. Opmerking: Werkt alleen met Gboard-toetsenbord.</string>
   <string name="playback_controls_repeat_pause">Herhaal Pauze</string>
   <string name="playback_controls_repeat_list">Herhaal lijst</string>
   <string name="action_subscribe_off">Abonneren uit</string>
@@ -588,7 +546,6 @@
   <string name="dialog_notification">Meld updates met een pop-updialoog</string>
   <string name="mark_as_watched">Markeren als bekeken</string>
   <string name="player_ui_animations">Animaties van het bedieningspaneel inschakelen</string>
-  <string name="player_likes_count">Aantal likes/dislikes weergeven</string>
   <string name="sorting_alphabetically2">Alfabetisch (snelle, geanimeerde previews)</string>
   <string name="sorting_default">Standaard (snelle, geanimeerde previews)</string>
   <string name="content_block_exclude_channel">Sluit dit kanaal uit van SponsorBlock</string>
@@ -624,7 +581,6 @@
   <string name="multi_profiles">Gebruik aparte instellingen voor elk account</string>
   <string name="protect_account_with_password">Bescherm dit account met een wachtwoord</string>
   <string name="enter_account_password">Voer het wachtwoord van uw account in</string>
-  <string name="show_connect_messages">Toon verbindingsberichten</string>
   <string name="prefer_avc_over_vp9_desc">WAARSCHUWING: maximaal 1080p</string>
   <string name="play_next">Volgende afspelen</string>
   <string name="hide_watched_from_subscriptions">Verberg bekeken video\'s van Abonnementen</string>
@@ -632,9 +588,7 @@
   <string name="hide_unwanted_content">Ongewenste inhoud verbergen</string>
   <string name="hide_watched_from_home">Verberg bekeken video\'s van Home</string>
   <string name="hide_watched_from_watch_later">Verberg bekeken video\'s van de afspeellijst Later bekijken</string>
-  <string name="remote_control_permission">Achtergrond Afstandsbediening vereist Overlay-machtiging</string>
   <string name="login_from_browser">Inloggen via browser</string>
-  <string name="disable_remote_history">Geschiedenis uitschakelen bij gebruik van afstandsbediening</string>
   <string name="keyboard_fix">Voorkom dat de OK-knop het toetsenbord opent (G20\'s en andere)</string>
   <string name="nothing_found">Niets gevonden</string>
   <string name="auto_frame_rate_desc">Met deze optie verwijdert u haperingen in beeld waarin de camera snel beweegt, bijvoorbeeld bij het streamen van sportwedstrijden.</string>
@@ -662,9 +616,6 @@
   <string name="prefer_ipv4">Geef de voorkeur aan IPv4 DNS</string>
   <string name="long_press_for_settings">LANG INDRUKKEN VOOR INSTELLINGEN</string>
   <string name="long_press_for_options">LANG DRUKKEN VOOR OPTIES</string>
-  <string name="device_specific_backup">Alleen back-up voor dit apparaat</string>
-  <string name="local_backup">Lokale back-up</string>
-  <string name="auto_backup">Automatische back-up (één keer per dag)</string>
   <string name="repeat_mode_reverse_list">Speel de afspeellijst of kanaalvideo\'s in omgekeerde volgorde af</string>
   <string name="calm_msg">We lossen het probleem op. Controleer van tijd tot tijd op updates</string>
   <string name="without_picture">Zonder beeld</string>
@@ -684,7 +635,6 @@
   <string name="unlock_all_formats_desc">Op sommige apparaten meldt de firmware ten onrechte dat bepaalde formaten niet worden ondersteund, ook al zijn ze dat wel.\n(Bijvoorbeeld: 1080p smart-tv\'s melden 4k vaak als niet ondersteund.)</string>
   <string name="prefer_ipv4_desc">Kan situaties oplossen waarin de app helemaal niet werkt.\nLet op. Kan vastlopen en crashen veroorzaken (vooral op Android 8-apparaten of Dune HD)</string>
   <string name="player_loop_shorts">Short herhaald afspelen ipv doorlopend</string>
-  <string name="import_subscriptions_group">Importeren</string>
   <string name="lb_playback_controls_closed_captioning_disable">Ondertiteling uitschakelen</string>
   <string name="lb_playback_controls_closed_captioning_enable">Ondertiteling inschakelen</string>
   <string name="my_videos">Mijn video\'s</string>
@@ -693,7 +643,6 @@
   <string name="you_liked">Je vond het leuk</string>
   <string name="premium_users_only">Alleen voor Premium-gebruikers. Oplossing voor onvolledige lijst met videoformaten.</string>
   <string name="playback_buffering_fix">Oplossing voor buffering bij afspelen</string>
-  <string name="oculus_quest_fix">Oculus Quest-oplossing</string>
   <string name="card_preview_muted">Video zonder geluid</string>
   <string name="card_preview_full">Video met geluid</string>
   <string name="card_preview">Kaartvoorbeeld</string>
@@ -709,10 +658,6 @@
   <string name="channel_unblocked">Kanaal gedeblokkeerd</string>
   <string name="header_blocked_channels">Geblokkeerde kanalen</string>
   <string name="msg_no_blocked_channels">Geen geblokkeerde kanalen</string>
-  <string name="auto_backup_category">Automatische backup</string>
-  <string name="once_a_day">Eenmaal per dag</string>
-  <string name="once_a_week">Eenmaal per week</string>
-  <string name="once_a_month">Eenmaal per maand</string>
   <string name="action_debug_info">Foutopsporingsinformatie</string>
   <string name="player_time_stretching">Audio-tijdverlenging</string>
   <string name="player_time_stretching_desc">Behoudt de natuurlijke stem bij het veranderen van de snelheid. Kan de prestaties op sommige apparaten aanzienlijk verminderen.</string>
@@ -720,5 +665,4 @@
   <string name="ignore_short_segments">Negeer korte segmenten</string>
   <string name="install_bridge">Installeer ATV/Amazon bridge</string>
   <string name="fix_empty_subs_and_channels">Fix lege Abonnementen en Kanalen</string>
-  <string name="local_backup_not_supported">Automatische back-up op Android TV 11+ wordt niet ondersteund door systeem restricties. Gebruik in plaats van Gdrive hiervoor.</string>
 </resources>

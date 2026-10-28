@@ -1,5 +1,0 @@
-<resources translatable="false">
-    <string name="search_label">M2Y Tube</string>
-    <string name="settings_description">M2Y Tube videoları</string>
-    <string name="search_authority">com.m2y.tube.search_provider</string>
-</resources>

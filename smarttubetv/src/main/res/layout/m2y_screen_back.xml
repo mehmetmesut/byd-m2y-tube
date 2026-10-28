@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- M2Y: visible back button (touch), centered on the search bar and left of the content column (rows and search tags
+     start at 112 px). The app scales dp itself (initDpi: 1 dp = 2 px on the 1920x1080 head unit): 48 dp ≈ 64 real dp. -->
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/m2y_screen_back"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_gravity="top|start"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="33dp"
+    android:padding="12dp"
+    android:src="@drawable/m2y_ic_back"
+    android:background="@drawable/m2y_screen_back_bg"
+    android:contentDescription="@string/m2y_back"
+    android:focusable="false"
+    android:elevation="8dp" />

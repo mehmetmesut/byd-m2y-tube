@@ -27,6 +27,19 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_gravity="center_vertical|start">
+        <!-- M2Y: Home orb, shown only by BrowseFragment -->
+        <androidx.leanback.widget.SearchOrbView
+            android:id="@+id/home_orb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionGroup="true"
+            android:layout_marginEnd="@dimen/search_bar_right_items_margin"
+            app:searchOrbIcon="@drawable/m2y_title_home"
+            app:searchOrbColor="@color/orb_color"
+            app:searchOrbBrightColor="@color/orb_bright_color"
+            app:searchOrbIconColor="@color/orb_icon_color"
+            android:visibility="gone" />
+
         <androidx.leanback.widget.SearchOrbView
             android:id="@+id/title_orb"
             android:layout_height="wrap_content"

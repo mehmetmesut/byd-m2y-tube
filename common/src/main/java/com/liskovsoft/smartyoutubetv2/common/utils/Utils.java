@@ -57,7 +57,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
-import com.liskovsoft.leanbackassistant.utils.SafeWorkManager;
+import com.liskovsoft.smartyoutubetv2.common.misc.SafeWorkManager;
 
 import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.liskovsoft.sharedutils.helpers.AppInfoHelpers;
@@ -82,8 +82,6 @@ import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem.Video
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.TrackSelectorUtil;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.track.MediaTrack;
 import com.liskovsoft.smartyoutubetv2.common.misc.MotherActivity;
-import com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlService;
-import com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlWorker;
 import com.liskovsoft.smartyoutubetv2.common.misc.ScreensaverManager;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedChannelData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
@@ -91,7 +89,6 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.HiddenPrefs;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
-import com.liskovsoft.smartyoutubetv2.common.prefs.RemoteControlData;
 import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
 
 import java.io.IOException;
@@ -118,7 +115,6 @@ public class Utils {
     };
     public static final String[] BACKUP_PREFS = {
             "yt_service_prefs.xml",
-            "com.liskovsoft.appupdatechecker2.preferences.xml",
             "com.liskovsoft.sharedutils.prefs.GlobalPreferences.xml",
             "_preferences.xml" // before _ should be the app package name
     };
@@ -129,12 +125,8 @@ public class Utils {
     };
     private static final String SUPER_PASSWD = "smarttube";
     private static final int RANDOM_FAIL_REPEAT_TIMES = 10;
-    private static final String REMOTE_CONTROL_RECEIVER_CLASS_NAME = "com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlReceiver";
-    private static final String UPDATE_CHANNELS_RECEIVER_CLASS_NAME = "com.liskovsoft.leanbackassistant.channels.UpdateChannelsReceiver";
     private static final String BOOTSTRAP_ACTIVITY_CLASS_NAME = "com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity";
-    private static final String TASK_ID = RemoteControlWorker.class.getSimpleName();
     private static final String TAG = Utils.class.getSimpleName();
-    private static final String QR_CODE_URL_TEMPLATE = "https://api.qrserver.com/v1/create-qr-code/?data=%s";
     private static final int GLOBAL_VOLUME_TYPE = AudioManager.STREAM_MUSIC;
     private static final String GLOBAL_VOLUME_SERVICE = Context.AUDIO_SERVICE;
     public static final Handler sHandler = new Handler(Looper.getMainLooper());
@@ -246,19 +238,6 @@ public class Utils {
         return activity != null && !activity.isDestroyed() && !activity.isFinishing();
     }
 
-    public static void updateRemoteControlService(Context context) {
-        if (context == null || VERSION.SDK_INT <= 19) { // Eltex NPE fix
-            return;
-        }
-
-        if (RemoteControlData.instance(context).isDeviceLinkEnabled()) {
-            // Service that prevents the app from destroying
-            startService(context, RemoteControlService.class);
-        } else {
-            stopService(context, RemoteControlService.class);
-        }
-    }
-
     private static void bindService(Context context, Intent serviceIntent) {
         // https://medium.com/@debuggingisfun/android-auto-stop-background-service-336e8b3ff03c
         // https://medium.com/@debuggingisfun/android-o-work-around-background-service-limitation-e697b2192bc3
@@ -273,21 +252,6 @@ public class Utils {
                  // NOP
             }
         }, Context.BIND_AUTO_CREATE);
-    }
-
-    public static void startRemoteControlWorkRequest(Context context) {
-        PeriodicWorkRequest workRequest =
-                new PeriodicWorkRequest.Builder(
-                        RemoteControlWorker.class, 30, TimeUnit.MINUTES
-                ).build();
-
-        SafeWorkManager
-                .getInstance(context)
-                .enqueueUniquePeriodicWork(
-                        TASK_ID,
-                        ExistingPeriodicWorkPolicy.KEEP,
-                        workRequest
-                );
     }
 
     /**
@@ -507,10 +471,6 @@ public class Utils {
                 );
             }
         }
-    }
-
-    public static String toQrCodeLink(String data) {
-        return String.format(QR_CODE_URL_TEMPLATE, data);
     }
 
     public static void openLink(Context context, String url) {
@@ -943,18 +903,6 @@ public class Utils {
         return result;
     }
 
-    public static boolean isOculusQuest() {
-        return Helpers.getDeviceName().startsWith("Oculus Quest");
-    }
-
-    public static void updateChannels(Context context) {
-        startReceiver(context, UPDATE_CHANNELS_RECEIVER_CLASS_NAME);
-    }
-
-    public static void startRemoteControl(Context context) {
-        startReceiver(context, REMOTE_CONTROL_RECEIVER_CLASS_NAME);
-    }
-
     /**
      * Finish the app but remain running services
      */
@@ -1015,30 +963,6 @@ public class Utils {
         }
     }
 
-    private static void startReceiver(Context context, String receiverClassName) {
-        // Can't use class directly! ATV module is disabled for some flavors.
-        Class<?> clazz = null;
-
-        try {
-            clazz = Class.forName(receiverClassName);
-        } catch (ClassNotFoundException e) {
-            // NOP
-        }
-
-        if (clazz != null) {
-            if (context != null) {
-                Log.d(TAG, "Starting channels receiver...");
-                Intent intent = new Intent(context, clazz);
-                try {
-                    context.sendBroadcast(intent);
-                } catch (Exception e) {
-                    // NullPointerException on MX9Pro (rk3328  7.1.2)
-                }
-            }
-        } else {
-            Log.e(TAG, "Channels receiver class not found: " + receiverClassName);
-        }
-    }
 
     private static void exitToHome(Context context) {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -1166,18 +1090,13 @@ public class Utils {
     }
 
     public static int getFasterDataSource() {
-        return skipCronet() ? PlayerTweaksData.PLAYER_DATA_SOURCE_DEFAULT : preferOkHttp()
-                ? PlayerTweaksData.PLAYER_DATA_SOURCE_OKHTTP : PlayerTweaksData.PLAYER_DATA_SOURCE_CRONET;
+        return skipCronet() ? PlayerTweaksData.PLAYER_DATA_SOURCE_DEFAULT : PlayerTweaksData.PLAYER_DATA_SOURCE_CRONET;
     }
 
     public static boolean skipCronet() {
         // Android 6 and below may crash running Cronet???
         //return VERSION.SDK_INT <= 23 || Helpers.equals(BuildConfig.FLAVOR, "strtarmenia");
         return Helpers.equals(BuildConfig.FLAVOR, "strtarmenia");
-    }
-
-    private static boolean preferOkHttp() {
-        return Helpers.equalsAny(Build.MODEL, "SHIELD Android TV");
     }
 
     public static boolean isEnoughRam() {

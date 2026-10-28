@@ -13,6 +13,8 @@ public interface PlayerEngine extends PlayerConstants {
     void openDashUrl(String dashManifestUrl);
     void openHlsUrl(String hlsPlaylistUrl);
     void openUrlList(List<String> urlList);
+    /** M2Y: a saved video — local files (video and audio) played together. */
+    void openFiles(List<String> paths);
     void openMerged(MediaItemFormatInfo formatInfo, String hlsPlaylistUrl);
     void openMerged(InputStream dashManifest, String hlsPlaylistUrl);
     long getPositionMs();

@@ -97,6 +97,15 @@ public class ExoMediaSourceFactory {
         return buildMediaSource(Uri.parse(hlsPlaylist), HLS_PLAYLIST_EXTENSION);
     }
 
+    /** M2Y: saved video and audio files merged into one source. */
+    public MediaSource fromFiles(List<String> paths) {
+        MediaSource[] sources = new MediaSource[paths.size()];
+        for (int i = 0; i < paths.size(); i++) {
+            sources[i] = buildMediaSource(Uri.fromFile(new java.io.File(paths.get(i))), null);
+        }
+        return sources.length == 1 ? sources[0] : new com.google.android.exoplayer2.source.MergingMediaSource(sources);
+    }
+
     public MediaSource fromUrlList(List<String> urlList) {
         MediaSource[] mediaSources = new MediaSource[urlList.size()];
 

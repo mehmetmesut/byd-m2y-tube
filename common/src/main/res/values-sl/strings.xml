@@ -49,7 +49,6 @@
   <string name="settings_other">Ostalo</string>
   <string name="settings_player">Video predvajalnik</string>
   <string name="settings_language">Jezik</string>
-  <string name="settings_linked_devices">Povezane naprave</string>
   <string name="settings_about">O programu</string>
   <string name="dialog_account_list">Izberi račun</string>
   <string name="dialog_account_none">Brez</string>
@@ -157,11 +156,6 @@
   <string name="player_remember_speed">Zapomni si hitrost</string>
   <string name="mark_channel_as_watched">Označi kot ogledan</string>
   <string name="channel_marked_as_watched">Kanal je bil označen kot ogledan</string>
-  <string name="dialog_add_device">Dodaj napravo</string>
-  <string name="dialog_remove_all_devices">Odstrani napravo</string>
-  <string name="device_link_enabled">Povezava omogočena</string>
-  <string name="device_connected">Naprava \"%s\" je bila povezana</string>
-  <string name="device_disconnected">Naprava \"%s\" se je odklopila</string>
   <string name="playback_queue_category_title">Čakalna vrsta za predvajanje</string>
   <string name="open_playlist">Odpri seznam predvajanja</string>
   <string name="repeat_mode_pause_alt">Neprekinjeno predvajaj samo videoposnetke s seznama predvajanja</string>
@@ -214,8 +208,6 @@
   <string name="add_remove_from_playback_queue">Dodaj/odstrani iz čakalne vrste za predvajanje</string>
   <string name="add_to_playback_queue">Dodaj v čakalno vrsto za predvajanje</string>
   <string name="remove_from_playback_queue">Odstrani iz čakalne vrste za predvajanje</string>
-  <string name="proxy_enabled">Proxy strežnik omogočen</string>
-  <string name="proxy_disabled">Proxy strežnik onemogočen</string>
   <string name="uploads_row_name">Nalaganja</string>
   <string name="playlists_row_name">Ustvarjeni seznami predvajanja</string>
   <string name="popular_uploads_row_name">Priljubljeni videoposnetki</string>
@@ -223,9 +215,6 @@
   <string name="covid_news_row_name">COVID-19 novice</string>
   <string name="enable_voice_search">Omogoči glasovno iskanje</string>
   <string name="subscribe_unsubscribe_from_channel">Naročite/odjavite se od kanala</string>
-  <string name="app_backup_restore">Varnostno kopiranje/obnovitev</string>
-  <string name="app_backup">Varnostno kopirani podatki</string>
-  <string name="app_restore">Obnovitev podatkov iz varnostne kopije</string>
   <string name="skip_each_segment_once">Ne preskoči odseka ponovno</string>
   <string name="disable_ok_long_press">Onemogočanje OK gumba z daljšim pritiskom </string>
   <string name="sponsor_color_markers">Barvne oznake v vrstici napredovanja videoposnetka</string>
@@ -275,7 +264,6 @@
   <string name="content_block_action_toast">Preskoči z obvestilom</string>
   <string name="content_block_action_dialog">Prikaži okno za potrditev</string>
   <string name="cancel_dialog">Prekliči</string>
-  <string name="finish_on_disconnect">Zaprite aplikacijo, ko odklopite telefon/tablico</string>
   <string name="play_video">Predvajaj</string>
   <string name="rename_playlist">Preimenuj seznam predvajanja</string>
   <string name="playlist">Seznam predvajanja</string>
@@ -289,7 +277,6 @@
   <string name="playlist_order_published_date_older_first">Datum objave (najstarejši)</string>
   <string name="playlist_order_popularity">Najbolj priljubljeni</string>
   <string name="playlist_order">Razvrsti</string>
-  <string name="proxy_credentials_invalid">Napačno uporabniško ime ali geslo</string>
   <string name="card_text_scroll_factor">Hitrost pomikanja besedila na karticah</string>
   <string name="content_block_notify_dialog">Okno za potrditev</string>
   <string name="content_block_intro">Uvodna špica/vmesna špica</string>

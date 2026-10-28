@@ -220,6 +220,11 @@ public class SampleQueue implements TrackOutput {
    * @return The largest sample timestamp that has been queued, or {@link Long#MIN_VALUE} if no
    *     samples have been queued.
    */
+  /** M2Y: see {@link SampleMetadataQueue#getKeyframeTimesAroundUs(long)}. */
+  public long[] getKeyframeTimesAroundUs(long timeUs) {
+    return metadataQueue.getKeyframeTimesAroundUs(timeUs);
+  }
+
   public long getLargestQueuedTimestampUs() {
     return metadataQueue.getLargestQueuedTimestampUs();
   }

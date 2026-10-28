@@ -44,16 +44,7 @@ public class SignInPresenter extends BasePresenter<SignInView> {
             return;
         }
 
-        if (YTSignInPresenter.instance(getContext()).isWaiting()) {
-            mPresenter = YTSignInPresenter.instance(getContext());
-        } else if (GoogleSignInPresenter.instance(getContext()).isWaiting()) {
-            mPresenter = GoogleSignInPresenter.instance(getContext());
-        }
-
-        if (mPresenter == null) {
-            mPresenter = YTSignInPresenter.instance(getContext());
-            //throw new IllegalStateException("At least one nested sign in presenter should be initialized.");
-        }
+        mPresenter = YTSignInPresenter.instance(getContext());
 
         mPresenter.setView(getView());
         mPresenter.onViewInitialized();
