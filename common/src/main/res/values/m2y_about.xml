@@ -17,6 +17,14 @@
     <string name="m2y_save_quality">Quality</string>
     <string name="m2y_saved_videos">Saved</string>
     <string name="m2y_memory_videos">In memory</string>
+    <string name="m2y_cache_count">Cached videos</string>
+    <string name="m2y_cache_count_off">0 · Off (no video kept)</string>
+    <string name="m2y_cache_count_n">%d videos</string>
+    <string name="m2y_in_memory_row">In memory · %1$s · %2$s</string>
+    <string name="m2y_keep_copy">Keep for good (no extra data)</string>
+    <string name="m2y_saved_from_player">YouTube refused the direct download; saving in the playing quality: %1$s</string>
+    <string name="m2y_kept">Added to Saved</string>
+    <string name="m2y_keep_pending">It joins Saved once the whole video is in</string>
     <string name="m2y_saving">Saving for offline</string>
     <string name="m2y_saving_started">Saving (%1$s)… you can keep watching · %2$s used</string>
     <string name="m2y_saved_done">Saved: %1$s</string>

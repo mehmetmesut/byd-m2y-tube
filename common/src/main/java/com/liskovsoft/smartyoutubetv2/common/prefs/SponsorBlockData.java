@@ -293,12 +293,12 @@ public class SponsorBlockData {
         // Easy add new segments
         for (String segmentCategory : mAllCategories) {
             if (getAction(segmentCategory) == ACTION_UNDEFINED) {
-                // Disable filler category by default
-                // This category is very extreme and is recommended to be disabled by default because of that.
-                if (SponsorSegment.CATEGORY_FILLER.equals(segmentCategory)) {
-                    mActions.add(SegmentAction.from(segmentCategory, ACTION_DO_NOTHING));
-                } else {
+                // M2Y: only paid sponsor reads are skipped by default; the rest (intro, outro, "non-music" parts...)
+                // stay as colour marks on the seek bar. Skipping them cut most music videos before their real end.
+                if (SponsorSegment.CATEGORY_SPONSOR.equals(segmentCategory)) {
                     mActions.add(SegmentAction.from(segmentCategory, ACTION_SKIP_WITH_TOAST));
+                } else {
+                    mActions.add(SegmentAction.from(segmentCategory, ACTION_DO_NOTHING));
                 }
             }
         }

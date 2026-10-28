@@ -56,7 +56,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Observable;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineStatus;
 import com.liskovsoft.smartyoutubetv2.common.m2y.offline.OfflineStore;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.PlaybackCache;
 import io.reactivex.disposables.Disposable;
 
 public class BrowsePresenter extends BasePresenter<BrowseView> implements SectionPresenter, VideoGroupPresenter, AccountChangeListener {
@@ -78,6 +80,9 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
     private final BrowseProcessorManager mBrowseProcessor;
     private final List<Disposable> mActions;
     private final Runnable mRefreshSection = this::refresh;
+    private int mOfflineListsVersion = -1;
+    // M2Y: Saved / In memory show a new or removed video at once (held here: OfflineStatus keeps listeners weakly)
+    private final Runnable mOfflineChanged = this::onOfflineListsChanged;
     private BrowseSection mCurrentSection;
     private Video mCurrentVideo;
     private long mLastUpdateTimeMs = -1;
@@ -125,6 +130,10 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         if (getView() == null) {
             return;
         }
+
+        PlaybackCache.init(getContext()); // M2Y: copies left unfinished last time are completed in the background
+        OfflineStatus.init(getContext());
+        OfflineStatus.listen(mOfflineChanged);
 
         updateSections();
 
@@ -529,6 +538,18 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         VideoGroup group = item.getGroup();
 
         continueGroup(group);
+    }
+
+    private void onOfflineListsChanged() {
+        int version = OfflineStatus.getListsVersion();
+        if (version == mOfflineListsVersion) {
+            return; // only download progress changed
+        }
+        mOfflineListsVersion = version;
+        if (getView() != null && mCurrentSection != null
+                && (mCurrentSection.getId() == SECTION_M2Y_SAVED || mCurrentSection.getId() == SECTION_M2Y_MEMORY)) {
+            updateCurrentSection();
+        }
     }
 
     @Override

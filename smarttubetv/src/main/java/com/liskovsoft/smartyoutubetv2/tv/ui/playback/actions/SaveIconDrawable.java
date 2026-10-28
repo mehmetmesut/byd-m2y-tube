@@ -77,9 +77,11 @@ public class SaveIconDrawable extends Drawable implements Runnable {
         float r = size / 2f * (1f - RING_INSET * 2f);
         mRing.set(cx - r, cy - r, cx + r, cy + r);
 
-        if (state == OfflineStatus.SAVED) {
-            mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(GREEN);
+        if (state == OfflineStatus.SAVED || state == OfflineStatus.IN_MEMORY) {
+            // saved for good: a filled green circle; kept from watching ("In memory"): a white ring
+            mPaint.setStyle(state == OfflineStatus.SAVED ? Paint.Style.FILL : Paint.Style.STROKE);
+            mPaint.setStrokeWidth(size * RING_WIDTH);
+            mPaint.setColor(state == OfflineStatus.SAVED ? GREEN : Color.WHITE);
             canvas.drawCircle(cx, cy, r, mPaint);
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setStrokeWidth(size * RING_WIDTH);

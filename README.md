@@ -10,7 +10,7 @@
   <img alt="licence" src="https://img.shields.io/github/license/mehmetmesut/byd-m2y-tube?color=6250d6">
 </p>
 <p align="center">
-  <a href="https://github.com/mehmetmesut/byd-m2y-tube/releases/download/1.25.07.68.2/M2YTube_1.25.07.68.2_arm64-v8a.apk"><b>⬇ Download APK (18.0 MB)</b></a> ·
+  <a href="https://github.com/mehmetmesut/byd-m2y-tube/releases/download/1.25.07.68.3/M2YTube_1.25.07.68.3_arm64-v8a.apk"><b>⬇ Download APK (18.0 MB)</b></a> ·
   <a href="https://byd.mehmetmesut.com">byd.mehmetmesut.com</a> ·
   <a href="https://github.com/mehmetmesut/byd-m2y">⭐ All M2Y apps for BYD</a>
 </p>
@@ -29,7 +29,7 @@ I built these apps first for **my own BYD SEAL U DM-i**, because the store apps 
 - **Quality that fits the screen.** Never above **1080p60**, never below 360p; AV1, HDR, 2K and 4K are not offered. Default is **480p30 VP9** on the hardware decoder.
 - **Music mode.** One entry in the quality list turns the video track off, shows the cover and plays audio only: less data and less decoding.
 - **Plays on while you navigate.** Background audio is on by default; the Home button leaves the player while the video keeps playing.
-- **Works offline too.** Save a video from the player (360p–1080p) or simply watch it to the end: the last 5 videos watched to the end are kept from the stream itself (no extra data) and play without internet. Left menu: **Saved** and **In memory**.
+- **Works offline too.** Save a video from the player (360p–1080p) or just open it: a video starts loading as a whole, and the last 5 opened videos are kept from the stream itself (no extra data) and play without internet (Settings > Player > Cached videos, 0–25). Left menu: **Saved** and **In memory**.
 - **Ad-free, no tracking.** No ads without signing in and none when you sign in with your own YouTube account; no analytics, no crash reporting, no update checker.
 - **Light on the head unit.** No Google Play services, no card shadows or zoom animations, thumbnails kept in memory, no boot or screen-on receiver of its own.
 
@@ -45,9 +45,13 @@ I built these apps first for **my own BYD SEAL U DM-i**, because the store apps 
 
 **Offline**
 - **Save** button next to search in the player: pick a quality (360p–1080p, VP9 before H.264); the download runs in the background with a progress ring. Up to 8 GB; the least recently watched go first.
-- **In memory:** the last 5 videos watched to the end are kept automatically from the stream, byte-identical to YouTube's files, at no extra data cost. When a sixth one starts, the oldest is removed at once.
+- **In memory:** the last 5 opened videos are kept automatically from the stream, byte-identical to YouTube's files, at no extra data cost; a video left early is finished in the background where YouTube allows it. When one more starts, the oldest is removed at once. **Cached videos** (Settings > Player) sets 0–25; 0 keeps nothing and loads only what plays.
+- **Keep for good:** the save list's first row turns the copy being played into a lasting save (no download). When YouTube refuses a direct download, the app keeps the played copy instead.
+- The save button shows the state: arrow = not kept, white ring = in memory, green = saved.
 - Without internet the app opens Saved (or In memory) instead of an error page.
-- **Search:** one tap on a suggestion searches it at once and closes the keyboard.
+- **Search:** one tap on a suggestion searches it at once and closes the keyboard; the search field stays on screen.
+- **Touch:** one tap opens a card; a tap in the middle of the player (3 cm circle) plays/pauses, elsewhere it shows or hides the controls; a shaky tap is not taken for a swipe.
+- **Plays to the end:** SponsorBlock skips only paid sponsor reads by default; other segments are shown as colour marks on the seek bar.
 
 **Touch controls and gestures**
 - With the controls hidden the first tap only shows them; with the controls visible a tap on the picture pauses or resumes.
@@ -84,7 +88,7 @@ Head unit with wireless ADB enabled (step-by-step guide on [byd.mehmetmesut.com]
 
 ```
 adb connect <car-ip>:5555
-adb install -r M2YTube_1.25.07.68.2_arm64-v8a.apk
+adb install -r M2YTube_1.25.07.68.3_arm64-v8a.apk
 ```
 
 - **Windows one-click installer:** [m2y-kurulum.cmd](https://byd.mehmetmesut.com/m2y-kurulum.cmd) asks for the car's IP, downloads Google's platform-tools if they are missing, downloads the apps you choose, verifies their SHA-256 and installs them.
@@ -151,7 +155,7 @@ Bu uygulamaları önce **kendi BYD SEAL U DM-i aracım** için yaptım, çünkü
 - **Ekrana uygun kalite.** Hiçbir zaman **1080p60**'ın üstü, 360p'nin altı yok; AV1, HDR, 2K ve 4K sunulmaz. Varsayılan, donanım kod çözücüde **480p30 VP9**.
 - **Müzik modu.** Kalite listesindeki tek bir seçenek görüntü kanalını kapatır, kapağı gösterir ve yalnız ses çalar: daha az veri, daha az kod çözme.
 - **Gezinirken çalmaya devam eder.** Arka planda ses varsayılan olarak açık; Ev düğmesi oynatıcıdan çıkarır, video çalmayı sürdürür.
-- **İnternetsiz de çalışır.** Oynatıcıdaki kaydet düğmesiyle bir videoyu kaydedin (360p–1080p) ya da sonuna kadar izleyin: sonuna kadar izlenen son 5 video oynatma akışının kendisinden saklanır (ek veri harcamaz) ve internetsiz oynar. Sol menüde **Kaydedilenler** ve **Hafızadakiler**.
+- **İnternetsiz de çalışır.** Oynatıcıdaki kaydet düğmesiyle bir videoyu kaydedin (360p–1080p) ya da yalnız açın: video açılınca tamamı yüklenmeye başlar ve açılan son 5 video oynatma akışının kendisinden saklanır (ek veri harcamaz), internetsiz oynar (Ayarlar > Oynatıcı > Önbellek Sayısı, 0–25). Sol menüde **Kaydedilenler** ve **Hafızadakiler**.
 - **Reklamsız, izlemesiz.** Oturum açmadan reklam yok; kendi YouTube hesabınızla oturum açınca da yok. Analiz, çökme raporu ve güncelleme denetimi yok.
 - **Multimedya ekranına hafif.** Google Play hizmeti yok, kart gölgesi ve yakınlaştırma animasyonu yok, küçük resimler bellekte tutulur, özgün uygulamanın açılışta/ekran açılışında çalışan alıcısı kaldırıldı.
 
@@ -167,9 +171,13 @@ Bu uygulamaları önce **kendi BYD SEAL U DM-i aracım** için yaptım, çünkü
 
 **Çevrimdışı**
 - Oynatıcıda aramanın yanında **Kaydet** düğmesi: kaliteyi seçin (360p–1080p, VP9 önce, sonra H.264); indirme arka planda, ilerleme halkasıyla sürer. En çok 8 GB; en uzun süredir izlenmeyen önce silinir.
-- **Hafızadakiler:** sonuna kadar izlenen son 5 video oynatma akışından kendiliğinden saklanır; dosyalar YouTube'dakilerle bayt bayt aynıdır, ek veri harcanmaz. Altıncı video başladığı an en eskisi silinir.
+- **Hafızadakiler:** açılan son 5 video oynatma akışından kendiliğinden saklanır; dosyalar YouTube'dakilerle bayt bayt aynıdır, ek veri harcanmaz; erken çıkılan video, YouTube izin verdiği ölçüde arka planda tamamlanır. Bir video daha başladığı an en eskisi silinir. **Önbellek Sayısı** (Ayarlar > Oynatıcı) 0–25; 0'da hiçbir video tutulmaz ve yalnız oynatılan kısım yüklenir.
+- **Kalıcı kaydet:** kaydet listesinin ilk satırı izlenen kopyayı kalıcı kayda çevirir (indirme yok). YouTube doğrudan indirmeyi reddederse uygulama izlenen kopyayı saklar.
+- Kaydet düğmesi durumu gösterir: ok = tutulmuyor, beyaz halka = hafızada, yeşil = kayıtlı.
 - İnternet yokken uygulama hata sayfası yerine Kaydedilenler'i (ya da Hafızadakiler'i) açar.
-- **Arama:** bir öneriye tek dokunuş onu hemen arar ve klavyeyi kapatır.
+- **Arama:** bir öneriye tek dokunuş onu hemen arar ve klavyeyi kapatır; arama kutusu ekranda kalır.
+- **Dokunmatik:** karta tek dokunuş açar; oynatıcının ortasına (3 cm daire) dokunmak oynatır/duraklatır, başka yere dokunmak denetimleri gösterir/gizler; titrek dokunuş kaydırma sayılmaz.
+- **Sonuna kadar oynar:** SponsorBlock varsayılanda yalnız ücretli sponsor bölümünü atlar; diğer bölümler ilerleme çubuğunda renkli işaret olarak görünür.
 
 **Dokunmatik denetimler ve hareketler**
 - Denetimler gizliyken ilk dokunuş yalnız denetimleri açar; denetimler görünürken görüntüye dokunmak duraklatır ya da devam ettirir.
@@ -206,7 +214,7 @@ Kablosuz ADB'si açık multimedya ekranı için (adım adım rehber: [byd.mehmet
 
 ```
 adb connect <araç-ip>:5555
-adb install -r M2YTube_1.25.07.68.2_arm64-v8a.apk
+adb install -r M2YTube_1.25.07.68.3_arm64-v8a.apk
 ```
 
 - **Windows tek tıkla kurulum aracı:** [m2y-kurulum.cmd](https://byd.mehmetmesut.com/m2y-kurulum.cmd) aracın IP adresini sorar, eksikse Google'ın platform-tools paketini indirir, seçtiğiniz uygulamaları indirir, SHA-256 değerlerini doğrular ve kurar.
@@ -273,7 +281,7 @@ YouTube'u kendi BYD SEAL U DM-i aracımın ekranında, reklamsız, telefon yerle
 - **Качество под экран.** Никогда выше **1080p60** и никогда ниже 360p; AV1, HDR, 2K и 4K не предлагаются. По умолчанию — **480p30 VP9** на аппаратном декодере.
 - **Режим «Музыка».** Один пункт в списке качества отключает видеодорожку, показывает обложку и воспроизводит только звук: меньше трафика и меньше декодирования.
 - **Играет, пока вы ориентируетесь.** Фоновое воспроизведение звука включено по умолчанию; кнопка «Домой» выходит из плеера, а видео продолжает играть.
-- **Работает и без интернета.** Сохраните видео кнопкой в плеере (360p–1080p) или просто досмотрите его до конца: последние 5 досмотренных видео сохраняются из самого потока (без лишнего трафика) и воспроизводятся без интернета. В левом меню — **Saved** и **In memory**.
+- **Работает и без интернета.** Сохраните видео кнопкой в плеере (360p–1080p) или просто откройте его: видео сразу загружается целиком, а последние 5 открытых видео сохраняются из самого потока (без лишнего трафика) и воспроизводятся без интернета (Settings > Player > Cached videos, 0–25). В левом меню — **Saved** и **In memory**.
 - **Без рекламы и слежки.** Рекламы нет ни без входа в аккаунт, ни при входе в собственный аккаунт YouTube; нет аналитики, отчётов о сбоях и проверки обновлений.
 - **Лёгкое для головного устройства.** Без сервисов Google Play, без теней карточек и анимации увеличения, миниатюры хранятся в памяти, собственного приёмника загрузки и включения экрана у приложения нет.
 
@@ -289,9 +297,13 @@ YouTube'u kendi BYD SEAL U DM-i aracımın ekranında, reklamsız, telefon yerle
 
 **Без интернета**
 - Кнопка **«Сохранить»** рядом с поиском в плеере: выберите качество (360p–1080p, сначала VP9, затем H.264); загрузка идёт в фоне с кольцом прогресса. До 8 ГБ; первыми удаляются давно не смотревшиеся.
-- **In memory:** последние 5 досмотренных видео сохраняются автоматически из самого потока, побайтно совпадают с файлами YouTube, без лишнего трафика. Когда начинается шестое, самое старое сразу удаляется.
+- **In memory:** последние 5 открытых видео сохраняются автоматически из самого потока, побайтно совпадают с файлами YouTube, без лишнего трафика; видео, закрытое раньше, дозагружается в фоне, если YouTube это позволяет. Когда начинается ещё одно, самое старое сразу удаляется. **Cached videos** (Settings > Player): 0–25; при 0 ничего не сохраняется.
+- **Keep for good:** первая строка списка сохранения делает просматриваемую копию постоянной (без загрузки). Если YouTube запрещает прямую загрузку, приложение сохраняет просмотренную копию.
+- Кнопка сохранения показывает состояние: стрелка — не сохранено, белое кольцо — в памяти, зелёный — сохранено.
 - Без интернета приложение открывает Saved (или In memory) вместо страницы ошибки.
-- **Поиск:** одно касание подсказки сразу ищет её и закрывает клавиатуру.
+- **Поиск:** одно касание подсказки сразу ищет её и закрывает клавиатуру; поле поиска остаётся на экране.
+- **Касания:** одно касание открывает карточку; касание в центре плеера (круг 3 см) — пауза/воспроизведение, в другом месте — показать/скрыть элементы управления; дрожащее касание не считается свайпом.
+- **До конца:** SponsorBlock по умолчанию пропускает только платную рекламу спонсора; остальные отрезки видны цветными метками на шкале.
 
 **Сенсорное управление и жесты**
 - Когда элементы управления скрыты, первое касание лишь показывает их; когда они видны, касание изображения ставит на паузу или продолжает воспроизведение.
@@ -328,7 +340,7 @@ YouTube'u kendi BYD SEAL U DM-i aracımın ekranında, reklamsız, telefon yerle
 
 ```
 adb connect <car-ip>:5555
-adb install -r M2YTube_1.25.07.68.2_arm64-v8a.apk
+adb install -r M2YTube_1.25.07.68.3_arm64-v8a.apk
 ```
 
 - **Установщик для Windows в один клик:** [m2y-kurulum.cmd](https://byd.mehmetmesut.com/m2y-kurulum.cmd) спрашивает IP-адрес автомобиля, при необходимости скачивает platform-tools от Google, скачивает выбранные вами приложения, проверяет SHA-256 и устанавливает их.

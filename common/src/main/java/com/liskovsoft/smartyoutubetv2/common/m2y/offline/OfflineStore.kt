@@ -70,6 +70,21 @@ object OfflineStore {
         }
     }
 
+    /** Moves a copy between In memory ([auto]) and Saved; in the background. */
+    @JvmStatic
+    fun setAuto(ctx: Context, videoId: String, auto: Boolean) {
+        val app = ctx.applicationContext
+        io.execute {
+            try {
+                val e = find(app, videoId) ?: return@execute
+                write(e.dir, Properties().apply { load(e); setProperty("auto", if (auto) "1" else "0") })
+                OfflineStatus.finished(videoId, true) // the save button and the lists show it saved
+            } catch (e: IOException) {
+                com.liskovsoft.sharedutils.mylogger.Log.e("M2YOffline", "Keeping %s: %s", videoId, e.message)
+            }
+        }
+    }
+
     /** Runs [block] on the store's background thread. */
     fun background(block: () -> Unit) = io.execute(block)
 

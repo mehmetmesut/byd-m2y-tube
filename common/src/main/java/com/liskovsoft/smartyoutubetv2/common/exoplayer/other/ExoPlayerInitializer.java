@@ -8,6 +8,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
@@ -29,6 +30,8 @@ import java.util.UUID;
 
 public class ExoPlayerInitializer {
     private static final int M2Y_BACK_BUFFER_MS = 10_000;
+    private static final int M2Y_WHOLE_VIDEO_MS = 6 * 60 * 60 * 1_000; // longer than any video: the byte cap decides
+    private static final int M2Y_WHOLE_VIDEO_BYTES = 128 * 1024 * 1024; // largeHeap (512 MB on the car): room left for the app
     private final int mMaxBufferBytes;
     private final PlayerData mPlayerData;
     private final PlayerTweaksData mPlayerTweaksData;
@@ -50,7 +53,7 @@ public class ExoPlayerInitializer {
     }
 
     public SimpleExoPlayer createPlayer(Context context, DefaultRenderersFactory renderersFactory, DefaultTrackSelector trackSelector) {
-        DefaultLoadControl loadControl = createLoadControl();
+        LoadControl loadControl = createLoadControl();
 
         // HDR fix?
         //trackSelector.setParameters(trackSelector.buildUponParameters().setTunnelingAudioSessionId(C.generateAudioSessionIdV21(context)));
@@ -98,7 +101,8 @@ public class ExoPlayerInitializer {
      * Increase player's min/max buffer size to 60 secs
      * @return load control
      */
-    private DefaultLoadControl createLoadControl() {
+    private LoadControl createLoadControl() {
+        boolean wholeVideo = false;
         DefaultLoadControl.Builder baseBuilder = new DefaultLoadControl.Builder();
 
         // Default values
@@ -129,10 +133,14 @@ public class ExoPlayerInitializer {
                 baseBuilder.setBackBuffer(minBufferMs, true);
                 break;
             case PlayerData.BUFFER_MEDIUM:
-                //minBufferMs = 30_000;
-                //maxBufferMs = 30_000;
-                // M2Y: keep the last 10 s played so a short seek back does not reload (30 s held 15–25 MB at 1080p)
+                // M2Y: load the whole video at once, up to M2Y_WHOLE_VIDEO_BYTES in memory, so the offline copy
+                // (PlaybackCache) is complete even when the video is left early; live streams: WholeVideoLoadControl
+                minBufferMs = M2Y_WHOLE_VIDEO_MS;
+                maxBufferMs = M2Y_WHOLE_VIDEO_MS;
+                baseBuilder.setTargetBufferBytes(M2Y_WHOLE_VIDEO_BYTES).setPrioritizeTimeOverSizeThresholds(false);
+                // keep the last 10 s played so a short seek back does not reload (30 s held 15–25 MB at 1080p)
                 baseBuilder.setBackBuffer(M2Y_BACK_BUFFER_MS, true);
+                wholeVideo = true;
                 break;
             case PlayerData.BUFFER_LOW:
                 minBufferMs = 5_000; // LIVE fix
@@ -148,7 +156,8 @@ public class ExoPlayerInitializer {
         // Decrease buffer size?
         //baseBuilder.setAllocator(new DefaultAllocator(true, 16 * 1024));
 
-        return baseBuilder.createDefaultLoadControl();
+        DefaultLoadControl loadControl = baseBuilder.createDefaultLoadControl();
+        return wholeVideo ? new WholeVideoLoadControl(loadControl) : loadControl;
     }
 
     private void setupVolumeBoost(SimpleExoPlayer player) {

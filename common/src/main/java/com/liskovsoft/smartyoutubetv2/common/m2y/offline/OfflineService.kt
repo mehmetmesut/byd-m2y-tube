@@ -58,9 +58,13 @@ class OfflineService : Service() {
         pending.add(job.videoId)
         worker.execute {
             val ok = run(job)
+            // YouTube refused the direct streams: the copy the player makes while playing is kept instead (no extra data)
+            val fromPlayer = !ok && blocked && !OfflineStatus.isCancelled(job.videoId) &&
+                PlaybackCache.keep(this, job.videoId) != PlaybackCache.KEEP_NONE
             val message = when {
                 ok -> R.string.m2y_saved_done
                 OfflineStatus.isCancelled(job.videoId) -> R.string.m2y_save_cancelled
+                fromPlayer -> R.string.m2y_saved_from_player
                 blocked -> R.string.m2y_save_blocked
                 noSpace -> R.string.m2y_save_no_space
                 else -> R.string.m2y_save_failed

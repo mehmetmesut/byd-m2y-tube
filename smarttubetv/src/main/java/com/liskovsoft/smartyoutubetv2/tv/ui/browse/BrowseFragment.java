@@ -113,6 +113,13 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         boolean isColor = requireContext().getTheme().resolveAttribute(android.R.attr.windowBackground, bg, true)
                 && bg.type >= TypedValue.TYPE_FIRST_COLOR_INT && bg.type <= TypedValue.TYPE_LAST_COLOR_INT;
         title.setBackgroundColor(isColor ? bg.data : Color.BLACK);
+        // the section list starts below the strip, otherwise its first sections (Home, Saved) stay hidden behind it
+        title.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
+            if (b != ob && getHeadersSupportFragment() != null && getHeadersSupportFragment().getVerticalGridView() != null) {
+                View list = getHeadersSupportFragment().getVerticalGridView();
+                list.setPadding(list.getPaddingLeft(), b, list.getPaddingRight(), list.getPaddingBottom());
+            }
+        });
     }
 
     /** M2Y: a touch screen has no "left" key, so a Home orb left of Search (lb_title_view) opens and closes the section menu. */
@@ -134,6 +141,12 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
     @Override
     public void showTitle(boolean show) {
         super.showTitle(true);
+    }
+
+    /** M2Y: Search and Account stay next to Home also when a section other than the first is selected (leanback hides them). */
+    @Override
+    public void showTitle(int flags) {
+        super.showTitle(flags | androidx.leanback.widget.TitleViewAdapter.SEARCH_VIEW_VISIBLE);
     }
 
     @Override

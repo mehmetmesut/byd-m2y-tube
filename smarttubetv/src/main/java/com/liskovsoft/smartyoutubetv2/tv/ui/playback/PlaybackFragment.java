@@ -112,13 +112,15 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
     private SimpleExoPlayer mPlayer;
     private GestureDetector mVideoTapDetector;
     private static final long BACK_BUTTON_SYNC_DELAY_MS = 400; // after the row scroll animation settles
-    private static final int SWIPE_DOWN_MIN_DP = 60;
+    private static final int SWIPE_DOWN_MIN_DP = 96; // M2Y: up/down swipes; 60 dp also caught taps with a shaky finger
     private static final int SWIPE_SIDE_MIN_DP = 120;
     private float mLastTouchRawX;
     private float mLastTouchRawY;
     private boolean mLastInputFromRemote; // a D-pad/OK key came after the last touch: the side dialog, not the compact list
     private MusicCover mMusicCover;
     private DownloadBadge mDownloadBadge;
+    private static final float CENTER_TAP_DIAMETER_CM = 3f;
+    private static final float CM_PER_INCH = 2.54f;
     private boolean mSwallowGesture; // the touch started with the controls hidden: it must not reach the rows that appear under the finger
     private static final int BACK_BUTTON_MAX_SCROLL_DP = 48;
     private final Runnable mBackButtonSync = () -> showBackButton(isBackButtonWanted());
@@ -339,9 +341,16 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
 
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) { // tested at the moment of the tap, before any UI change
-                    if (mOverlayAtDown && getView() != null && !hitsControl(getView(), e.getRawX(), e.getRawY(), getView().getWidth() * getView().getHeight())) {
-                        togglePlayback();
+                    View view = getView();
+                    if (view == null || (mOverlayAtDown && hitsControl(view, e.getRawX(), e.getRawY(), view.getWidth() * view.getHeight()))) {
+                        return true; // a button, the seek bar or a card row takes its own tap
                     }
+                    // M2Y: a circle in the middle of the screen plays/pauses; anywhere else shows or hides the controls
+                    if (isInCenterCircle(view, e)) {
+                        togglePlayback();
+                    } else if (mOverlayAtDown) {
+                        showOverlay(false);
+                    } // controls hidden: tickle() on touch-down already shows them
                     return true;
                 }
 
@@ -405,6 +414,11 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
 
         if (mRowsGrid == null && getView() != null) {
             mRowsGrid = findRowsGrid(getView());
+            if (mRowsGrid != null) {
+                // M2Y: a tap with a shaky finger (the car's touch panel) must not scroll to the suggestions: the larger
+                // "paging" slop before a drag counts as a scroll
+                mRowsGrid.setScrollingTouchSlop(androidx.recyclerview.widget.RecyclerView.TOUCH_SLOP_PAGING);
+            }
         }
 
         return mRowsGrid == null || mRowsGrid.computeVerticalScrollOffset() < BACK_BUTTON_MAX_SCROLL_DP * getResources().getDisplayMetrics().density;
@@ -475,6 +489,26 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
                 onMore, onClose, () -> mPlaybackPresenter.onKeyDown(-1)); // touching the list keeps the controls up
     }
 
+    @Override
+    public void closeOptionsPopupForUpdate() {
+        OptionsPopup.dismissForUpdate();
+    }
+
+    @Override
+    public boolean isOptionsPopupShown() {
+        return OptionsPopup.isShowing();
+    }
+
+    /** M2Y: the tap falls in the play/pause circle, [CENTER_TAP_DIAMETER_CM] wide (physical size from the panel's dpi). */
+    private boolean isInCenterCircle(View view, MotionEvent e) {
+        int[] at = new int[2];
+        view.getLocationOnScreen(at);
+        float dx = e.getRawX() - (at[0] + view.getWidth() / 2f);
+        float dy = e.getRawY() - (at[1] + view.getHeight() / 2f);
+        float radiusPx = CENTER_TAP_DIAMETER_CM / 2 / CM_PER_INCH * getResources().getDisplayMetrics().xdpi;
+        return dx * dx + dy * dy <= radiusPx * radiusPx;
+    }
+
     private void togglePlayback() {
         if (mPlayerGlue != null) {
             mPlayerGlue.togglePlayback(); // through the glue, so the play/pause button follows
@@ -524,7 +558,12 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
             tickle(); // show Player UI
         }
 
-        mPlaybackPresenter.onKeyDown(-1); // reset ui timer
+        // M2Y: reset the ui timer when a gesture starts and ends, not on every move step (each reset runs through all
+        // player controllers: dozens of times per swipe, on the main thread)
+        int action = event.getActionMasked();
+        if (action != MotionEvent.ACTION_MOVE && action != MotionEvent.ACTION_HOVER_MOVE) {
+            mPlaybackPresenter.onKeyDown(-1);
+        }
     }
 
     public void onFinish() {

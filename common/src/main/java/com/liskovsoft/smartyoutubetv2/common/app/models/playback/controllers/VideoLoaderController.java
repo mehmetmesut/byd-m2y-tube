@@ -111,6 +111,7 @@ public class VideoLoaderController extends BasePlayerController {
     @Override
     public void onEngineReleased() {
         disposeActions();
+        PlaybackCache.onPlaybackStopped(); // M2Y: a video left early is finished in the background
     }
 
     @Override

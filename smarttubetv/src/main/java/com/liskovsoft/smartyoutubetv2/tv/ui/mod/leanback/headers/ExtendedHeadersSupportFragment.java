@@ -31,6 +31,26 @@ public class ExtendedHeadersSupportFragment extends HeadersSupportFragment {
         mOnHeaderLongPressedListener = listener;
     }
 
+    /**
+     * M2Y (touch): the list keeps its top on screen (Home first) and moves only for a section low on the screen. The
+     * selection line sits near the bottom and the top of the list is a hard stop; leanback pinned the selection under
+     * the title strip, so the first sections stayed hidden behind it and a tap on any visible section scrolled the list.
+     */
+    @Override
+    public void setAlignment(int windowAlignOffsetTop) {
+        androidx.leanback.widget.VerticalGridView grid = getVerticalGridView();
+        if (grid == null) {
+            return;
+        }
+        grid.setItemAlignmentOffset(0);
+        grid.setItemAlignmentOffsetPercent(androidx.leanback.widget.VerticalGridView.ITEM_ALIGN_OFFSET_PERCENT_DISABLED);
+        grid.setWindowAlignmentOffset(0);
+        grid.setWindowAlignmentOffsetPercent(SELECTION_LINE_PERCENT);
+        grid.setWindowAlignment(androidx.leanback.widget.VerticalGridView.WINDOW_ALIGN_LOW_EDGE);
+    }
+
+    private static final float SELECTION_LINE_PERCENT = 80f;
+
     private final ItemBridgeAdapter.AdapterListener mCustomAdapterListener =
             new ItemBridgeAdapter.AdapterListener() {
                 @Override

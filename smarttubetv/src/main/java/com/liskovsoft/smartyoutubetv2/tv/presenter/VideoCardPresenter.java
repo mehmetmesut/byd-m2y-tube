@@ -81,6 +81,7 @@ public class VideoCardPresenter extends LongClickPresenter {
         cardView.setTextScrollSpeed(cardTextScrollSpeed);
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
+        com.liskovsoft.smartyoutubetv2.tv.ui.widgets.m2y.SingleTapClick.install(cardView); // M2Y: one tap opens
         cardView.enableBadge(isBadgeEnabled());
         cardView.enableTitle(isTitleEnabled());
         cardView.enableContent(isContentEnabled());

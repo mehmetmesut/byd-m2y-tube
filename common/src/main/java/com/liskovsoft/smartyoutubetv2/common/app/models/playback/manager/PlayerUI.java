@@ -46,6 +46,14 @@ public interface PlayerUI {
         return false;
     }
 
+    /** M2Y: closes the compact list so the next {@link #showOptionsPopup} shows new rows (not a "second tap = close"). */
+    default void closeOptionsPopupForUpdate() {
+    }
+
+    default boolean isOptionsPopupShown() {
+        return false;
+    }
+
     /** M2Y: an audio track plays with the video track off ("Music" quality). */
     default boolean isAudioOnly() {
         return false;

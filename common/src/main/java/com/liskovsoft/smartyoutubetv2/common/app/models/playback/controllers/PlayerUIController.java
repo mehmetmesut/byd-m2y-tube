@@ -73,7 +73,8 @@ public class PlayerUIController extends BasePlayerController {
         }
 
         // Playing the video and dialog overlay isn't shown
-        if (getPlayer().isPlaying() && !getAppDialogPresenter().isDialogShown()) {
+        // M2Y: an open quality/speed/save list keeps the controls (and itself) up until a choice or an outside tap
+        if (getPlayer().isPlaying() && !getAppDialogPresenter().isDialogShown() && !getPlayer().isOptionsPopupShown()) {
             if (getPlayer().isControlsShown()) { // don't hide when suggestions is shown
                 getPlayer().showOverlay(false);
                 mOverlayHideTimeMs = System.currentTimeMillis();
@@ -550,10 +551,12 @@ public class PlayerUIController extends BasePlayerController {
             // the direct streams of a SABR video arrived: open the list if the same video still plays and the controls are
             // still up (the list belongs to the controls row and would hang there once they hide)
             if (getPlayer() != null && getPlayer().isControlsShown() && video != null && video.equals(getVideo())) {
+                getPlayer().closeOptionsPopupForUpdate(); // M2Y: replace the "preparing" rows, do not toggle them closed
                 onSaveClicked();
             }
         });
-        if (items != null && getPlayer() != null && !getPlayer().showOptionsPopup(items, null, null)) {
+        boolean popup = items != null && getPlayer() != null && getPlayer().showOptionsPopup(items, null, null);
+        if (items != null && getPlayer() != null && !popup) {
             OfflineDialog.showDialog(getContext(), getAppDialogPresenter(), items);
         }
     }

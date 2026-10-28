@@ -43,6 +43,23 @@ class RangesTest {
     }
 
     @Test
+    fun missingListsEveryHoleInOrder() {
+        val r = Ranges()
+        r.add(10, 20)
+        r.add(30, 40)
+        assertEquals(listOf("0-10", "20-30", "40-50"), r.missing(50).map { "${it[0]}-${it[1]}" })
+        assertEquals(20L, r.covered())
+    }
+
+    @Test
+    fun nothingMissingWhenComplete() {
+        val r = Ranges()
+        r.add(0, 50)
+        assertTrue(r.missing(50).isEmpty())
+        assertEquals(listOf("0-100"), Ranges().missing(100).map { "${it[0]}-${it[1]}" })
+    }
+
+    @Test
     fun survivesSaveAndLoad() {
         val r = Ranges()
         r.add(0, 10)

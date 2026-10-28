@@ -17,6 +17,14 @@
     <string name="m2y_save_quality">Kalite</string>
     <string name="m2y_saved_videos">Kaydedilenler</string>
     <string name="m2y_memory_videos">Hafızadakiler</string>
+    <string name="m2y_cache_count">Önbellek Sayısı</string>
+    <string name="m2y_cache_count_off">0 · Kapalı (önbellekte video tutulmaz)</string>
+    <string name="m2y_cache_count_n">%d video</string>
+    <string name="m2y_in_memory_row">Hafızada · %1$s · %2$s</string>
+    <string name="m2y_keep_copy">Kalıcı kaydet (veri harcamaz)</string>
+    <string name="m2y_saved_from_player">YouTube doğrudan indirmeye izin vermedi; izlenen kalitede kaydediliyor: %1$s</string>
+    <string name="m2y_kept">Kaydedilenler\'e eklendi</string>
+    <string name="m2y_keep_pending">Video tamamlanınca Kaydedilenler\'e eklenecek</string>
     <string name="m2y_saving">Çevrimdışı için kaydediliyor</string>
     <string name="m2y_saving_started">Kaydediliyor (%1$s)… izlemeye devam edebilirsiniz · %2$s dolu</string>
     <string name="m2y_saved_done">Kaydedildi: %1$s</string>

@@ -38,6 +38,7 @@ public class SettingsCardPresenter extends Presenter {
         @SuppressLint("InflateParams")
         View container = LayoutInflater.from(context).inflate(R.layout.settings_card, null);
         container.setBackgroundColor(mDefaultBackgroundColor);
+        com.liskovsoft.smartyoutubetv2.tv.ui.widgets.m2y.SingleTapClick.install(container); // M2Y: one tap opens
         //if (VERSION.SDK_INT >= 23 && MainUIData.instance(context).isUiTweakEnabled(MainUIData.UI_TWEAK_ROUNDED_CORNERS)) {
         //    container.setForeground(ContextCompat.getDrawable(context, R.drawable.lb_card_outline));
         //}

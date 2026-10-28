@@ -884,10 +884,10 @@ public class SearchSupportFragment extends Fragment {
     }
 
     void updateSearchBarVisibility() {
-        int position = mRowsSupportFragment != null ? mRowsSupportFragment.getSelectedPosition() : -1;
         try {
-            mSearchBar.setVisibility(position <=0 || mResultAdapter == null
-                    || mResultAdapter.size() == 0 ? View.VISIBLE : View.GONE);
+            // M2Y: the field stays on screen (leanback hid it once a result row got focus, and a touch screen had no way
+            // back); the opaque bar covers the rows scrolling under it
+            mSearchBar.setVisibility(View.VISIBLE);
         } catch (NullPointerException e) {
             // Fatal Exception: java.lang.NullPointerException
             // Attempt to invoke interface method 'void android.view.autofill.IAutoFillManager.addClient(android.view.autofill

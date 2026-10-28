@@ -89,8 +89,7 @@ public class VerticalGridPresenter extends Presenter {
         public void onUnbind(ItemBridgeAdapter.ViewHolder viewHolder) {
             if (getOnItemViewClickedListener() != null) {
                 viewHolder.mHolder.view.setOnClickListener(null);
-                // MOD: Open a video from a single tap
-                viewHolder.mHolder.view.setOnTouchListener(null);
+                // M2Y: the card's own touch listener (one tap opens it, set once by its presenter) stays
             }
         }
 

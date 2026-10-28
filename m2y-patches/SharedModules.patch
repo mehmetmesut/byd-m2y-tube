@@ -84,3 +84,32 @@ index 64477e0..be5f249 100644
      public static boolean isActivityExists(Intent intent, Context context) {
          if (intent == null || context == null) {
              return false;
+diff --git a/sharedutils/src/main/java/com/liskovsoft/sharedutils/mylogger/Log.java b/sharedutils/src/main/java/com/liskovsoft/sharedutils/mylogger/Log.java
+index 1efafb0..9b6f43a 100644
+--- a/sharedutils/src/main/java/com/liskovsoft/sharedutils/mylogger/Log.java
++++ b/sharedutils/src/main/java/com/liskovsoft/sharedutils/mylogger/Log.java
+@@ -9,13 +9,24 @@ public class Log {
+     private static MyLogger sLogger = new SystemLogger();
+ 
+     public static void d(String tag, Object msg, Object... formatArgs) {
++        if (isQuiet()) {
++            return;
++        }
+         sLogger.d(tag, formatMsg(msg, formatArgs));
+     }
+ 
+     public static void i(String tag, Object msg, Object... formatArgs) {
++        if (isQuiet()) {
++            return;
++        }
+         sLogger.i(tag, formatMsg(msg, formatArgs));
+     }
+ 
++    /** M2Y: release builds drop debug/info lines (one touch swipe wrote ~80); the file logger, when enabled, keeps all. */
++    private static boolean isQuiet() {
++        return !com.liskovsoft.sharedutils.BuildConfig.DEBUG && sLogger instanceof SystemLogger;
++    }
++
+     public static void w(String tag, Object msg, Object... formatArgs) {
+         sLogger.w(tag, formatMsg(msg, formatArgs));
+     }

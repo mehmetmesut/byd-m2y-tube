@@ -292,8 +292,7 @@ public class ListRowPresenter extends RowPresenter {
         public void onUnbind(ItemBridgeAdapter.ViewHolder viewHolder) {
             if (mRowViewHolder.getOnItemViewClickedListener() != null) {
                 viewHolder.mHolder.view.setOnClickListener(null);
-                // MOD: Open a video from a single tap
-                viewHolder.mHolder.view.setOnTouchListener(null);
+                // M2Y: the card's own touch listener (one tap opens it, set once by its presenter) stays
             }
         }
 

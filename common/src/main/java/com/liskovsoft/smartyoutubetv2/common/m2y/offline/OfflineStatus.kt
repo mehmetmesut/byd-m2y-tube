@@ -14,10 +14,17 @@ import java.util.concurrent.CopyOnWriteArrayList
 object OfflineStatus {
     const val NONE = -1
     const val SAVED = 100
+    const val IN_MEMORY = 101 // kept from watching (automatic copy), not saved for good
 
     private val progress = ConcurrentHashMap<String, Int>()
     private val cancelled = ConcurrentHashMap.newKeySet<String>()
     @Volatile private var saved: MutableSet<String>? = null
+    private val memory = ConcurrentHashMap.newKeySet<String>()
+
+    /** Grows whenever a video is added to or removed from Saved / In memory (lists refresh on a change). */
+    @JvmStatic @Volatile
+    var listsVersion = 0
+        private set
     @Volatile private var running: String? = null
     private val listeners = CopyOnWriteArrayList<WeakReference<Runnable>>()
     private val main = Handler(Looper.getMainLooper())
@@ -34,17 +41,18 @@ object OfflineStatus {
         saved = ConcurrentHashMap.newKeySet<String>()
         val app = ctx.applicationContext
         OfflineStore.background {
-            OfflineStore.list(app).forEach { saved?.add(it.videoId) }
+            OfflineStore.list(app).forEach { if (it.auto) memory.add(it.videoId) else saved?.add(it.videoId) }
             changed()
         }
     }
 
-    /** [NONE], 0..99 while downloading, or [SAVED]. */
+    /** [NONE], 0..99 while downloading, [SAVED] or [IN_MEMORY]. */
     @JvmStatic
     fun state(videoId: String?): Int = when {
         videoId == null -> NONE
         progress.containsKey(videoId) -> progress[videoId] ?: 0
         saved?.contains(videoId) == true -> SAVED
+        memory.contains(videoId) -> IN_MEMORY
         else -> NONE
     }
 
@@ -54,7 +62,7 @@ object OfflineStatus {
 
     /** Called back on the main thread whenever a state changes. Held weakly: the button goes with its player. */
     @JvmStatic
-    fun listen(r: Runnable) { listeners.add(WeakReference(r)) }
+    fun listen(r: Runnable) { if (listeners.none { it.get() === r }) listeners.add(WeakReference(r)) }
 
     fun started(videoId: String) { cancelled.remove(videoId); progress[videoId] = 0; changed() }
 
@@ -66,11 +74,18 @@ object OfflineStatus {
     fun finished(videoId: String, ok: Boolean) {
         progress.remove(videoId)
         if (running == videoId) running = null
-        if (ok) saved?.add(videoId)
+        if (ok) {
+            saved?.add(videoId)
+            memory.remove(videoId)
+            listsVersion++
+        }
         changed()
     }
 
-    fun removed(videoId: String) { saved?.remove(videoId); changed() }
+    fun removed(videoId: String) { saved?.remove(videoId); memory.remove(videoId); listsVersion++; changed() }
+
+    /** A copy kept from watching became complete (In memory). */
+    fun inMemory(videoId: String) { if (saved?.contains(videoId) != true) memory.add(videoId); listsVersion++; changed() }
 
     fun cancel(videoId: String) { cancelled.add(videoId) }
 

@@ -131,8 +131,8 @@ android {
         }
         stfdroid { // M2Y Tube: the GMS-free flavor, rebranded (no Crashlytics, no update URLs)
             applicationId "com.m2y.tube"
-            versionName "1.25.07.68.2" // M2Y Tube's own version; base: SmartTube 32.68
-            versionCode 125076802
+            versionName "1.25.07.68.3" // M2Y Tube's own version; base: SmartTube 32.68
+            versionCode 125076803
             targetSdkVersion project.properties.compileSdkVersion
         }
     }

@@ -7,6 +7,7 @@ import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
 import com.liskovsoft.sharedutils.prefs.GlobalPreferences;
 import com.liskovsoft.smartyoutubetv2.common.R;
+import com.liskovsoft.smartyoutubetv2.common.m2y.offline.PlaybackCache;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionCategory;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.OptionItem;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem;
@@ -61,6 +62,7 @@ public class PlayerSettingsPresenter extends BasePresenter<Void> {
         appendVideoPresetsCategory(settingsPresenter);
         appendPlayerButtonsCategory(settingsPresenter);
         appendNetworkEngineCategory(settingsPresenter);
+        appendCacheCountCategory(settingsPresenter);
         appendVideoBufferCategory(settingsPresenter);
         appendVideoZoomCategory(settingsPresenter);
         appendVideoSpeedCategory(settingsPresenter);
@@ -128,6 +130,22 @@ public class PlayerSettingsPresenter extends BasePresenter<Void> {
         }
 
         settingsPresenter.appendRadioCategory(getContext().getString(R.string.player_ui_hide_behavior), options);
+    }
+
+    /** M2Y: how many recently watched videos stay on the device for offline viewing (0 = none). */
+    private void appendCacheCountCategory(AppDialogPresenter settingsPresenter) {
+        List<OptionItem> options = new ArrayList<>();
+        int current = PlaybackCache.keepCount(getContext());
+
+        for (int i = 0; i <= PlaybackCache.MAX_KEEP; i++) {
+            int count = i;
+            options.add(UiOptionItem.from(
+                    i == 0 ? getContext().getString(R.string.m2y_cache_count_off) : getContext().getString(R.string.m2y_cache_count_n, i),
+                    option -> PlaybackCache.setKeepCount(getContext(), count),
+                    current == i));
+        }
+
+        settingsPresenter.appendRadioCategory(getContext().getString(R.string.m2y_cache_count), options);
     }
 
     private void appendVideoBufferCategory(AppDialogPresenter settingsPresenter) {

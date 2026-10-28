@@ -152,6 +152,16 @@ public final class OptionsPopup {
     }
 
     /** @return true if a list was open */
+    /** Closes the open list so that the next {@link #show} opens new content instead of being taken as a second tap. */
+    public static void dismissForUpdate() {
+        dismiss();
+        sDismissedAt = 0;
+    }
+
+    public static boolean isShowing() {
+        return sPopup != null && sPopup.isShowing();
+    }
+
     public static boolean dismiss() {
         if (sPopup != null && sPopup.isShowing()) {
             sPopup.dismiss();
